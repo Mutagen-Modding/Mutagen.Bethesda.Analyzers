@@ -1,9 +1,11 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using Microsoft.Extensions.Logging;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Result;
-using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
@@ -13,17 +15,17 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
         public string Author => "erri120";
         public string Description => "Finds missing assets.";
 
-        public const string MissingFemaleArmorModel = "Missing female armor model file";
-        public const string MissingMaleArmorModel = "Missing male armor model file";
+        public static readonly ErrorDefinition MissingArmorModel = new(
+            "SOMEID",
+            "Missing Armor Model file",
+            "TODO",
+            Severity.Error);
 
-        public const string MissingDiffuseTexture = "Missing diffuse texture in TextureSet";
-        public const string MissingNormalOrGlossTexture = "Missing normal or gloss texture in TextureSet";
-        public const string MissingEnvironmentMaskOrSubsurfaceTintTexture = "Missing environment mask or subsurface tint texture in TextureSet";
-        public const string MissingGlowOrDetailMap = "Missing glow or detail map in TextureSet";
-        public const string MissingHeightTexture = "Missing height texture in TextureSet";
-        public const string MissingEnvironmentTexture = "Missing environment texture in TextureSet";
-        public const string MissingMultilayerTexture = "Missing multilayer texture in TextureSet";
-        public const string MissingBacklightMaskOrSpecular = "Missing backlight mask or specular texture in TextureSet";
+        public static readonly ErrorDefinition MissingTextureInTextureSet = new(
+            "SOMEID",
+            "Missing Texture in TextureSet",
+            "TODO",
+            Severity.Error);
 
         private readonly ILogger<MissingAssetsAnalyzer> _logger;
         private readonly IFileSystem _fileSystem;
@@ -34,41 +36,51 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             _fileSystem = fileSystem;
         }
 
-        public AnalyzerResult AnalyzeRecord(IArmorGetter armor)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IArmorGetter armor)
         {
-            var result = new AnalyzerResult();
+            var result = new MajorRecordAnalyzerResult();
 
             var femaleFile = armor.WorldModel?.Female?.Model?.File;
-            CheckForMissingAsset(femaleFile, armor.FormKey, result, MissingFemaleArmorModel);
+            CheckForMissingAsset(femaleFile, result, () => RecordError.Create(
+                MissingArmorModel,
+                armor,
+                RecordTypes.ARMO,
+                x => x.WorldModel!.Female!.Model!.File));
 
             var maleFile = armor.WorldModel?.Male?.Model?.File;
-            CheckForMissingAsset(maleFile, armor.FormKey, result, MissingMaleArmorModel);
+            CheckForMissingAsset(maleFile, result, () => RecordError.Create(
+                MissingArmorModel,
+                armor,
+                RecordTypes.ARMO,
+                x => x.WorldModel!.Male!.Model!.File));
 
             return result;
         }
 
-        public AnalyzerResult AnalyzeRecord(ITextureSetGetter textureSet)
+        public MajorRecordAnalyzerResult AnalyzeRecord(ITextureSetGetter textureSet)
         {
-            var result = new AnalyzerResult();
+            var result = new MajorRecordAnalyzerResult();
 
-            CheckForMissingAsset(textureSet.Diffuse, textureSet.FormKey, result, MissingDiffuseTexture);
-            CheckForMissingAsset(textureSet.NormalOrGloss, textureSet.FormKey, result, MissingNormalOrGlossTexture);
-            CheckForMissingAsset(textureSet.EnvironmentMaskOrSubsurfaceTint, textureSet.FormKey, result, MissingEnvironmentMaskOrSubsurfaceTintTexture);
-            CheckForMissingAsset(textureSet.GlowOrDetailMap, textureSet.FormKey, result, MissingGlowOrDetailMap);
-            CheckForMissingAsset(textureSet.Height, textureSet.FormKey, result, MissingHeightTexture);
-            CheckForMissingAsset(textureSet.Environment, textureSet.FormKey, result, MissingEnvironmentTexture);
-            CheckForMissingAsset(textureSet.Multilayer, textureSet.FormKey, result, MissingMultilayerTexture);
-            CheckForMissingAsset(textureSet.BacklightMaskOrSpecular, textureSet.FormKey, result, MissingBacklightMaskOrSpecular);
+            CheckForMissingAsset(textureSet.Diffuse, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.Diffuse!));
+            CheckForMissingAsset(textureSet.NormalOrGloss, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.NormalOrGloss!));
+            CheckForMissingAsset(textureSet.EnvironmentMaskOrSubsurfaceTint, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.EnvironmentMaskOrSubsurfaceTint!));
+            CheckForMissingAsset(textureSet.GlowOrDetailMap, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.GlowOrDetailMap!));
+            CheckForMissingAsset(textureSet.Height, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.Height!));
+            CheckForMissingAsset(textureSet.Environment, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.Environment!));
+            CheckForMissingAsset(textureSet.Multilayer, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.Multilayer!));
+            CheckForMissingAsset(textureSet.BacklightMaskOrSpecular, result, () => RecordError.Create(MissingTextureInTextureSet, textureSet, RecordTypes.TXST, x => x.BacklightMaskOrSpecular!));
 
             return result;
         }
 
-        private void CheckForMissingAsset(string? path, FormKey formKey, AnalyzerResult result, string error)
+        private void CheckForMissingAsset(string? path, MajorRecordAnalyzerResult result, Func<RecordError> action)
         {
             if (path == null) return;
 
             if (!_fileSystem.File.Exists(path))
-                result.AddError(error, formKey);
+            {
+                result.AddError(action());
+            }
         }
     }
 }

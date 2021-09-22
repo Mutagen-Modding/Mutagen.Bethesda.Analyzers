@@ -23,10 +23,9 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 .Returns(() => new GenderedItem<IArmorModelGetter?>(CreateArmorModel(), CreateArmorModel()));
 
             var result = analyzer.AnalyzeRecord(armorRecord);
-            Assert.Collection(
-                result.Errors,
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingFemaleArmorModel, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingMaleArmorModel, x.Message));
+            Assert.Collection(result.Errors,
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingArmorModel, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingArmorModel, x.ErrorDefinition));
         }
 
         [Fact]
@@ -56,17 +55,16 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 .Returns(Path.GetRandomFileName());
 
             var result = analyzer.AnalyzeRecord(textureSetRecord);
-
             Assert.Collection(
                 result.Errors,
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingDiffuseTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingNormalOrGlossTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingEnvironmentMaskOrSubsurfaceTintTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingGlowOrDetailMap, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingHeightTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingEnvironmentTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingMultilayerTexture, x.Message),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingBacklightMaskOrSpecular, x.Message));
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition));
         }
 
         private static ArmorModel CreateArmorModel()

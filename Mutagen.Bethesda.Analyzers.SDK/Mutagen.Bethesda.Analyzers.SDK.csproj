@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    
+
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="all" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
