@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.SDK\Mutagen.Bethesda.Analyzers.SDK.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Moq" Version="4.16.1" />
+      <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="13.2.47" />
+    </ItemGroup>
+
+</Project>
