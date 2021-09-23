@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Plugins.Records;
@@ -9,7 +10,7 @@ namespace Mutagen.Bethesda.Analyzers
     {
         private readonly IModDriver[] _modDrivers;
 
-        public Engine(IModDriver[] modDrivers)
+        public Engine(IEnumerable<IModDriver> modDrivers)
         {
             _modDrivers = modDrivers
                 .Where(x => x.Applicable)
