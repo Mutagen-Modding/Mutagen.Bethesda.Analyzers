@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Results
     [PublicAPI]
     public interface IAnalyzerResult<TError> where TError : IError
     {
-        IEnumerable<TError> Errors { get; }
+        IReadOnlyCollection<TError> Errors { get; }
 
         void AddError(TError error);
     }
