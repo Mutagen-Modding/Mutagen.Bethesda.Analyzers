@@ -1,11 +1,12 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Errors;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
-    public partial class MissingAssetsAnalyzer
+    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IArmorGetter>
     {
         public static readonly ErrorDefinition MissingArmorModel = new(
             "SOMEID",

@@ -11,8 +11,7 @@ using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
     [Analyzer]
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IArmorGetter>, IMajorRecordAnalyzer<ITextureSetGetter>,
-        IMajorRecordAnalyzer<IWeaponGetter>, IMajorRecordAnalyzer<IStaticGetter>
+    public partial class MissingAssetsAnalyzer
     {
         public string Author => "erri120";
         public string Description => "Finds missing assets.";
