@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Results
     public class MajorRecordAnalyzerResult : IAnalyzerResult<RecordError>
     {
         private List<RecordError> _errors = new();
-        public IEnumerable<RecordError> Errors => _errors;
+        public IReadOnlyCollection<RecordError> Errors => _errors;
 
         public void AddError(RecordError error)
         {
