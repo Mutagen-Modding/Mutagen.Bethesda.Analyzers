@@ -7,5 +7,20 @@
     <ItemGroup>
       <PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.31.1-prerelease007" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="MissingAssetsAnalyzerArmor.cs">
+        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="MissingAssetsAnalyzerTextureSet.cs">
+        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="MissingAssetsAnalyzerWeapon.cs">
+        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="MissingAssetsAnalyzerStatics.cs">
+        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 
 </Project>
