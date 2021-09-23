@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
             MajorRecordAnalyzerResult? result)
         {
             if (result == null || result.Errors.Count == 0) return;
-            System.Console.WriteLine($"{sourceMod.ModKey} -> {majorRecord.FormKey}");
+            System.Console.WriteLine($"{sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
             foreach (var error in result.Errors)
             {
                 System.Console.WriteLine($"  {error.ErrorDefinition}");
