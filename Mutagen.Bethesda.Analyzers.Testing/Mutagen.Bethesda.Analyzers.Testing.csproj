@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
+      <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.31.0" />
+    </ItemGroup>
+
+</Project>

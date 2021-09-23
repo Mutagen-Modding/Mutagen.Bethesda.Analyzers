@@ -2,10 +2,12 @@
 
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.31.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.TestingUtils\Mutagen.Bethesda.Analyzers.TestingUtils.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Testing\Mutagen.Bethesda.Analyzers.Testing.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.SkyrimAnalyzer\Mutagen.Bethesda.SkyrimAnalyzer.csproj" />
     </ItemGroup>
 
