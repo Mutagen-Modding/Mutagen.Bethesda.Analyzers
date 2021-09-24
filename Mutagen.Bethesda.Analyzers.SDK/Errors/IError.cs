@@ -5,6 +5,6 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Errors
     [PublicAPI]
     public interface IError
     {
-        ErrorDefinition ErrorDefinition { get; }
+        FormattedErrorDefinition FormattedErrorDefinition { get; }
     }
 }

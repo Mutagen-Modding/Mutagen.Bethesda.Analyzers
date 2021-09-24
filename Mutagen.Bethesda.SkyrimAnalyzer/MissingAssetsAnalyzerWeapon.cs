@@ -11,13 +11,13 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
         public static readonly ErrorDefinition MissingWeaponModel = new(
             "SOMEID",
             "Missing Weapon Model file",
-            "TODO",
+            MissingModelFileMessageFormat,
             Severity.Error);
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IWeaponGetter weapon)
         {
             var res = new MajorRecordAnalyzerResult();
-            CheckForMissingModelAsset(weapon, res, MissingWeaponModel, RecordTypes.WEAP);
+            CheckForMissingModelAsset(weapon, res, MissingWeaponModel);
             return res;
         }
     }

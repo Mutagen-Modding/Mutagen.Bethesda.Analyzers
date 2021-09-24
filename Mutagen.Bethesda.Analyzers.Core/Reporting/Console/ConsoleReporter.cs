@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
             System.Console.WriteLine($"{sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
             foreach (var error in result.Errors)
             {
-                System.Console.WriteLine($"  {error.ErrorDefinition}");
+                System.Console.WriteLine($"  {error.FormattedErrorDefinition}");
             }
         }
     }

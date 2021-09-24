@@ -2,7 +2,6 @@
 using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
@@ -11,28 +10,31 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
         public static readonly ErrorDefinition MissingHeadPartModel = new(
             "SOMEID",
             "Missing Head Part Model file",
-            "TODO",
+            MissingModelFileMessageFormat,
             Severity.Error);
 
         public static readonly ErrorDefinition MissingHeadPartFile = new(
             "SOMEID",
             "Missing Head Part file",
-            "TODO",
+            "Missing file for Head Part Part {0} at {1}",
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IHeadPartGetter majorRecord)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IHeadPartGetter headPart)
         {
             var res = new MajorRecordAnalyzerResult();
 
-            CheckForMissingModelAsset(majorRecord, res, MissingHeadPartModel, RecordTypes.HDPT);
+            CheckForMissingModelAsset(headPart, res, MissingHeadPartModel);
 
-            foreach (var part in majorRecord.Parts)
+            var i = 0;
+            foreach (var part in headPart.Parts)
             {
                 CheckForMissingAsset(part.FileName, res, () => RecordError.Create(
-                    MissingHeadPartFile,
-                    majorRecord,
-                    RecordTypes.HDPT,
+                    headPart,
+                    FormattedErrorDefinition.Create(
+                        MissingHeadPartFile,
+                        i, part.FileName),
                     x => x.Parts[0].FileName!));
+                i++;
             }
 
             return res;
