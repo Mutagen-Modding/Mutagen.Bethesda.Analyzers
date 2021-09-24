@@ -135,6 +135,53 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
             Assert.Empty(result.Errors);
         }
 
+        [Fact]
+        public void TestMissingHeadPartModel()
+        {
+            var headPart = Mock.Of<IHeadPartGetter>();
+            Mock.Get(headPart)
+                .Setup(x => x.Parts)
+                .Returns(() => new List<IPartGetter>());
+            TestMissingModelFile(headPart, x => x.AnalyzeRecord(headPart), MissingAssetsAnalyzer.MissingHeadPartModel);
+        }
+
+        [Theory, MoqData]
+        public void TestExistingHeadPartModel(
+            Mock<IHeadPartGetter> headPart,
+            FilePath existingModelFile,
+            MissingAssetsAnalyzer analyzer)
+        {
+            headPart.Setup(x => x.Model).Returns(() => new Model
+            {
+                File = existingModelFile
+            });
+
+            var result = analyzer.AnalyzeRecord(headPart.Object);
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact]
+        public void TestMissingHeadPartFile()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var analyzer = new MissingAssetsAnalyzer(NullLogger<MissingAssetsAnalyzer>.Instance, fileSystem);
+
+            var headPart = Mock.Of<IHeadPartGetter>();
+            Mock.Get(headPart)
+                .Setup(x => x.Parts)
+                .Returns(() => new List<IPartGetter>
+                {
+                    new Part
+                    {
+                        FileName = Path.GetRandomFileName()
+                    }
+                });
+
+            var result = analyzer.AnalyzeRecord(headPart);
+            Assert.Collection(result.Errors,
+                x => Assert.Equal(MissingAssetsAnalyzer.MissingHeadPartFile, x.ErrorDefinition));
+        }
+
         private static void TestMissingModelFile<TMajorRecordGetter>(
             TMajorRecordGetter mock,
             Func<MissingAssetsAnalyzer, MajorRecordAnalyzerResult> func,
