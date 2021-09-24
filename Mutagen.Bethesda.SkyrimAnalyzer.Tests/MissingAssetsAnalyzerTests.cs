@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
+using Mutagen.Bethesda.Analyzers.TestingUtils;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
@@ -29,9 +29,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 .Returns(() => new GenderedItem<IArmorModelGetter?>(CreateArmorModel(), CreateArmorModel()));
 
             var result = analyzer.AnalyzeRecord(armorRecord);
-            Assert.Collection(result.Errors,
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingArmorModel, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingArmorModel, x.ErrorDefinition));
+            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingArmorModel, 2);
         }
 
         [Fact]
@@ -53,16 +51,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
             mock.Setup(x => x.BacklightMaskOrSpecular).Returns(Path.GetRandomFileName());
 
             var result = analyzer.AnalyzeRecord(textureSetRecord);
-            Assert.Collection(
-                result.Errors,
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition),
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingTextureInTextureSet, x.ErrorDefinition));
+            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingTextureInTextureSet, 8);
         }
 
         [Theory, MoqData]
@@ -178,8 +167,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 });
 
             var result = analyzer.AnalyzeRecord(headPart);
-            Assert.Collection(result.Errors,
-                x => Assert.Equal(MissingAssetsAnalyzer.MissingHeadPartFile, x.ErrorDefinition));
+            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingHeadPartFile);
         }
 
         private static void TestMissingModelFile<TMajorRecordGetter>(
@@ -199,7 +187,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 });
 
             var res = func(analyzer);
-            Assert.Collection(res.Errors, x => Assert.Equal(errorDefinition, x.ErrorDefinition));
+            AnalyzerTestUtils.HasError(res, errorDefinition);
         }
 
         private static ArmorModel CreateArmorModel()
