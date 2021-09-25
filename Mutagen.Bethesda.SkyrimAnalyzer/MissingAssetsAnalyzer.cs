@@ -45,12 +45,12 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             result.AddError(error);
         }
 
-        private void CheckForMissingAsset(string? path, MajorRecordAnalyzerResult result, Func<RecordError> action)
+        private void CheckForMissingAsset(string? path, MajorRecordAnalyzerResult result, Func<RecordError> func)
         {
             if (path == null) return;
             if (FileExists(path)) return;
 
-            var error = action();
+            var error = func();
             result.AddError(error);
         }
 

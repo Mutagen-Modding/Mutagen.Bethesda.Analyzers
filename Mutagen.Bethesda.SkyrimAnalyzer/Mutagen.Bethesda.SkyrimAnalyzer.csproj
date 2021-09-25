@@ -24,6 +24,9 @@
       <Compile Update="MissingAssetsAnalyzerHeadPart.cs">
         <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
       </Compile>
+      <Compile Update="MissingAssetsAnalyzerArmorAddon.cs">
+        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
