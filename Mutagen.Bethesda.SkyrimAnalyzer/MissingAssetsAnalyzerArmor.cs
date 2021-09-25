@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
         public static readonly ErrorDefinition MissingArmorModel = new(
             "SOMEID",
             "Missing Armor Model file",
-            MissingModelFileMessageFormat,
+            "Missing {0} model file at {1}",
             Severity.Error);
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IArmorGetter armor)
@@ -19,12 +19,12 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
 
             var femaleFile = armor.WorldModel?.Female?.Model?.File;
             CheckForMissingAsset(femaleFile, result, () => RecordError.Create(armor,
-                FormattedErrorDefinition.Create(MissingArmorModel, femaleFile),
+                FormattedErrorDefinition.Create(MissingArmorModel, "female", femaleFile),
                 x => x.WorldModel!.Female!.Model!.File));
 
             var maleFile = armor.WorldModel?.Male?.Model?.File;
             CheckForMissingAsset(maleFile, result, () => RecordError.Create(armor,
-                FormattedErrorDefinition.Create(MissingArmorModel, maleFile),
+                FormattedErrorDefinition.Create(MissingArmorModel, "male", maleFile),
                 x => x.WorldModel!.Male!.Model!.File));
 
             return result;
