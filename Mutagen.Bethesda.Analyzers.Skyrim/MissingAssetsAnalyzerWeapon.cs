@@ -2,11 +2,10 @@
 using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.Skyrim.Internals;
 
-namespace Mutagen.Bethesda.SkyrimAnalyzer
+namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IWeaponGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGetter>
     {
         public static readonly ErrorDefinition MissingWeaponModel = new(
             "SOMEID",
@@ -14,10 +13,10 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             MissingModelFileMessageFormat,
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IWeaponGetter weapon)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IWeaponGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
-            CheckForMissingModelAsset(weapon, res, MissingWeaponModel);
+            CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
             return res;
         }
     }

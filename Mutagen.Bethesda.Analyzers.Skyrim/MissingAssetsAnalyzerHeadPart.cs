@@ -3,9 +3,9 @@ using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.SkyrimAnalyzer
+namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IHeadPartGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGetter>
     {
         public static readonly ErrorDefinition MissingHeadPartModel = new(
             "SOMEID",
@@ -19,17 +19,17 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             "Missing file for Head Part Part {0} at {1}",
             Severity.CTD);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IHeadPartGetter headPart)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IHeadPartGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
 
-            CheckForMissingModelAsset(headPart, res, MissingHeadPartModel);
+            CheckForMissingModelAsset(param.Record, res, MissingHeadPartModel);
 
             var i = 0;
-            foreach (var part in headPart.Parts)
+            foreach (var part in param.Record.Parts)
             {
                 CheckForMissingAsset(part.FileName, res, () => RecordError.Create(
-                    headPart,
+                    param.Record,
                     FormattedErrorDefinition.Create(
                         MissingHeadPartFile,
                         i, part.FileName),

@@ -3,9 +3,9 @@ using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.SkyrimAnalyzer
+namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IArmorAddonGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddonGetter>
     {
         public static readonly ErrorDefinition MissingArmorAddonWorldModel = new(
             "SOMEID",
@@ -19,31 +19,31 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             "Missing {0} 1st Person Armor Addon Model file at {1}",
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IArmorAddonGetter armorAddon)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorAddonGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
 
-            var femaleWorldModel = armorAddon.WorldModel?.Female?.File;
+            var femaleWorldModel = param.Record.WorldModel?.Female?.File;
             CheckForMissingAsset(femaleWorldModel, res, () => RecordError.Create(
-                armorAddon,
+                param.Record,
                 FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "female", femaleWorldModel),
                 x => x.WorldModel!.Female!.File));
 
-            var maleWorldModel = armorAddon.WorldModel?.Male?.File;
+            var maleWorldModel = param.Record.WorldModel?.Male?.File;
             CheckForMissingAsset(maleWorldModel, res, () => RecordError.Create(
-                armorAddon,
+                param.Record,
                 FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "male", maleWorldModel),
                 x => x.WorldModel!.Male!.File));
 
-            var femaleFirstPersonModel = armorAddon.FirstPersonModel?.Female?.File;
+            var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
             CheckForMissingAsset(femaleFirstPersonModel, res, () => RecordError.Create(
-                armorAddon,
+                param.Record,
                 FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "female", femaleFirstPersonModel),
                 x => x.FirstPersonModel!.Female!.File));
 
-            var maleFirstPersonModel = armorAddon.FirstPersonModel?.Male?.File;
+            var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
             CheckForMissingAsset(maleFirstPersonModel, res, () => RecordError.Create(
-                armorAddon,
+                param.Record,
                 FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "male", maleFirstPersonModel),
                 x => x.FirstPersonModel!.Male!.File));
 

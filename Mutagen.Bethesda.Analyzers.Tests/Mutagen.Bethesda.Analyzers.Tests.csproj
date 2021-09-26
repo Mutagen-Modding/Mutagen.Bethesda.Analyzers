@@ -1,13 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <IsPackable>false</IsPackable>
-        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Mutagen.Bethesda.Analyzers.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.2.0" />
-        <PackageReference Include="FluentAssertions" Version="6.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.31.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
@@ -23,9 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Core\Mutagen.Bethesda.Analyzers.Core.csproj" />
-      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.TestingUtils\Mutagen.Bethesda.Analyzers.TestingUtils.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Testing\Mutagen.Bethesda.Analyzers.Testing.csproj" />
-      <ProjectReference Include="..\Mutagen.Bethesda.SkyrimAnalyzer\Mutagen.Bethesda.SkyrimAnalyzer.csproj" />
     </ItemGroup>
 
 </Project>
