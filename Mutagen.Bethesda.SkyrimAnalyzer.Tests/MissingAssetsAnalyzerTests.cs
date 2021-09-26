@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Mutagen.Bethesda.Analyzers.SDK.Errors;
@@ -28,7 +29,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 .Setup(x => x.WorldModel)
                 .Returns(() => new GenderedItem<IArmorModelGetter?>(CreateArmorModel(), CreateArmorModel()));
 
-            var result = analyzer.AnalyzeRecord(armorRecord);
+            var result = analyzer.AnalyzeRecord(armorRecord.AsIsolatedParams());
             AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingArmorModel, 2);
         }
 
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
             mock.Setup(x => x.Multilayer).Returns(Path.GetRandomFileName());
             mock.Setup(x => x.BacklightMaskOrSpecular).Returns(Path.GetRandomFileName());
 
-            var result = analyzer.AnalyzeRecord(textureSetRecord);
+            var result = analyzer.AnalyzeRecord(textureSetRecord.AsIsolatedParams());
             AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingTextureInTextureSet, 8);
         }
 
@@ -76,7 +77,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
             textureSet.Setup(x => x.Multilayer).Returns(existingMultilayer);
             textureSet.Setup(x => x.BacklightMaskOrSpecular).Returns(existingSpecular);
 
-            var result = analyzer.AnalyzeRecord(textureSet.Object);
+            var result = analyzer.AnalyzeRecord(textureSet.Object.AsIsolatedParams());
             Assert.Empty(result.Errors);
         }
 
@@ -84,7 +85,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
         public void TestMissingWeaponModel()
         {
             var weapon = Mock.Of<IWeaponGetter>();
-            TestMissingModelFile(weapon, x => x.AnalyzeRecord(weapon), MissingAssetsAnalyzer.MissingWeaponModel);
+            TestMissingModelFile(weapon, x => x.AnalyzeRecord(weapon.AsIsolatedParams()), MissingAssetsAnalyzer.MissingWeaponModel);
         }
 
         [Theory, MoqData]
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 File = existingModelFile
             });
 
-            var result = analyzer.AnalyzeRecord(weapon.Object);
+            var result = analyzer.AnalyzeRecord(weapon.Object.AsIsolatedParams());
             Assert.Empty(result.Errors);
         }
 
@@ -106,7 +107,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
         public void TestMissingStaticsModel()
         {
             var staticGetter = Mock.Of<IStaticGetter>();
-            TestMissingModelFile(staticGetter, x => x.AnalyzeRecord(staticGetter), MissingAssetsAnalyzer.MissingStaticModel);
+            TestMissingModelFile(staticGetter, x => x.AnalyzeRecord(staticGetter.AsIsolatedParams()), MissingAssetsAnalyzer.MissingStaticModel);
         }
 
         [Theory, MoqData]
@@ -120,7 +121,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 File = existingModelFile
             });
 
-            var result = analyzer.AnalyzeRecord(staticGetter.Object);
+            var result = analyzer.AnalyzeRecord(staticGetter.Object.AsIsolatedParams());
             Assert.Empty(result.Errors);
         }
 
@@ -131,7 +132,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
             Mock.Get(headPart)
                 .Setup(x => x.Parts)
                 .Returns(() => new List<IPartGetter>());
-            TestMissingModelFile(headPart, x => x.AnalyzeRecord(headPart), MissingAssetsAnalyzer.MissingHeadPartModel);
+            TestMissingModelFile(headPart, x => x.AnalyzeRecord(headPart.AsIsolatedParams()), MissingAssetsAnalyzer.MissingHeadPartModel);
         }
 
         [Theory, MoqData]
@@ -145,7 +146,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                 File = existingModelFile
             });
 
-            var result = analyzer.AnalyzeRecord(headPart.Object);
+            var result = analyzer.AnalyzeRecord(headPart.Object.AsIsolatedParams());
             Assert.Empty(result.Errors);
         }
 
@@ -166,7 +167,7 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
                     }
                 });
 
-            var result = analyzer.AnalyzeRecord(headPart);
+            var result = analyzer.AnalyzeRecord(headPart.AsIsolatedParams());
             AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingHeadPartFile);
         }
 

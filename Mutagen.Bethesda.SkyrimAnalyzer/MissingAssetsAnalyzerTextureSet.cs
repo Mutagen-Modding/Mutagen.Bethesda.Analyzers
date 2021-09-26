@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<ITextureSetGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSetGetter>
     {
         public static readonly ErrorDefinition MissingTextureInTextureSet = new(
             "SOMEID",
@@ -22,18 +22,18 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
         private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
         private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(ITextureSetGetter textureSet)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<ITextureSetGetter> param)
         {
             var result = new MajorRecordAnalyzerResult();
 
-            CheckForMissingAsset(textureSet.Diffuse, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetDiffuseName, textureSet.Diffuse), x => x.Diffuse!));
-            CheckForMissingAsset(textureSet.NormalOrGloss, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetNormalOrGlossName, textureSet.NormalOrGloss), x => x.NormalOrGloss!));
-            CheckForMissingAsset(textureSet.EnvironmentMaskOrSubsurfaceTint, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetEnvironmentMaskOrSubsurfaceTintName, textureSet.EnvironmentMaskOrSubsurfaceTint), x => x.EnvironmentMaskOrSubsurfaceTint!));
-            CheckForMissingAsset(textureSet.GlowOrDetailMap, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetGlowOrDetailMapName, textureSet.GlowOrDetailMap), x => x.GlowOrDetailMap!));
-            CheckForMissingAsset(textureSet.Height, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetHeightName, textureSet.Height), x => x.Height!));
-            CheckForMissingAsset(textureSet.Environment, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetEnvironmentName, textureSet.Environment), x => x.Environment!));
-            CheckForMissingAsset(textureSet.Multilayer, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetMultilayerName, textureSet.Multilayer), x => x.Multilayer!));
-            CheckForMissingAsset(textureSet.BacklightMaskOrSpecular, result, () => RecordError.Create(textureSet, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetBacklightMaskOrSpecularName, textureSet.BacklightMaskOrSpecular), x => x.BacklightMaskOrSpecular!));
+            CheckForMissingAsset(param.Record.Diffuse, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetDiffuseName, param.Record.Diffuse), x => x.Diffuse!));
+            CheckForMissingAsset(param.Record.NormalOrGloss, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetNormalOrGlossName, param.Record.NormalOrGloss), x => x.NormalOrGloss!));
+            CheckForMissingAsset(param.Record.EnvironmentMaskOrSubsurfaceTint, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint), x => x.EnvironmentMaskOrSubsurfaceTint!));
+            CheckForMissingAsset(param.Record.GlowOrDetailMap, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap), x => x.GlowOrDetailMap!));
+            CheckForMissingAsset(param.Record.Height, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetHeightName, param.Record.Height), x => x.Height!));
+            CheckForMissingAsset(param.Record.Environment, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetEnvironmentName, param.Record.Environment), x => x.Environment!));
+            CheckForMissingAsset(param.Record.Multilayer, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetMultilayerName, param.Record.Multilayer), x => x.Multilayer!));
+            CheckForMissingAsset(param.Record.BacklightMaskOrSpecular, result, () => RecordError.Create(param.Record, FormattedErrorDefinition.Create(MissingTextureInTextureSet, TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular), x => x.BacklightMaskOrSpecular!));
 
             return result;
         }

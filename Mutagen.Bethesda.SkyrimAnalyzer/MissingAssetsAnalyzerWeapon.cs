@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 
 namespace Mutagen.Bethesda.SkyrimAnalyzer
 {
-    public partial class MissingAssetsAnalyzer : IMajorRecordAnalyzer<IWeaponGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGetter>
     {
         public static readonly ErrorDefinition MissingWeaponModel = new(
             "SOMEID",
@@ -14,10 +14,10 @@ namespace Mutagen.Bethesda.SkyrimAnalyzer
             MissingModelFileMessageFormat,
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IWeaponGetter weapon)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IWeaponGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
-            CheckForMissingModelAsset(weapon, res, MissingWeaponModel);
+            CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
             return res;
         }
     }

@@ -7,11 +7,11 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
     public class MajorRecordDriver<TMajor> : IModDriver
         where TMajor : class, IMajorRecordGetter
     {
-        private readonly IMajorRecordAnalyzer<TMajor>[] _analyzers;
+        private readonly IIsolatedRecordAnalyzer<TMajor>[] _analyzers;
 
         public bool Applicable => _analyzers.Length > 0;
 
-        public MajorRecordDriver(IMajorRecordAnalyzer<TMajor>[] analyzers)
+        public MajorRecordDriver(IIsolatedRecordAnalyzer<TMajor>[] analyzers)
         {
             _analyzers = analyzers;
         }
@@ -20,9 +20,10 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
         {
             foreach (var rec in modGetter.EnumerateMajorRecords<TMajor>())
             {
+                var param = new IsolatedRecordAnalyzerParams<TMajor>(rec);
                 foreach (var analyzer in _analyzers)
                 {
-                    dropbox.Dropoff(modGetter, rec, analyzer.AnalyzeRecord(rec));
+                    dropbox.Dropoff(modGetter, rec, analyzer.AnalyzeRecord(param));
                 }
             }
         }

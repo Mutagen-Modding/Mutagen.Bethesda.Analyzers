@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
                 .AsSelf();
 
             foreach (var analyzerType in TypeExt.GetInheritingFromGenericInterface(
-                typeof(IMajorRecordAnalyzer<>),
+                typeof(IIsolatedRecordAnalyzer<>),
                 loadAssemblies: true)
                 .Select(x => x.Key.GetGenericArguments()[0])
                 .Select(x => LoquiRegistration.GetRegister(x).GetterType)
