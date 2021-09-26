@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             "Missing {0} model file at {1}",
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IArmorGetter> param)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorGetter> param)
         {
             var result = new MajorRecordAnalyzerResult();
 

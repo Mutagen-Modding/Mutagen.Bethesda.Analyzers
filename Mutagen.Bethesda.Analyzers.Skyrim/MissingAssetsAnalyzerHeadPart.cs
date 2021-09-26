@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             "Missing file for Head Part Part {0} at {1}",
             Severity.CTD);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IHeadPartGetter> param)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IHeadPartGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
 

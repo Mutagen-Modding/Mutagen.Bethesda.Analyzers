@@ -6,37 +6,28 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
     public class ByTypeDriver<TMajor> : IDriver
         where TMajor : class, IMajorRecordGetter
     {
-        private readonly IContextualRecordAnalyzer<TMajor>[] _contextualRecordAnalyzers;
-        private readonly IIsolatedRecordAnalyzer<TMajor>[] _isolatedRecordAnalyzers;
+        private readonly IIsolatedRecordAnalyzer<TMajor>[] _recordAnalyzers;
 
-        public bool Applicable => _isolatedRecordAnalyzers.Length > 0;
+        public bool Applicable => _recordAnalyzers.Length > 0;
 
         public ByTypeDriver(
-            IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers,
-            IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers)
+            IIsolatedRecordAnalyzer<TMajor>[] recordAnalyzers)
         {
-            _contextualRecordAnalyzers = contextualRecordAnalyzers;
-            _isolatedRecordAnalyzers = isolatedRecordAnalyzers;
+            _recordAnalyzers = recordAnalyzers;
         }
 
         public void Drive(DriverParams driverParams)
         {
-            var contextualParam = new ContextualRecordAnalyzerParams<TMajor>(
+            var param = new RecordAnalyzerParams<TMajor>(
                 driverParams.LinkCache,
                 driverParams.LoadOrder);
 
             foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
             {
-                var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(rec);
-                foreach (var analyzer in _isolatedRecordAnalyzers)
+                param = param with { Record = rec };
+                foreach (var analyzer in _recordAnalyzers)
                 {
-                    driverParams.ReportDropbox.Dropoff(driverParams.TargetMod, rec, analyzer.AnalyzeRecord(isolatedParam));
-                }
-
-                contextualParam = contextualParam with { Record = rec };
-                foreach (var analyzer in _contextualRecordAnalyzers)
-                {
-                    driverParams.ReportDropbox.Dropoff(driverParams.TargetMod, rec, analyzer.AnalyzeRecord(contextualParam));
+                    driverParams.ReportDropbox.Dropoff(driverParams.TargetMod, rec, analyzer.AnalyzeRecord(param));
                 }
             }
         }

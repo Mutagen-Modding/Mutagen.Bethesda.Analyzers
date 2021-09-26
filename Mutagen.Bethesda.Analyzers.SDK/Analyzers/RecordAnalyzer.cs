@@ -8,6 +8,6 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
     public interface IIsolatedRecordAnalyzer<in TMajor> : IAnalyzer
         where TMajor : IMajorRecordGetter
     {
-        MajorRecordAnalyzerResult? AnalyzeRecord(IIsolatedRecordAnalyzerParams<TMajor> majorRecord);
+        MajorRecordAnalyzerResult? AnalyzeRecord(IRecordAnalyzerParams<TMajor> majorRecord);
     }
 }

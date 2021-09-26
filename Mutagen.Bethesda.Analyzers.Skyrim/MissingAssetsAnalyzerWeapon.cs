@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             MissingModelFileMessageFormat,
             Severity.Error);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IWeaponGetter> param)
+        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IWeaponGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
             CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
