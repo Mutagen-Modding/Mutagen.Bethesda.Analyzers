@@ -18,8 +18,8 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
                 .Select(x => LoquiRegistration.GetRegister(x).GetterType)
                 .Distinct())
             {
-                builder.RegisterType(typeof(RecordDriver<>).MakeGenericType(analyzerType))
-                    .As<IModDriver>();
+                builder.RegisterType(typeof(ByTypeDriver<>).MakeGenericType(analyzerType))
+                    .As<IDriver>();
             }
         }
     }

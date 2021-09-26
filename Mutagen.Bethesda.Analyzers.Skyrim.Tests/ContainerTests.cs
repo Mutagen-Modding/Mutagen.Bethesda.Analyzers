@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             builder.RegisterModule<TestModule>();
             var container = builder.Build();
 
-            var drivers = container.Resolve<IModDriver[]>();
+            var drivers = container.Resolve<IDriver[]>();
             drivers
-                .Any(x => typeof(RecordDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
+                .Any(x => typeof(ByTypeDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
                 .Should().BeTrue();
         }
     }

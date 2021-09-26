@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Mutagen.Bethesda.Analyzers;
+using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Testing;
 using Xunit;
 
@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             builder.RegisterModule<TestModule>();
             var container = builder.Build();
 
-            container.Resolve<Engine>();
+            container.Resolve<IsolatedEngine>();
         }
     }
 }

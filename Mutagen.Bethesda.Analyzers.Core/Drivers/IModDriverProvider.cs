@@ -5,14 +5,14 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
 {
     public interface IModDriverProvider
     {
-        IEnumerable<IModDriver> Drivers { get; }
+        IEnumerable<IDriver> Drivers { get; }
     }
 
     public class InjectionDriverProvider : IModDriverProvider
     {
-        public IEnumerable<IModDriver> Drivers { get; }
+        public IEnumerable<IDriver> Drivers { get; }
 
-        public InjectionDriverProvider(IEnumerable<IModDriver> drivers)
+        public InjectionDriverProvider(IEnumerable<IDriver> drivers)
         {
             Drivers = drivers
                 .Where(x => x.Applicable)
