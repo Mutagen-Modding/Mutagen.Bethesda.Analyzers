@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace System.Runtime.CompilerServices
+namespace Mutagen.Bethesda.Analyzers.Testing
 {
     public static class ParamExtensions
     {

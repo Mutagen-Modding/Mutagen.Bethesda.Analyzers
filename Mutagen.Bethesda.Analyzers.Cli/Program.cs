@@ -1,4 +1,7 @@
-﻿using Autofac;
+﻿using System.IO.Abstractions;
+using Autofac;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Reporting.Console;
 using Mutagen.Bethesda.Environments;
@@ -12,7 +15,13 @@ namespace Mutagen.Bethesda.Analyzers.Cli
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
+            builder.RegisterInstance(new FileSystem())
+                .As<IFileSystem>();
+            builder.RegisterGeneric(typeof(NullLogger<>))
+                .As(typeof(ILogger<>))
+                .SingleInstance();
             builder.RegisterModule<MainModule>();
+            builder.RegisterModule<ReflectionDriverModule>();
             builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
                 .AsImplementedInterfaces();
             var container = builder.Build();

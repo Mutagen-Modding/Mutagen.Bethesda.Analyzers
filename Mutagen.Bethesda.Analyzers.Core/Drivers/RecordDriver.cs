@@ -4,14 +4,14 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
 {
-    public class MajorRecordDriver<TMajor> : IModDriver
+    public class RecordDriver<TMajor> : IModDriver
         where TMajor : class, IMajorRecordGetter
     {
         private readonly IIsolatedRecordAnalyzer<TMajor>[] _analyzers;
 
         public bool Applicable => _analyzers.Length > 0;
 
-        public MajorRecordDriver(IIsolatedRecordAnalyzer<TMajor>[] analyzers)
+        public RecordDriver(IIsolatedRecordAnalyzer<TMajor>[] analyzers)
         {
             _analyzers = analyzers;
         }

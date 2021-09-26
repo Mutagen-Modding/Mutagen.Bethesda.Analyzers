@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Mutagen.Bethesda.Analyzers.SDK.Errors;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
+using Mutagen.Bethesda.Analyzers.Testing;
 using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Analyzers.TestingUtils;
 using Mutagen.Bethesda.Plugins.Records;
