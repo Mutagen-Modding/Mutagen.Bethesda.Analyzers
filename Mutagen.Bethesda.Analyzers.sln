@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Skyrim.Tests", "Mutagen.Bethesda.Analyzers.Skyrim.Tests\Mutagen.Bethesda.Analyzers.Skyrim.Tests.csproj", "{D064B420-8DEC-4CDA-BC11-B9BFDC8C5EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Core", "Mutagen.Bethesda.Analyzers.Core\Mutagen.Bethesda.Analyzers.Core.csproj", "{63AA20B1-E492-4451-9905-293440647B1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Engine", "Mutagen.Bethesda.Analyzers.Engine\Mutagen.Bethesda.Analyzers.Engine.csproj", "{63AA20B1-E492-4451-9905-293440647B1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{DD3585F6-7D5E-4561-95BB-B48D754B792C}"
 EndProject

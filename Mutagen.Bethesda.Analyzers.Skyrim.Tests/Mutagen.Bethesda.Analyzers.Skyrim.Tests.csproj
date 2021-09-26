@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Core\Mutagen.Bethesda.Analyzers.Core.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Engine\Mutagen.Bethesda.Analyzers.Engine.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.TestingUtils\Mutagen.Bethesda.Analyzers.TestingUtils.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Testing\Mutagen.Bethesda.Analyzers.Testing.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Skyrim\Mutagen.Bethesda.Analyzers.Skyrim.csproj" />
