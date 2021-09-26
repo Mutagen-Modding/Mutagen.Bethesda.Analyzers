@@ -7,11 +7,11 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<ITextureSetGetter>
     {
-        public static readonly TopicDefinition<string, string?> MissingTextureInTextureSet = new(
-            "SOMEID",
-            "Missing Texture in TextureSet",
-            "Missing texture {0} at {1}",
-            Severity.Error);
+        public static readonly TopicDefinition<string, string?> MissingTextureInTextureSet = MutagenTopicBuilder.FromDiscussion(
+                91,
+                "Missing Texture in TextureSet",
+                Severity.Error)
+            .WithFormatting<string, string?>("Missing texture {0} at {1}");
 
         private const string TextureSetDiffuseName = nameof(ITextureSet.Diffuse);
         private const string TextureSetNormalOrGlossName = "Normal/Gloss";

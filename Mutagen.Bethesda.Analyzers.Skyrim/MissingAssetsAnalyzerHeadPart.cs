@@ -7,17 +7,17 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IHeadPartGetter>
     {
-        public static readonly TopicDefinition<string> MissingHeadPartModel = new(
-            "SOMEID",
-            "Missing Head Part Model file",
-            MissingModelFileMessageFormat,
-            Severity.Error);
+        public static readonly TopicDefinition<string> MissingHeadPartModel = MutagenTopicBuilder.FromDiscussion(
+                87,
+                "Missing Head Part Model file",
+                Severity.Error)
+            .WithFormatting<string>(MissingModelFileMessageFormat);
 
-        public static readonly TopicDefinition<int, string?> MissingHeadPartFile = new(
-            "SOMEID",
-            "Missing Head Part file",
-            "Missing file for Head Part Part {0} at {1}",
-            Severity.CTD);
+        public static readonly TopicDefinition<int, string?> MissingHeadPartFile = MutagenTopicBuilder.FromDiscussion(
+                89,
+                "Missing Head Part file",
+                Severity.CTD)
+            .WithFormatting<int, string?>("Missing file for Head Part Part {0} at {1}");
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IHeadPartGetter> param)
         {
