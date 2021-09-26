@@ -30,8 +30,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             {
                 CheckForMissingAsset(part.FileName, res, () => RecordError.Create(
                     param.Record,
-                    FormattedErrorDefinition.Create(
-                        MissingHeadPartFile,
+                    MissingHeadPartFile.Format(
                         i, part.FileName),
                     x => x.Parts[0].FileName!));
                 i++;

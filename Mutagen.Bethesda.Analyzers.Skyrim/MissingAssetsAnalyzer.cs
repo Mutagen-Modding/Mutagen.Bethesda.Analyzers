@@ -36,10 +36,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             if (path == null) return;
             if (FileExists(path)) return;
 
-            var formattedErrorDefinition = FormattedErrorDefinition.Create(errorDefinition, path);
             var error = RecordError.Create(
                 modeledGetter,
-                formattedErrorDefinition,
+                errorDefinition.Format(path),
                 x => x.Model!.File);
 
             result.AddError(error);

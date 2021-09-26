@@ -26,25 +26,25 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             var femaleWorldModel = param.Record.WorldModel?.Female?.File;
             CheckForMissingAsset(femaleWorldModel, res, () => RecordError.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "female", femaleWorldModel),
+                MissingArmorAddonWorldModel.Format("female", femaleWorldModel),
                 x => x.WorldModel!.Female!.File));
 
             var maleWorldModel = param.Record.WorldModel?.Male?.File;
             CheckForMissingAsset(maleWorldModel, res, () => RecordError.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "male", maleWorldModel),
+                MissingArmorAddonWorldModel.Format("male", maleWorldModel),
                 x => x.WorldModel!.Male!.File));
 
             var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
             CheckForMissingAsset(femaleFirstPersonModel, res, () => RecordError.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "female", femaleFirstPersonModel),
+                MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel),
                 x => x.FirstPersonModel!.Female!.File));
 
             var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
             CheckForMissingAsset(maleFirstPersonModel, res, () => RecordError.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "male", maleFirstPersonModel),
+                MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel),
                 x => x.FirstPersonModel!.Male!.File));
 
             return res;

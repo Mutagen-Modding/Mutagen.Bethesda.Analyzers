@@ -12,19 +12,16 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Errors
     {
         public override string ToString()
         {
-            return $"[{SeverityString(Severity)}] [{Id}] {Title}: {MessageFormat}";
+            return $"[{Severity.ToShortString()}] [{Id}] {Title}: {MessageFormat}";
         }
 
-        private static string SeverityString(Severity sev)
+        public FormattedErrorDefinition Format(params object?[]? formatArgs)
         {
-            return sev switch
-            {
-                Severity.Suggestion => "SUG",
-                Severity.Warning => "WAR",
-                Severity.Error => "ERR",
-                Severity.CTD => "CTD",
-                _ => throw new ArgumentOutOfRangeException(nameof(sev), sev, null)
-            };
+            return new FormattedErrorDefinition(
+                this,
+                formatArgs == null
+                    ? MessageFormat
+                    : string.Format(MessageFormat, formatArgs));
         }
     }
 }
