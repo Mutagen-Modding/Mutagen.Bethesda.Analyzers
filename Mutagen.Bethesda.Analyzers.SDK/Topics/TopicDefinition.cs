@@ -12,23 +12,36 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     }
 
     [PublicAPI]
-    public record TopicDefinition(
+    public partial record TopicDefinition(
         string Id,
         string Title,
-        string Message,
         Severity Severity,
+        string? Message = null,
         Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
-            return $"[{Severity.ToShortString()}] [{Id}] {Title}: {Message}";
+            return $"[{Severity.ToShortString()}] [{Id}] {Title}{(Message == null ? null : $": {Message}")}";
+        }
+
+        public static TopicDefinition FromDiscussion(
+            int id,
+            string title,
+            Severity severity,
+            string discussionsUri)
+        {
+            return new TopicDefinition(
+                Id: id.ToString(),
+                Title: title,
+                Severity: severity,
+                InformationUri: new Uri($"{discussionsUri.TrimEnd('/')}/{id.ToString()}"));
         }
 
         public FormattedTopicDefinition Format()
         {
             return new FormattedTopicDefinition(
                 this,
-                Message);
+                Message ?? Title);
         }
     }
 

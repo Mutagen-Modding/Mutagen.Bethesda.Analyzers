@@ -7,11 +7,11 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorGetter>
     {
-        public static readonly TopicDefinition<string, string?> MissingArmorModel = new(
-            "SOMEID",
-            "Missing Armor Model file",
-            "Missing {0} model file at {1}",
-            Severity.Error);
+        public static readonly TopicDefinition<string, string?> MissingArmorModel = MutagenTopicBuilder.FromDiscussion(
+                82,
+                "Missing Armor Model file",
+                Severity.Error)
+            .WithFormatting<string, string?>("Missing {0} model file at {1}");
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorGetter> param)
         {
