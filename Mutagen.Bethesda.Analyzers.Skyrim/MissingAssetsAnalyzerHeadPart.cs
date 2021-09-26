@@ -1,5 +1,5 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
@@ -7,13 +7,13 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IHeadPartGetter>
     {
-        public static readonly ErrorDefinition<string> MissingHeadPartModel = new(
+        public static readonly TopicDefinition<string> MissingHeadPartModel = new(
             "SOMEID",
             "Missing Head Part Model file",
             MissingModelFileMessageFormat,
             Severity.Error);
 
-        public static readonly ErrorDefinition<int, string?> MissingHeadPartFile = new(
+        public static readonly TopicDefinition<int, string?> MissingHeadPartFile = new(
             "SOMEID",
             "Missing Head Part file",
             "Missing file for Head Part Part {0} at {1}",
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             var i = 0;
             foreach (var part in param.Record.Parts)
             {
-                CheckForMissingAsset(part.FileName, res, () => RecordError.Create(
+                CheckForMissingAsset(part.FileName, res, () => RecordTopic.Create(
                     param.Record,
                     MissingHeadPartFile.Format(i, part.FileName),
                     x => x.Parts[0].FileName!));

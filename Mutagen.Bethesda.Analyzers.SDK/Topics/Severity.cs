@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Mutagen.Bethesda.Analyzers.SDK.Errors
+namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
     [PublicAPI]
     public enum Severity : byte

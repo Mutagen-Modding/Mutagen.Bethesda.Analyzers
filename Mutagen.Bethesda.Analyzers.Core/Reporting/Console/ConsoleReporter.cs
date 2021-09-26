@@ -10,11 +10,11 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
             IMajorRecordCommonGetter majorRecord,
             MajorRecordAnalyzerResult? result)
         {
-            if (result == null || result.Errors.Count == 0) return;
+            if (result == null || result.Topics.Count == 0) return;
             System.Console.WriteLine($"{sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
-            foreach (var error in result.Errors)
+            foreach (var error in result.Topics)
             {
-                System.Console.WriteLine($"  {error.FormattedErrorDefinition}");
+                System.Console.WriteLine($"  {error.FormattedTopicDefinition}");
             }
         }
     }
