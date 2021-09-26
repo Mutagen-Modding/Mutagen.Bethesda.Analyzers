@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Topics
@@ -8,6 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id { get; }
         string Title { get; }
         Severity Severity { get; }
+        Uri? InformationUri { get; }
     }
 
     [PublicAPI]
@@ -15,7 +16,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         string Message,
-        Severity Severity) : ITopicDefinition
+        Severity Severity,
+        Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
@@ -35,7 +37,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         string MessageFormat,
-        Severity Severity) : ITopicDefinition
+        Severity Severity,
+        Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
@@ -55,7 +58,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         string MessageFormat,
-        Severity Severity) : ITopicDefinition
+        Severity Severity,
+        Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
@@ -75,7 +79,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         string MessageFormat,
-        Severity Severity) : ITopicDefinition
+        Severity Severity,
+        Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
@@ -95,7 +100,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         string MessageFormat,
-        Severity Severity) : ITopicDefinition
+        Severity Severity,
+        Uri? InformationUri = null) : ITopicDefinition
     {
         public override string ToString()
         {
