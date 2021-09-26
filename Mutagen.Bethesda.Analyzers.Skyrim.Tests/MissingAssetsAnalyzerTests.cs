@@ -14,7 +14,7 @@ using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Xunit;
 
-namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
 {
     public class MissingAssetsAnalyzerTests
     {

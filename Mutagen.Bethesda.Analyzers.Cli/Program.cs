@@ -6,7 +6,7 @@ using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Reporting.Console;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda.SkyrimAnalyzer;
+using Mutagen.Bethesda.Analyzers.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Cli
 {

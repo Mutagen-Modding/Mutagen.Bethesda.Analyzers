@@ -3,6 +3,7 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+        <RootNamespace>Mutagen.Bethesda.Analyzers.Skyrim.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,7 +26,7 @@
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Core\Mutagen.Bethesda.Analyzers.Core.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.TestingUtils\Mutagen.Bethesda.Analyzers.TestingUtils.csproj" />
       <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Testing\Mutagen.Bethesda.Analyzers.Testing.csproj" />
-      <ProjectReference Include="..\Mutagen.Bethesda.SkyrimAnalyzer\Mutagen.Bethesda.SkyrimAnalyzer.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Skyrim\Mutagen.Bethesda.Analyzers.Skyrim.csproj" />
     </ItemGroup>
 
 </Project>

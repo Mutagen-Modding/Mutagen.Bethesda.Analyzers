@@ -5,7 +5,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Analyzers.Testing;
 using Xunit;
 
-namespace Mutagen.Bethesda.SkyrimAnalyzer.Tests
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
 {
     public class ContainerTests
     {
