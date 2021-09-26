@@ -7,13 +7,13 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorAddonGetter>
     {
-        public static readonly ErrorDefinition MissingArmorAddonWorldModel = new(
+        public static readonly ErrorDefinition<string, string?> MissingArmorAddonWorldModel = new(
             "SOMEID",
             "Missing Armor Addon Model file",
             "Missing {0} Armor Addon Model file at {1}",
             Severity.Error);
 
-        public static readonly ErrorDefinition MissingArmorAddonFirstPersonModel = new(
+        public static readonly ErrorDefinition<string, string?> MissingArmorAddonFirstPersonModel = new(
             "SOMEID",
             "Missing Armor Addon 1st Person Model file",
             "Missing {0} 1st Person Armor Addon Model file at {1}",

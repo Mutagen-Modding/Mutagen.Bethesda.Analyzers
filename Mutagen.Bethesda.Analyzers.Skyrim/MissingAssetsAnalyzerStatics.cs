@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IStaticGetter>
     {
-        public static readonly ErrorDefinition MissingStaticModel = new(
+        public static readonly ErrorDefinition<string> MissingStaticModel = new(
             "SOMEID",
             "Missing Static Model file",
             MissingModelFileMessageFormat,

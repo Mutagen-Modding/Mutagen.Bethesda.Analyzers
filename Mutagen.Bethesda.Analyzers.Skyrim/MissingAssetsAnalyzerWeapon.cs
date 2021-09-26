@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IWeaponGetter>
     {
-        public static readonly ErrorDefinition MissingWeaponModel = new(
+        public static readonly ErrorDefinition<string> MissingWeaponModel = new(
             "SOMEID",
             "Missing Weapon Model file",
             MissingModelFileMessageFormat,

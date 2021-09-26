@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
         private void CheckForMissingModelAsset<TMajorRecordGetter>(
             TMajorRecordGetter modeledGetter,
             MajorRecordAnalyzerResult result,
-            ErrorDefinition errorDefinition)
+            ErrorDefinition<string> errorDefinition)
             where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
         {
             var path = modeledGetter.Model?.File;

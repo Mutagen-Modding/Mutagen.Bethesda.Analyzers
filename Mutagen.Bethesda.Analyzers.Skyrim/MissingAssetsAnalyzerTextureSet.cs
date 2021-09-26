@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
     public partial class MissingAssetsAnalyzer : IRecordAnalyzer<ITextureSetGetter>
     {
-        public static readonly ErrorDefinition MissingTextureInTextureSet = new(
+        public static readonly ErrorDefinition<string, string?> MissingTextureInTextureSet = new(
             "SOMEID",
             "Missing Texture in TextureSet",
             "Missing texture {0} at {1}",

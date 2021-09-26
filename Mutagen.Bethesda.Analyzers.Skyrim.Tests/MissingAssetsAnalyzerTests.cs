@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
         private static void TestMissingModelFile<TMajorRecordGetter>(
             TMajorRecordGetter mock,
             Func<MissingAssetsAnalyzer, MajorRecordAnalyzerResult> func,
-            ErrorDefinition errorDefinition)
+            ErrorDefinition<string> errorDefinition)
             where TMajorRecordGetter : class, IMajorRecordGetter, IModeledGetter
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());

@@ -5,10 +5,10 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Errors
     [PublicAPI]
     public class FormattedErrorDefinition
     {
-        public readonly ErrorDefinition ErrorDefinition;
+        public readonly IErrorDefinition ErrorDefinition;
         public readonly string FormattedMessage;
 
-        public FormattedErrorDefinition(ErrorDefinition errorDefinition, string formattedMessage)
+        public FormattedErrorDefinition(IErrorDefinition errorDefinition, string formattedMessage)
         {
             ErrorDefinition = errorDefinition;
             FormattedMessage = formattedMessage;
