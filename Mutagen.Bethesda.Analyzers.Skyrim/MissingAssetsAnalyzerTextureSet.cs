@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSetGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<ITextureSetGetter>
     {
         public static readonly ErrorDefinition MissingTextureInTextureSet = new(
             "SOMEID",

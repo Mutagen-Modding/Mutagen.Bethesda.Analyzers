@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddonGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorAddonGetter>
     {
         public static readonly ErrorDefinition MissingArmorAddonWorldModel = new(
             "SOMEID",

@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IStaticGetter>
     {
         public static readonly ErrorDefinition MissingStaticModel = new(
             "SOMEID",

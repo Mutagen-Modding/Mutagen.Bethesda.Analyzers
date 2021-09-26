@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IHeadPartGetter>
     {
         public static readonly ErrorDefinition MissingHeadPartModel = new(
             "SOMEID",
