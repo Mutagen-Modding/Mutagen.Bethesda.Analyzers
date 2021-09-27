@@ -9,7 +9,6 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    [Analyzer]
     public partial class MissingAssetsAnalyzer
     {
         public string Author => "erri120";
