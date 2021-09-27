@@ -1,17 +1,17 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IStaticGetter>
     {
-        public static readonly ErrorDefinition MissingStaticModel = new(
-            "SOMEID",
-            "Missing Static Model file",
-            MissingModelFileMessageFormat,
-            Severity.Error);
+        public static readonly TopicDefinition<string> MissingStaticModel = MutagenTopicBuilder.FromDiscussion(
+                90,
+                "Missing Static Model file",
+                Severity.Error)
+            .WithFormatting<string>(MissingModelFileMessageFormat);
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IStaticGetter> param)
         {

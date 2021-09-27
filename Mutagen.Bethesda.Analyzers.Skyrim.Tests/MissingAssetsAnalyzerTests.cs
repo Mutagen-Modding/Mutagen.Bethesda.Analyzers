@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.Testing;
 using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
                 .Returns(() => new GenderedItem<IArmorModelGetter?>(CreateArmorModel(), CreateArmorModel()));
 
             var result = analyzer.AnalyzeRecord(armorRecord.AsBasicParams());
-            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingArmorModel, 2);
+            AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingArmorModel, 2);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             mock.Setup(x => x.BacklightMaskOrSpecular).Returns(Path.GetRandomFileName());
 
             var result = analyzer.AnalyzeRecord(textureSetRecord.AsBasicParams());
-            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingTextureInTextureSet, 8);
+            AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingTextureInTextureSet, 8);
         }
 
         [Theory, MoqData]
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             textureSet.Setup(x => x.BacklightMaskOrSpecular).Returns(existingSpecular);
 
             var result = analyzer.AnalyzeRecord(textureSet.Object.AsBasicParams());
-            Assert.Empty(result.Errors);
+            Assert.Empty(result.Topics);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             });
 
             var result = analyzer.AnalyzeRecord(weapon.Object.AsBasicParams());
-            Assert.Empty(result.Errors);
+            Assert.Empty(result.Topics);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             });
 
             var result = analyzer.AnalyzeRecord(staticGetter.Object.AsBasicParams());
-            Assert.Empty(result.Errors);
+            Assert.Empty(result.Topics);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
             });
 
             var result = analyzer.AnalyzeRecord(headPart.Object.AsBasicParams());
-            Assert.Empty(result.Errors);
+            Assert.Empty(result.Topics);
         }
 
         [Fact]
@@ -168,13 +168,13 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
                 });
 
             var result = analyzer.AnalyzeRecord(headPart.AsBasicParams());
-            AnalyzerTestUtils.HasError(result, MissingAssetsAnalyzer.MissingHeadPartFile);
+            AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingHeadPartFile);
         }
 
         private static void TestMissingModelFile<TMajorRecordGetter>(
             TMajorRecordGetter mock,
             Func<MissingAssetsAnalyzer, MajorRecordAnalyzerResult> func,
-            ErrorDefinition errorDefinition)
+            TopicDefinition<string> topicDefinition)
             where TMajorRecordGetter : class, IMajorRecordGetter, IModeledGetter
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
                 });
 
             var res = func(analyzer);
-            AnalyzerTestUtils.HasError(res, errorDefinition);
+            AnalyzerTestUtils.HasTopic(res, topicDefinition);
         }
 
         private static ArmorModel CreateArmorModel()

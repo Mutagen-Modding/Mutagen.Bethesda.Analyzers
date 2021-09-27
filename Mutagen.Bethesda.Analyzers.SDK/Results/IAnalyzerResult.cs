@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Results
 {
     [PublicAPI]
-    public interface IAnalyzerResult<TError> where TError : IError
+    public interface IAnalyzerResult<TError> where TError : ITopic
     {
-        IReadOnlyCollection<TError> Errors { get; }
+        IReadOnlyCollection<TError> Topics { get; }
 
-        void AddError(TError error);
+        void AddTopic(TError error);
     }
 }

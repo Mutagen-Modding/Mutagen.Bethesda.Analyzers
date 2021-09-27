@@ -1,50 +1,50 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddonGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorAddonGetter>
     {
-        public static readonly ErrorDefinition MissingArmorAddonWorldModel = new(
-            "SOMEID",
-            "Missing Armor Addon Model file",
-            "Missing {0} Armor Addon Model file at {1}",
-            Severity.Error);
+        public static readonly TopicDefinition<string, string?> MissingArmorAddonWorldModel = MutagenTopicBuilder.FromDiscussion(
+                84,
+                "Missing Armor Addon Model file",
+                Severity.Error)
+            .WithFormatting<string, string?>("Missing {0} Armor Addon Model file at {1}");
 
-        public static readonly ErrorDefinition MissingArmorAddonFirstPersonModel = new(
-            "SOMEID",
-            "Missing Armor Addon 1st Person Model file",
-            "Missing {0} 1st Person Armor Addon Model file at {1}",
-            Severity.Error);
+        public static readonly TopicDefinition<string, string?> MissingArmorAddonFirstPersonModel = MutagenTopicBuilder.FromDiscussion(
+                85,
+                "Missing Armor Addon 1st Person Model file",
+                Severity.Error)
+            .WithFormatting<string, string?>("Missing {0} 1st Person Armor Addon Model file at {1}");
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorAddonGetter> param)
         {
             var res = new MajorRecordAnalyzerResult();
 
             var femaleWorldModel = param.Record.WorldModel?.Female?.File;
-            CheckForMissingAsset(femaleWorldModel, res, () => RecordError.Create(
+            CheckForMissingAsset(femaleWorldModel, res, () => RecordTopic.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "female", femaleWorldModel),
+                MissingArmorAddonWorldModel.Format("female", femaleWorldModel),
                 x => x.WorldModel!.Female!.File));
 
             var maleWorldModel = param.Record.WorldModel?.Male?.File;
-            CheckForMissingAsset(maleWorldModel, res, () => RecordError.Create(
+            CheckForMissingAsset(maleWorldModel, res, () => RecordTopic.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonWorldModel, "male", maleWorldModel),
+                MissingArmorAddonWorldModel.Format("male", maleWorldModel),
                 x => x.WorldModel!.Male!.File));
 
             var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
-            CheckForMissingAsset(femaleFirstPersonModel, res, () => RecordError.Create(
+            CheckForMissingAsset(femaleFirstPersonModel, res, () => RecordTopic.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "female", femaleFirstPersonModel),
+                MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel),
                 x => x.FirstPersonModel!.Female!.File));
 
             var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
-            CheckForMissingAsset(maleFirstPersonModel, res, () => RecordError.Create(
+            CheckForMissingAsset(maleFirstPersonModel, res, () => RecordTopic.Create(
                 param.Record,
-                FormattedErrorDefinition.Create(MissingArmorAddonFirstPersonModel, "male", maleFirstPersonModel),
+                MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel),
                 x => x.FirstPersonModel!.Male!.File));
 
             return res;

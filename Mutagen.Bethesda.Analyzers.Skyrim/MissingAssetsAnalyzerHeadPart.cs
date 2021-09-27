@@ -1,23 +1,23 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IHeadPartGetter>
     {
-        public static readonly ErrorDefinition MissingHeadPartModel = new(
-            "SOMEID",
-            "Missing Head Part Model file",
-            MissingModelFileMessageFormat,
-            Severity.Error);
+        public static readonly TopicDefinition<string> MissingHeadPartModel = MutagenTopicBuilder.FromDiscussion(
+                87,
+                "Missing Head Part Model file",
+                Severity.Error)
+            .WithFormatting<string>(MissingModelFileMessageFormat);
 
-        public static readonly ErrorDefinition MissingHeadPartFile = new(
-            "SOMEID",
-            "Missing Head Part file",
-            "Missing file for Head Part Part {0} at {1}",
-            Severity.CTD);
+        public static readonly TopicDefinition<int, string?> MissingHeadPartFile = MutagenTopicBuilder.FromDiscussion(
+                89,
+                "Missing Head Part file",
+                Severity.CTD)
+            .WithFormatting<int, string?>("Missing file for Head Part Part {0} at {1}");
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IHeadPartGetter> param)
         {
@@ -28,11 +28,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             var i = 0;
             foreach (var part in param.Record.Parts)
             {
-                CheckForMissingAsset(part.FileName, res, () => RecordError.Create(
+                CheckForMissingAsset(part.FileName, res, () => RecordTopic.Create(
                     param.Record,
-                    FormattedErrorDefinition.Create(
-                        MissingHeadPartFile,
-                        i, part.FileName),
+                    MissingHeadPartFile.Format(i, part.FileName),
                     x => x.Parts[0].FileName!));
                 i++;
             }

@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Skyrim.Tests", "Mutagen.Bethesda.Analyzers.Skyrim.Tests\Mutagen.Bethesda.Analyzers.Skyrim.Tests.csproj", "{D064B420-8DEC-4CDA-BC11-B9BFDC8C5EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Core", "Mutagen.Bethesda.Analyzers.Core\Mutagen.Bethesda.Analyzers.Core.csproj", "{63AA20B1-E492-4451-9905-293440647B1F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Engine", "Mutagen.Bethesda.Analyzers.Engine\Mutagen.Bethesda.Analyzers.Engine.csproj", "{63AA20B1-E492-4451-9905-293440647B1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Executables", "Executables", "{DD3585F6-7D5E-4561-95BB-B48D754B792C}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Testing", "Mutagen.Bethesda.Analyzers.Testing\Mutagen.Bethesda.Analyzers.Testing.csproj", "{BC0A7772-46BE-4155-9647-591D13AE5D2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Tests", "Mutagen.Bethesda.Analyzers.Tests\Mutagen.Bethesda.Analyzers.Tests.csproj", "{9B31E5F4-5E2A-4DFF-A1A7-958CF5F570B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Analyzers.Common", "Mutagen.Bethesda.Analyzers.Common\Mutagen.Bethesda.Analyzers.Common.csproj", "{CC2208AD-9845-4CE6-A478-3B916EF7A2A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +72,10 @@ Global
 		{9B31E5F4-5E2A-4DFF-A1A7-958CF5F570B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B31E5F4-5E2A-4DFF-A1A7-958CF5F570B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B31E5F4-5E2A-4DFF-A1A7-958CF5F570B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC2208AD-9845-4CE6-A478-3B916EF7A2A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC2208AD-9845-4CE6-A478-3B916EF7A2A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC2208AD-9845-4CE6-A478-3B916EF7A2A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC2208AD-9845-4CE6-A478-3B916EF7A2A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{099DF49C-B15B-407C-93B3-4C63FBB50ACB} = {57D0B11F-05A3-44F3-9E34-FA371A806C6A}
@@ -80,5 +86,6 @@ Global
 		{2414ADAC-994A-46A3-9D09-28093E575DFE} = {DD3585F6-7D5E-4561-95BB-B48D754B792C}
 		{BC0A7772-46BE-4155-9647-591D13AE5D2E} = {5F4F559E-143A-45A5-8EBB-CE759A7D67EC}
 		{9B31E5F4-5E2A-4DFF-A1A7-958CF5F570B7} = {5F4F559E-143A-45A5-8EBB-CE759A7D67EC}
+		{CC2208AD-9845-4CE6-A478-3B916EF7A2A3} = {65ADC99E-9E67-43B5-AEF5-A8975A1E6FFA}
 	EndGlobalSection
 EndGlobal

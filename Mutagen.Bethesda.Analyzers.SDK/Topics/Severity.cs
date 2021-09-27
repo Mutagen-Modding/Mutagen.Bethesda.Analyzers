@@ -1,21 +1,20 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Mutagen.Bethesda.Analyzers.SDK.Errors
+namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
     [PublicAPI]
-    public record ErrorDefinition(
-        string Id,
-        string Title,
-        string MessageFormat,
-        Severity Severity)
+    public enum Severity : byte
     {
-        public override string ToString()
-        {
-            return $"[{SeverityString(Severity)}] [{Id}] {Title}: {MessageFormat}";
-        }
+        Suggestion = 0,
+        Warning = 1,
+        Error = 2,
+        CTD = 3
+    }
 
-        private static string SeverityString(Severity sev)
+    public static class SeverityExt
+    {
+        public static string ToShortString(this Severity sev)
         {
             return sev switch
             {

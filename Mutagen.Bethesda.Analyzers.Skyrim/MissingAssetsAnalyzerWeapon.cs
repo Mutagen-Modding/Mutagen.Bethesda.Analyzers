@@ -1,17 +1,17 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGetter>
+    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IWeaponGetter>
     {
-        public static readonly ErrorDefinition MissingWeaponModel = new(
-            "SOMEID",
-            "Missing Weapon Model file",
-            MissingModelFileMessageFormat,
-            Severity.Error);
+        public static readonly TopicDefinition<string> MissingWeaponModel = MutagenTopicBuilder.FromDiscussion(
+                92,
+                "Missing Weapon Model file",
+                Severity.Error)
+            .WithFormatting<string>(MissingModelFileMessageFormat);
 
         public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IWeaponGetter> param)
         {

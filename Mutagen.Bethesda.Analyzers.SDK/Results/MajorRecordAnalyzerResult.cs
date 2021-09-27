@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using Mutagen.Bethesda.Analyzers.SDK.Errors;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Results
 {
     [PublicAPI]
-    public class MajorRecordAnalyzerResult : IAnalyzerResult<RecordError>
+    public class MajorRecordAnalyzerResult : IAnalyzerResult<RecordTopic>
     {
-        private List<RecordError> _errors = new();
-        public IReadOnlyCollection<RecordError> Errors => _errors;
+        private List<RecordTopic> _topics = new();
+        public IReadOnlyCollection<RecordTopic> Topics => _topics;
 
-        public void AddError(RecordError error)
+        public void AddTopic(RecordTopic topic)
         {
-            _errors.Add(error);
+            _topics.Add(topic);
         }
     }
 }

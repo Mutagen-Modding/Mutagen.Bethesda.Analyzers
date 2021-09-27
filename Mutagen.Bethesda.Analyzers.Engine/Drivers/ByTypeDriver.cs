@@ -6,12 +6,12 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
     public class ByTypeDriver<TMajor> : IDriver
         where TMajor : class, IMajorRecordGetter
     {
-        private readonly IIsolatedRecordAnalyzer<TMajor>[] _recordAnalyzers;
+        private readonly IRecordAnalyzer<TMajor>[] _recordAnalyzers;
 
         public bool Applicable => _recordAnalyzers.Length > 0;
 
         public ByTypeDriver(
-            IIsolatedRecordAnalyzer<TMajor>[] recordAnalyzers)
+            IRecordAnalyzer<TMajor>[] recordAnalyzers)
         {
             _recordAnalyzers = recordAnalyzers;
         }

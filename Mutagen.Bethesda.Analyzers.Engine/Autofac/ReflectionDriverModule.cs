@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             foreach (var analyzerType in TypeExt.GetInheritingFromGenericInterface(
-                    typeof(IIsolatedRecordAnalyzer<>),
+                    typeof(IRecordAnalyzer<>),
                     loadAssemblies: true)
                 .Select(x => x.Key.GetGenericArguments()[0])
                 .Select(x => LoquiRegistration.GetRegister(x).GetterType)
