@@ -27,19 +27,17 @@ namespace Mutagen.Bethesda.Analyzers.Engines
                 loadOrder.ToUntypedImmutableLinkCache(),
                 loadOrder,
                 reportDropbox);
-            var isolatedParam = new IsolatedDriverParams(
-                loadOrder.ToUntypedImmutableLinkCache(),
-                reportDropbox,
-                null!);
 
             foreach (var listing in loadOrder.ListedOrder)
             {
                 if (listing.Mod == null) continue;
 
-                isolatedParam = isolatedParam with { TargetMod = listing.Mod };
                 foreach (var driver in _isolatedModDrivers)
                 {
-                    driver.Drive(isolatedParam);
+                    driver.Drive(new IsolatedDriverParams(
+                        loadOrder.ToUntypedImmutableLinkCache(),
+                        reportDropbox,
+                        listing.Mod));
                 }
             }
 

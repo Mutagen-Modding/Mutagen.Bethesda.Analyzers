@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string>(MissingModelFileMessageFormat);
 
-        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IStaticGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IStaticGetter> param)
         {
             var res = new RecordAnalyzerResult();
             CheckForMissingModelAsset(param.Record, res, MissingStaticModel);

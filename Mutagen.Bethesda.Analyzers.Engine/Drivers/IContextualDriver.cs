@@ -2,6 +2,6 @@
 {
     public interface IContextualDriver : IDriver
     {
-        void Drive(IContextualDriverParams driverParams);
+        void Drive(ContextualDriverParams driverParams);
     }
 }

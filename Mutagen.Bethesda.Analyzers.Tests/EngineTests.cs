@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests
 
             foreach (var driver in drivers)
             {
-                driver.Received(1).Drive(Arg.Is<IIsolatedDriverParams>(
+                driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
                          && x.TargetMod == modGetter));
             }
@@ -54,10 +54,10 @@ namespace Mutagen.Bethesda.Analyzers.Tests
 
             foreach (var driver in drivers)
             {
-                driver.Received(1).Drive(Arg.Is<IIsolatedDriverParams>(
+                driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
                          && x.TargetMod == modA));
-                driver.Received(1).Drive(Arg.Is<IIsolatedDriverParams>(
+                driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
                          && x.TargetMod == modB));
             }
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests
 
             foreach (var driver in drivers)
             {
-                driver.Received(1).Drive(Arg.Is<IContextualDriverParams>(
+                driver.Received(1).Drive(Arg.Is<ContextualDriverParams>(
                     x => x.ReportDropbox == reportDropbox
                          && x.LoadOrder == loadOrder));
             }

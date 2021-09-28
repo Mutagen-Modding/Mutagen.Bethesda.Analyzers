@@ -2,6 +2,6 @@
 {
     public interface IIsolatedDriver : IDriver
     {
-        void Drive(IIsolatedDriverParams driverParams);
+        void Drive(IsolatedDriverParams driverParams);
     }
 }

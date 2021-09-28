@@ -5,15 +5,20 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
 {
-    public interface IContextualDriverParams
+    public readonly struct ContextualDriverParams
     {
-        ILinkCache LinkCache { get; init; }
-        IReportDropbox ReportDropbox { get; init; }
-        ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder { get; init; }
-    }
+        public readonly ILinkCache LinkCache;
+        public readonly ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder;
+        public readonly IReportDropbox ReportDropbox;
 
-    public record ContextualDriverParams(
-        ILinkCache LinkCache,
-        ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder,
-        IReportDropbox ReportDropbox) : IContextualDriverParams;
+        public ContextualDriverParams(
+            ILinkCache linkCache,
+            ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
+            IReportDropbox reportDropbox)
+        {
+            LinkCache = linkCache;
+            LoadOrder = loadOrder;
+            ReportDropbox = reportDropbox;
+        }
+    }
 }

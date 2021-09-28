@@ -5,9 +5,9 @@ using Mutagen.Bethesda.Plugins.Records;
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
 {
     [PublicAPI]
-    public interface IContextualRecordAnalyzer<in TMajor> : IAnalyzer
+    public interface IContextualRecordAnalyzer<TMajor> : IAnalyzer
         where TMajor : IMajorRecordGetter
     {
-        RecordAnalyzerResult? AnalyzeRecord(IContextualRecordAnalyzerParams<TMajor> param);
+        RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<TMajor> param);
     }
 }

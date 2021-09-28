@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string, string?>("Missing {0} 1st Person Armor Addon Model file at {1}");
 
-        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IArmorAddonGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorAddonGetter> param)
         {
             var res = new RecordAnalyzerResult();
 

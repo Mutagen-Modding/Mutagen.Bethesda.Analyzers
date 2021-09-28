@@ -4,17 +4,18 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
 {
-    public interface IContextualRecordAnalyzerParams<out TMajor> : IContextualAnalyzerParams
+    public readonly struct ContextualRecordAnalyzerParams<TMajor>
         where TMajor : IMajorRecordGetter
     {
-        public TMajor Record { get; }
-    }
+        public readonly ILinkCache LinkCache;
+        public readonly ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder;
+        public readonly TMajor Record;
 
-    public record ContextualRecordAnalyzerParams<TMajor>(
-        ILinkCache LinkCache,
-        ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder) : IContextualRecordAnalyzerParams<TMajor>
-        where TMajor : IMajorRecordGetter
-    {
-        public TMajor Record { get; init; } = default!;
+        public ContextualRecordAnalyzerParams(ILinkCache linkCache, ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder, TMajor @record)
+        {
+            LinkCache = linkCache;
+            LoadOrder = loadOrder;
+            Record = record;
+        }
     }
 }

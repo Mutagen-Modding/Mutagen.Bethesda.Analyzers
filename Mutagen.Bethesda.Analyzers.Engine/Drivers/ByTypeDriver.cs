@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
             _contextualRecordAnalyzers = contextualRecordAnalyzers;
         }
 
-        public void Drive(IIsolatedDriverParams driverParams)
+        public void Drive(IsolatedDriverParams driverParams)
         {
             foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
             {
@@ -34,25 +34,23 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
             }
         }
 
-        public void Drive(IContextualDriverParams driverParams)
+        public void Drive(ContextualDriverParams driverParams)
         {
-            var analyzerParams = new ContextualRecordAnalyzerParams<TMajor>(
-                driverParams.LinkCache,
-                driverParams.LoadOrder);
-
             foreach (var listing in driverParams.LoadOrder.ListedOrder)
             {
                 if (listing.Mod == null) continue;
 
                 foreach (var rec in listing.Mod.EnumerateMajorRecords<TMajor>())
                 {
-                    analyzerParams = analyzerParams with { Record = rec };
                     foreach (var analyzer in _contextualRecordAnalyzers)
                     {
                         driverParams.ReportDropbox.Dropoff(
                             listing.Mod,
                             rec,
-                            analyzer.AnalyzeRecord(analyzerParams));
+                            analyzer.AnalyzeRecord(new ContextualRecordAnalyzerParams<TMajor>(
+                                driverParams.LinkCache,
+                                driverParams.LoadOrder,
+                                rec)));
                     }
                 }
             }

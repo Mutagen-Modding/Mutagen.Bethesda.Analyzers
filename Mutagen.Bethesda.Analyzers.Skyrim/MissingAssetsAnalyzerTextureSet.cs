@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
         private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
         private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
-        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<ITextureSetGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
         {
             var result = new RecordAnalyzerResult();
 

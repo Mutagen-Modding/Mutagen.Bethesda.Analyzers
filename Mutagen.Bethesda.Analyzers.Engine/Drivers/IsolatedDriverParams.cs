@@ -4,15 +4,17 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
 {
-    public interface IIsolatedDriverParams
+    public readonly struct IsolatedDriverParams
     {
-        ILinkCache LinkCache { get; init; }
-        IReportDropbox ReportDropbox { get; init; }
-        IModGetter TargetMod { get; init; }
-    }
+        public readonly ILinkCache LinkCache;
+        public readonly IReportDropbox ReportDropbox;
+        public readonly IModGetter TargetMod;
 
-    public record IsolatedDriverParams(
-        ILinkCache LinkCache,
-        IReportDropbox ReportDropbox,
-        IModGetter TargetMod) : IIsolatedDriverParams;
+        public IsolatedDriverParams(ILinkCache linkCache, IReportDropbox reportDropbox, IModGetter targetMod)
+        {
+            LinkCache = linkCache;
+            ReportDropbox = reportDropbox;
+            TargetMod = targetMod;
+        }
+    }
 }

@@ -2,12 +2,13 @@
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
 {
-    public interface IIsolatedRecordAnalyzerParams<out TMajor>
-        where TMajor : IMajorRecordGetter
+    public readonly struct IsolatedRecordAnalyzerParams<TMajor>
     {
-        public TMajor Record { get; }
-    }
+        public readonly TMajor Record;
 
-    public record IsolatedRecordAnalyzerParams<TMajor>(TMajor Record) : IIsolatedRecordAnalyzerParams<TMajor>
-        where TMajor : IMajorRecordGetter;
+        public IsolatedRecordAnalyzerParams(TMajor @record)
+        {
+            Record = record;
+        }
+    }
 }
