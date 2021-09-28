@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             IModGetter modGetter,
             IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
-            IModDriverProvider<IIsolatedDriver> driverProvider)
+            IDriverProvider<IIsolatedDriver> driverProvider)
         {
             driverProvider.Drivers.Returns(drivers);
             var engine = new IsolatedEngine(driverProvider);
@@ -38,8 +38,8 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             IModGetter modB,
             IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
-            IModDriverProvider<IContextualDriver> contextualProvider,
-            IModDriverProvider<IIsolatedDriver> isolatedProvider)
+            IDriverProvider<IContextualDriver> contextualProvider,
+            IDriverProvider<IIsolatedDriver> isolatedProvider)
         {
             isolatedProvider.Drivers.Returns(drivers);
             var engine = new ContextualEngine(
@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             IModGetter modB,
             IReportDropbox reportDropbox,
             IContextualDriver[] drivers,
-            IModDriverProvider<IContextualDriver> contextualProvider,
-            IModDriverProvider<IIsolatedDriver> isolatedProvider)
+            IDriverProvider<IContextualDriver> contextualProvider,
+            IDriverProvider<IIsolatedDriver> isolatedProvider)
         {
             contextualProvider.Drivers.Returns(drivers);
             var engine = new ContextualEngine(

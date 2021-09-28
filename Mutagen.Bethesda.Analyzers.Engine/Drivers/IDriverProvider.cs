@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
 {
-    public interface IModDriverProvider<TDriver>
+    public interface IDriverProvider<TDriver>
         where TDriver : IDriver
     {
         IEnumerable<TDriver> Drivers { get; }
     }
 
-    public class InjectionDriverProvider<TDriver> : IModDriverProvider<TDriver>
+    public class InjectionDriverProvider<TDriver> : IDriverProvider<TDriver>
         where TDriver : IDriver
     {
         public IEnumerable<TDriver> Drivers { get; }

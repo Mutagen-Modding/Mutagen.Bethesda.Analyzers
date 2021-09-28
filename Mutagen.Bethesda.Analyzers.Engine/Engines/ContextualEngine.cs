@@ -12,12 +12,12 @@ namespace Mutagen.Bethesda.Analyzers.Engines
         private readonly IIsolatedDriver[] _isolatedModDrivers;
 
         public ContextualEngine(
-            IModDriverProvider<IContextualDriver> contextualModDrivers,
-            IModDriverProvider<IIsolatedDriver> isolatedModDrivers)
+            IDriverProvider<IContextualDriver> contextualDrivers,
+            IDriverProvider<IIsolatedDriver> isolatedDrivers)
         {
-            _contextualModDrivers = contextualModDrivers.Drivers
+            _contextualModDrivers = contextualDrivers.Drivers
                 .ToArray();
-            _isolatedModDrivers = isolatedModDrivers.Drivers
+            _isolatedModDrivers = isolatedDrivers.Drivers
                 .ToArray();
         }
 

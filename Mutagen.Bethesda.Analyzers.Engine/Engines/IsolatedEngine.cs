@@ -9,9 +9,9 @@ namespace Mutagen.Bethesda.Analyzers.Engines
     {
         private readonly IIsolatedDriver[] _drivers;
 
-        public IsolatedEngine(IModDriverProvider<IIsolatedDriver> isolatedModDrivers)
+        public IsolatedEngine(IDriverProvider<IIsolatedDriver> isolatedDrivers)
         {
-            _drivers = isolatedModDrivers.Drivers
+            _drivers = isolatedDrivers.Drivers
                 .ToArray();
         }
 

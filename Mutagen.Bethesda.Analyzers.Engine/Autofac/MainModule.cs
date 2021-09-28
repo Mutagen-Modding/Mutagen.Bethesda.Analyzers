@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
                 .AsImplementedInterfaces()
                 .AsSelf();
             builder.RegisterGeneric(typeof(InjectionDriverProvider<>))
-                .As(typeof(IModDriverProvider<>))
+                .As(typeof(IDriverProvider<>))
                 .SingleInstance();
         }
     }
