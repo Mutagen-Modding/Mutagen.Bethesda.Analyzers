@@ -1,28 +1,24 @@
 ﻿using System.Linq;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
-using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Engines
 {
     public class IsolatedEngine
     {
-        private readonly IDriver[] _drivers;
+        private readonly IIsolatedDriver[] _drivers;
 
-        public IsolatedEngine(IModDriverProvider modDrivers)
+        public IsolatedEngine(IModDriverProvider<IIsolatedDriver> isolatedModDrivers)
         {
-            _drivers = modDrivers.Drivers
+            _drivers = isolatedModDrivers.Drivers
                 .ToArray();
         }
 
         public void RunOn(IModGetter modGetter, IReportDropbox reportDropbox)
         {
-            var lo = new LoadOrder<IModListing<IModGetter>>();
-            lo.Add(new ModListing<IModGetter>(modGetter));
-            var driverParams = new DriverParams(
+            var driverParams = new IsolatedDriverParams(
                 modGetter.ToUntypedImmutableLinkCache(),
-                lo,
                 reportDropbox,
                 modGetter);
             foreach (var driver in _drivers)

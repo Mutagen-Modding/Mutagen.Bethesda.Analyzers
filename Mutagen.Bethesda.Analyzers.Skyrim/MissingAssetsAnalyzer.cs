@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 
         private void CheckForMissingModelAsset<TMajorRecordGetter>(
             TMajorRecordGetter modeledGetter,
-            MajorRecordAnalyzerResult result,
+            RecordAnalyzerResult result,
             TopicDefinition<string> topicDefinition)
             where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
         {
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
             result.AddTopic(error);
         }
 
-        private void CheckForMissingAsset(string? path, MajorRecordAnalyzerResult result, Func<RecordTopic> func)
+        private void CheckForMissingAsset(string? path, RecordAnalyzerResult result, Func<RecordTopic> func)
         {
             if (path == null) return;
             if (FileExists(path)) return;

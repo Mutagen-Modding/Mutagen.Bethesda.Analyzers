@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
         public void Dropoff(
             IModGetter sourceMod,
             IMajorRecordCommonGetter majorRecord,
-            MajorRecordAnalyzerResult? result)
+            RecordAnalyzerResult? result)
         {
             if (result == null || result.Topics.Count == 0) return;
             System.Console.WriteLine($"{sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");

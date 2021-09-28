@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
     {
         public static readonly TopicDefinition<string, string?> MissingArmorModel = MutagenTopicBuilder.FromDiscussion(
                 82,
@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string, string?>("Missing {0} model file at {1}");
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IArmorGetter> param)
         {
-            var result = new MajorRecordAnalyzerResult();
+            var result = new RecordAnalyzerResult();
 
             var femaleFile = param.Record.WorldModel?.Female?.Model?.File;
             CheckForMissingAsset(femaleFile, result, () => RecordTopic.Create(param.Record,

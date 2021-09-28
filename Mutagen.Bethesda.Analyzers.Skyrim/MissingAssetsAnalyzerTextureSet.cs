@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<ITextureSetGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSetGetter>
     {
         public static readonly TopicDefinition<string, string?> MissingTextureInTextureSet = MutagenTopicBuilder.FromDiscussion(
                 91,
@@ -22,9 +22,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
         private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
         private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<ITextureSetGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<ITextureSetGetter> param)
         {
-            var result = new MajorRecordAnalyzerResult();
+            var result = new RecordAnalyzerResult();
 
             CheckForMissingAsset(param.Record.Diffuse, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse), x => x.Diffuse!));
             CheckForMissingAsset(param.Record.NormalOrGloss, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss), x => x.NormalOrGloss!));

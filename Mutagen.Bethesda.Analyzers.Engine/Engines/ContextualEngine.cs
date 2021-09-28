@@ -8,19 +8,27 @@ namespace Mutagen.Bethesda.Analyzers.Engines
 {
     public class ContextualEngine
     {
-        private readonly IDriver[] _drivers;
+        private readonly IContextualDriver[] _contextualModDrivers;
+        private readonly IIsolatedDriver[] _isolatedModDrivers;
 
-        public ContextualEngine(IModDriverProvider modDrivers)
+        public ContextualEngine(
+            IModDriverProvider<IContextualDriver> contextualModDrivers,
+            IModDriverProvider<IIsolatedDriver> isolatedModDrivers)
         {
-            _drivers = modDrivers.Drivers
+            _contextualModDrivers = contextualModDrivers.Drivers
+                .ToArray();
+            _isolatedModDrivers = isolatedModDrivers.Drivers
                 .ToArray();
         }
 
         public void RunOn(ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder, IReportDropbox reportDropbox)
         {
-            var param = new DriverParams(
+            var contextualParam = new ContextualDriverParams(
                 loadOrder.ToUntypedImmutableLinkCache(),
                 loadOrder,
+                reportDropbox);
+            var isolatedParam = new IsolatedDriverParams(
+                loadOrder.ToUntypedImmutableLinkCache(),
                 reportDropbox,
                 null!);
 
@@ -28,11 +36,16 @@ namespace Mutagen.Bethesda.Analyzers.Engines
             {
                 if (listing.Mod == null) continue;
 
-                param = param with { TargetMod = listing.Mod };
-                foreach (var driver in _drivers)
+                isolatedParam = isolatedParam with { TargetMod = listing.Mod };
+                foreach (var driver in _isolatedModDrivers)
                 {
-                    driver.Drive(param);
+                    driver.Drive(isolatedParam);
                 }
+            }
+
+            foreach (var driver in _contextualModDrivers)
+            {
+                driver.Drive(contextualParam);
             }
         }
     }

@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IHeadPartGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGetter>
     {
         public static readonly TopicDefinition<string> MissingHeadPartModel = MutagenTopicBuilder.FromDiscussion(
                 87,
@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.CTD)
             .WithFormatting<int, string?>("Missing file for Head Part Part {0} at {1}");
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IHeadPartGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IHeadPartGetter> param)
         {
-            var res = new MajorRecordAnalyzerResult();
+            var res = new RecordAnalyzerResult();
 
             CheckForMissingModelAsset(param.Record, res, MissingHeadPartModel);
 

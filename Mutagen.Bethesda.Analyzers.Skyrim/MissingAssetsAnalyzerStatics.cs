@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IStaticGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGetter>
     {
         public static readonly TopicDefinition<string> MissingStaticModel = MutagenTopicBuilder.FromDiscussion(
                 90,
@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string>(MissingModelFileMessageFormat);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IStaticGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IIsolatedRecordAnalyzerParams<IStaticGetter> param)
         {
-            var res = new MajorRecordAnalyzerResult();
+            var res = new RecordAnalyzerResult();
             CheckForMissingModelAsset(param.Record, res, MissingStaticModel);
             return res;
         }
