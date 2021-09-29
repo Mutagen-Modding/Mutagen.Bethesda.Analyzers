@@ -1,13 +1,12 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting.Console;
-using Mutagen.Bethesda.Environments;
-using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Analyzers.Skyrim;
+using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Cli
 {
@@ -25,13 +24,15 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             builder.RegisterModule<ReflectionDriverModule>();
             builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
                 .AsImplementedInterfaces();
+            builder.RegisterInstance(new GameReleaseInjection(GameRelease.SkyrimSE))
+                .AsImplementedInterfaces();
+
             var container = builder.Build();
 
             var engine = container.Resolve<ContextualEngine>();
             var reporter = container.Resolve<ConsoleReporter>();
 
-            using var env = GameEnvironment.Typical.Skyrim(SkyrimRelease.SkyrimSE);
-            engine.RunOn(env.LoadOrder, reporter);
+            engine.Run(reporter);
         }
     }
 }
