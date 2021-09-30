@@ -3,41 +3,21 @@ using System.Linq;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Analyzers.Drivers
+namespace Mutagen.Bethesda.Analyzers.Drivers.Records
 {
-    public class ByGenericTypeDriver<TMajor> : IIsolatedDriver, IContextualDriver
+    public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
         where TMajor : class, IMajorRecordGetter
     {
-        private readonly IIsolatedRecordAnalyzer<TMajor>[] _isolatedRecordAnalyzers;
         private readonly IContextualRecordAnalyzer<TMajor>[] _contextualRecordAnalyzers;
 
-        public bool Applicable => _isolatedRecordAnalyzers.Length > 0
-            || _contextualRecordAnalyzers.Length > 0;
+        public bool Applicable => _contextualRecordAnalyzers.Length > 0;
 
-        public IEnumerable<IAnalyzer> Analyzers => _isolatedRecordAnalyzers
-            .Concat<IAnalyzer>(_contextualRecordAnalyzers);
+        public IEnumerable<IAnalyzer> Analyzers => _contextualRecordAnalyzers;
 
-        public ByGenericTypeDriver(
-            IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers,
+        public ByGenericTypeRecordContextualDriver(
             IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers)
         {
-            _isolatedRecordAnalyzers = isolatedRecordAnalyzers;
             _contextualRecordAnalyzers = contextualRecordAnalyzers;
-        }
-
-        public void Drive(IsolatedDriverParams driverParams)
-        {
-            foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
-            {
-                var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(rec);
-                foreach (var analyzer in _isolatedRecordAnalyzers)
-                {
-                    driverParams.ReportDropbox.Dropoff(
-                        driverParams.TargetMod,
-                        rec,
-                        analyzer.AnalyzeRecord(isolatedParam));
-                }
-            }
         }
 
         public void Drive(ContextualDriverParams driverParams)
