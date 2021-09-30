@@ -6,6 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     {
         string Id { get; }
         string Title { get; }
+        string MessageFormat { get; }
         Severity Severity { get; }
         Uri? InformationUri { get; }
     }

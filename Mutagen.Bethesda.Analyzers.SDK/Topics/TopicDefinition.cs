@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         string Id,
         string Title,
         Severity Severity,
-        string? Message = null,
+        string? MessageFormat = null,
         Uri? InformationUri = null) : ITopicDefinition
     {
         public static TopicDefinition FromDiscussion(
@@ -24,11 +24,11 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
                 InformationUri: new Uri($"{discussionsUri.TrimEnd('/')}/{id.ToString()}"));
         }
 
-        public FormattedTopicDefinition Format()
+        public IFormattedTopicDefinition Format()
         {
             return new FormattedTopicDefinition(
                 this,
-                Message ?? Title);
+                MessageFormat ?? Title);
         }
 
         public override string ToString() => this.ToShortString();
@@ -42,11 +42,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         Severity Severity,
         Uri? InformationUri = null) : ITopicDefinition
     {
-        public FormattedTopicDefinition Format(T1 item1)
+        public IFormattedTopicDefinition Format(T1 item1)
         {
-            return new FormattedTopicDefinition(
-                this,
-                string.Format(MessageFormat, item1));
+            return new FormattedTopicDefinition<T1>(this, item1);
         }
 
         public override string ToString() => this.ToShortString();
@@ -60,11 +58,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         Severity Severity,
         Uri? InformationUri = null) : ITopicDefinition
     {
-        public FormattedTopicDefinition Format(T1 item1, T2 item2)
+        public IFormattedTopicDefinition Format(T1 item1, T2 item2)
         {
-            return new FormattedTopicDefinition(
-                this,
-                string.Format(MessageFormat, item1, item2));
+            return new FormattedTopicDefinition<T1, T2>(this, item1, item2);
         }
 
         public override string ToString() => this.ToShortString();
@@ -78,11 +74,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         Severity Severity,
         Uri? InformationUri = null) : ITopicDefinition
     {
-        public FormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3)
+        public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3)
         {
-            return new FormattedTopicDefinition(
-                this,
-                string.Format(MessageFormat, item1, item2, item3));
+            return new FormattedTopicDefinition<T1, T2, T3>(this, item1, item2, item3);
         }
 
         public override string ToString() => this.ToShortString();
@@ -96,11 +90,10 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         Severity Severity,
         Uri? InformationUri = null) : ITopicDefinition
     {
-        public FormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3, T4 item4)
+        public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3, T4 item4)
         {
-            return new FormattedTopicDefinition(
-                this,
-                string.Format(MessageFormat, item1, item2, item3, item4));
+            return new FormattedTopicDefinition<T1, T2, T3, T4>(
+                this, item1, item2, item3, item4);
         }
 
         public override string ToString() => this.ToShortString();
