@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Plugins;
@@ -6,10 +7,17 @@ using Mutagen.Bethesda.Plugins.Records.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Engines
 {
-    public class IsolatedEngine
+    public interface IIsolatedEngine : IEngine
+    {
+        void RunOn(ModPath modPath, IReportDropbox reportDropbox);
+    }
+
+    public class IsolatedEngine : IIsolatedEngine
     {
         public IModImporter ModImporter { get; }
         public IDriverProvider<IIsolatedDriver> IsolatedDrivers { get; }
+
+        public IEnumerable<IDriver> Drivers => IsolatedDrivers.Drivers;
 
         public IsolatedEngine(
             IModImporter modImporter,

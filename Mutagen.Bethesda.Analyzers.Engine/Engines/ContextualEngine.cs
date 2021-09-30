@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
@@ -6,7 +7,7 @@ using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Engines
 {
-    public interface IContextualEngine
+    public interface IContextualEngine : IEngine
     {
         void Run(IReportDropbox reportDropbox);
     }
@@ -17,6 +18,9 @@ namespace Mutagen.Bethesda.Analyzers.Engines
         public IDataDirectoryProvider DataDirectoryProvider { get; }
         public IDriverProvider<IContextualDriver> ContextualModDrivers { get; }
         public IDriverProvider<IIsolatedDriver> IsolatedModDrivers { get; }
+
+        public IEnumerable<IDriver> Drivers => ContextualModDrivers.Drivers
+            .Concat<IDriver>(IsolatedModDrivers.Drivers);
 
         public ContextualEngine(
             IGameEnvironmentProvider envGetter,
