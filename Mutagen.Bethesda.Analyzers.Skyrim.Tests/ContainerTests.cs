@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
 
             var drivers = container.Resolve<IIsolatedDriver[]>();
             drivers
-                .Any(x => typeof(ByTypeDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
+                .Any(x => typeof(ByGenericTypeDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
                 .Should().BeTrue();
         }
     }

@@ -3,15 +3,16 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
 {
-    public class ByTypeDriver<TMajor> : IIsolatedDriver, IContextualDriver
+    public class ByGenericTypeDriver<TMajor> : IIsolatedDriver, IContextualDriver
         where TMajor : class, IMajorRecordGetter
     {
         private readonly IIsolatedRecordAnalyzer<TMajor>[] _isolatedRecordAnalyzers;
         private readonly IContextualRecordAnalyzer<TMajor>[] _contextualRecordAnalyzers;
 
-        public bool Applicable => _isolatedRecordAnalyzers.Length > 0;
+        public bool Applicable => _isolatedRecordAnalyzers.Length > 0
+            || _contextualRecordAnalyzers.Length > 0;
 
-        public ByTypeDriver(
+        public ByGenericTypeDriver(
             IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers,
             IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers)
         {
