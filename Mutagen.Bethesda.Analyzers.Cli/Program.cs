@@ -14,6 +14,16 @@ namespace Mutagen.Bethesda.Analyzers.Cli
     {
         static void Main(string[] args)
         {
+            var container = GetContainer();
+
+            var engine = container.Resolve<ContextualEngine>();
+            var reporter = container.Resolve<ConsoleReporter>();
+
+            engine.Run(reporter);
+        }
+
+        private static IContainer GetContainer()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterInstance(new FileSystem())
                 .As<IFileSystem>();
@@ -27,12 +37,7 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             builder.RegisterInstance(new GameReleaseInjection(GameRelease.SkyrimSE))
                 .AsImplementedInterfaces();
 
-            var container = builder.Build();
-
-            var engine = container.Resolve<ContextualEngine>();
-            var reporter = container.Resolve<ConsoleReporter>();
-
-            engine.Run(reporter);
+            return builder.Build();
         }
     }
 }

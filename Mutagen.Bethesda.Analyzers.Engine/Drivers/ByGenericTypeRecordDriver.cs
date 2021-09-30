@@ -1,4 +1,6 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers
@@ -11,6 +13,9 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
 
         public bool Applicable => _isolatedRecordAnalyzers.Length > 0
             || _contextualRecordAnalyzers.Length > 0;
+
+        public IEnumerable<IAnalyzer> Analyzers => _isolatedRecordAnalyzers
+            .Concat<IAnalyzer>(_contextualRecordAnalyzers);
 
         public ByGenericTypeDriver(
             IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers,
