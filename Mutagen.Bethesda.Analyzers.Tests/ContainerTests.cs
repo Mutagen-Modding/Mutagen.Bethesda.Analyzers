@@ -13,6 +13,8 @@ namespace Mutagen.Bethesda.Analyzers.Tests
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<TestModule>();
+            builder.RegisterInstance(new GameReleaseInjection(GameRelease.SkyrimSE))
+                .AsImplementedInterfaces();
             var container = builder.Build();
 
             container.Resolve<IsolatedEngine>();

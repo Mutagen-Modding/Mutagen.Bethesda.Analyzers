@@ -1,12 +1,15 @@
 ﻿using System;
+using System.IO;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.DI;
 using NSubstitute;
 using Xunit;
 
@@ -16,21 +19,23 @@ namespace Mutagen.Bethesda.Analyzers.Tests
     {
         [Theory, NSubData]
         public void IsolatedEngineCallsRecordAnalyzers(
+            ModPath modPath,
             IModGetter modGetter,
             IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
-            IDriverProvider<IIsolatedDriver> driverProvider)
+            IsolatedEngine sut)
         {
-            driverProvider.Drivers.Returns(drivers);
-            var engine = new IsolatedEngine(driverProvider);
+            sut.IsolatedDrivers.Drivers.Returns(drivers);
+            sut.ModImporter.Import(modPath).Returns(modGetter);
 
-            engine.RunOn(modGetter, reportDropbox);
+            sut.RunOn(modPath, reportDropbox);
 
             foreach (var driver in drivers)
             {
                 driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
-                         && x.TargetMod == modGetter));
+                         && x.TargetMod == modGetter
+                         && x.TargetModPath == modPath));
             }
         }
 
@@ -41,33 +46,31 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
             IGameEnvironmentState gameEnv,
-            IGameEnvironmentProvider gameEnvironmentProvider,
-            IDriverProvider<IContextualDriver> contextualProvider,
-            IDriverProvider<IIsolatedDriver> isolatedProvider)
+            ContextualEngine sut)
         {
             var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
             loadOrder.Add(new ModListing<IModGetter>(modA));
             loadOrder.Add(new ModListing<IModGetter>(modB));
 
             gameEnv.LoadOrder.Returns(loadOrder);
-            gameEnvironmentProvider.Construct().ReturnsForAnyArgs(gameEnv);
-            isolatedProvider.Drivers.Returns(drivers);
+            sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
+            sut.IsolatedModDrivers.Drivers.Returns(drivers);
 
-            var engine = new ContextualEngine(
-                gameEnvironmentProvider,
-                contextualProvider,
-                isolatedProvider);
+            sut.Run(reportDropbox);
 
-            engine.Run(reportDropbox);
+            var modAPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modA.ModKey.FileName));
+            var modBPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modB.ModKey.FileName));
 
             foreach (var driver in drivers)
             {
                 driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
-                         && x.TargetMod == modA));
+                         && x.TargetMod == modA
+                         && x.TargetModPath == modAPath));
                 driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
-                         && x.TargetMod == modB));
+                         && x.TargetMod == modB
+                         && x.TargetModPath == modBPath));
             }
         }
 
@@ -79,23 +82,17 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             IContextualDriver[] drivers,
             IGameEnvironmentState gameEnv,
             IGameEnvironmentProvider gameEnvironmentProvider,
-            IDriverProvider<IContextualDriver> contextualProvider,
-            IDriverProvider<IIsolatedDriver> isolatedProvider)
+            ContextualEngine sut)
         {
             var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
             loadOrder.Add(new ModListing<IModGetter>(modA));
             loadOrder.Add(new ModListing<IModGetter>(modB));
 
             gameEnv.LoadOrder.Returns(loadOrder);
-            gameEnvironmentProvider.Construct().ReturnsForAnyArgs(gameEnv);
-            contextualProvider.Drivers.Returns(drivers);
+            sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
+            sut.ContextualModDrivers.Drivers.Returns(drivers);
 
-            var engine = new ContextualEngine(
-                gameEnvironmentProvider,
-                contextualProvider,
-                isolatedProvider);
-
-            engine.Run(reportDropbox);
+            sut.Run(reportDropbox);
 
             foreach (var driver in drivers)
             {
