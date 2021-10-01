@@ -11,7 +11,7 @@
 
     <ItemGroup>
       <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-      <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.32.0.1-dev" />
+      <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.33.1-pr001" />
     </ItemGroup>
 
     <ItemGroup>
