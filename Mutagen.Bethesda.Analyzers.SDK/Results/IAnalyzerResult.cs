@@ -8,7 +8,5 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Results
     public interface IAnalyzerResult<TError> where TError : ITopic
     {
         IReadOnlyCollection<TError> Topics { get; }
-
-        void AddTopic(TError error);
     }
 }

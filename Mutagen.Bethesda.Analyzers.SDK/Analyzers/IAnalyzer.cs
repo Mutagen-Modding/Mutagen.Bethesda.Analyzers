@@ -1,11 +1,12 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
 {
     [PublicAPI]
     public interface IAnalyzer
     {
-        string Author { get; }
-        string Description { get; }
+        IEnumerable<ITopicDefinition> Topics { get; }
     }
 }

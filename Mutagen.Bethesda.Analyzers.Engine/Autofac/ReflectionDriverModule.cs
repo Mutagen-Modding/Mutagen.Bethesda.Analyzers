@@ -1,7 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using Autofac;
 using Loqui;
 using Mutagen.Bethesda.Analyzers.Drivers;
+using Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
+using Mutagen.Bethesda.Analyzers.Drivers.Records;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Noggog;
 
@@ -12,14 +14,20 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
         protected override void Load(ContainerBuilder builder)
         {
             foreach (var analyzerType in TypeExt.GetInheritingFromGenericInterface(
-                    typeof(IRecordAnalyzer<>),
+                    typeof(IIsolatedRecordAnalyzer<>),
                     loadAssemblies: true)
                 .Select(x => x.Key.GetGenericArguments()[0])
                 .Select(x => LoquiRegistration.GetRegister(x).GetterType)
                 .Distinct())
             {
-                builder.RegisterType(typeof(ByTypeDriver<>).MakeGenericType(analyzerType))
-                    .As<IDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordIsolatedDriver<>).MakeGenericType(analyzerType))
+                    .As<IIsolatedDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordContextualDriver<>).MakeGenericType(analyzerType))
+                    .As<IContextualDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordFrameIsolatedDriver<>).MakeGenericType(analyzerType))
+                    .As<IIsolatedRecordFrameAnalyzerDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordFrameContextualDriver<>).MakeGenericType(analyzerType))
+                    .As<IContextualRecordFrameAnalyzerDriver>();
             }
         }
     }

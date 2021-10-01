@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IWeaponGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGetter>
     {
         public static readonly TopicDefinition<string> MissingWeaponModel = MutagenTopicBuilder.FromDiscussion(
                 92,
@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string>(MissingModelFileMessageFormat);
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IWeaponGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IWeaponGetter> param)
         {
-            var res = new MajorRecordAnalyzerResult();
+            var res = new RecordAnalyzerResult();
             CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
             return res;
         }

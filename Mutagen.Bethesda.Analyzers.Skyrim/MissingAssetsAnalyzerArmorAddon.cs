@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim
 {
-    public partial class MissingAssetsAnalyzer : IRecordAnalyzer<IArmorAddonGetter>
+    public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddonGetter>
     {
         public static readonly TopicDefinition<string, string?> MissingArmorAddonWorldModel = MutagenTopicBuilder.FromDiscussion(
                 84,
@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                 Severity.Error)
             .WithFormatting<string, string?>("Missing {0} 1st Person Armor Addon Model file at {1}");
 
-        public MajorRecordAnalyzerResult AnalyzeRecord(IRecordAnalyzerParams<IArmorAddonGetter> param)
+        public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorAddonGetter> param)
         {
-            var res = new MajorRecordAnalyzerResult();
+            var res = new RecordAnalyzerResult();
 
             var femaleWorldModel = param.Record.WorldModel?.Female?.File;
             CheckForMissingAsset(femaleWorldModel, res, () => RecordTopic.Create(

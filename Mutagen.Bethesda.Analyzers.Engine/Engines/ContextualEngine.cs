@@ -1,38 +1,73 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
-using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Engines
 {
-    public class ContextualEngine
+    public interface IContextualEngine : IEngine
     {
-        private readonly IDriver[] _drivers;
+        void Run(IReportDropbox reportDropbox);
+    }
 
-        public ContextualEngine(IModDriverProvider modDrivers)
+    public class ContextualEngine : IContextualEngine
+    {
+        public IGameEnvironmentProvider EnvGetter { get; }
+        public IDataDirectoryProvider DataDirectoryProvider { get; }
+        public IDriverProvider<IContextualDriver> ContextualModDrivers { get; }
+        public IDriverProvider<IIsolatedDriver> IsolatedModDrivers { get; }
+
+        public IEnumerable<IDriver> Drivers => ContextualModDrivers.Drivers
+            .Concat<IDriver>(IsolatedModDrivers.Drivers);
+
+        public ContextualEngine(
+            IGameEnvironmentProvider envGetter,
+            IDataDirectoryProvider dataDataDirectoryProvider,
+            IDriverProvider<IContextualDriver> contextualDrivers,
+            IDriverProvider<IIsolatedDriver> isolatedDrivers)
         {
-            _drivers = modDrivers.Drivers
-                .ToArray();
+            EnvGetter = envGetter;
+            DataDirectoryProvider = dataDataDirectoryProvider;
+            ContextualModDrivers = contextualDrivers;
+            IsolatedModDrivers = isolatedDrivers;
         }
 
-        public void RunOn(ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder, IReportDropbox reportDropbox)
+        public void Run(IReportDropbox reportDropbox)
         {
-            var param = new DriverParams(
-                loadOrder.ToUntypedImmutableLinkCache(),
-                loadOrder,
-                reportDropbox,
-                null!);
+            using var env = EnvGetter.Construct();
 
-            foreach (var listing in loadOrder.ListedOrder)
+            var contextualParam = new ContextualDriverParams(
+                env.LinkCache,
+                env.LoadOrder,
+                reportDropbox);
+
+            var isolatedDrivers = IsolatedModDrivers.Drivers;
+            if (isolatedDrivers.Count > 0)
             {
-                if (listing.Mod == null) continue;
-
-                param = param with { TargetMod = listing.Mod };
-                foreach (var driver in _drivers)
+                foreach (var listing in env.LoadOrder.ListedOrder)
                 {
-                    driver.Drive(param);
+                    if (listing.Mod == null) continue;
+
+                    var modPath = Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName);
+
+                    var isolatedParam = new IsolatedDriverParams(
+                        listing.Mod.ToUntypedImmutableLinkCache(),
+                        reportDropbox,
+                        listing.Mod,
+                        modPath);
+
+                    foreach (var driver in IsolatedModDrivers.Drivers)
+                    {
+                        driver.Drive(isolatedParam);
+                    }
                 }
+            }
+
+            foreach (var driver in ContextualModDrivers.Drivers)
+            {
+                driver.Drive(contextualParam);
             }
         }
     }

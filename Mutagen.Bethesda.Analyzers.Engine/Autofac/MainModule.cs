@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Autofac;
 
@@ -11,7 +12,11 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
             builder.RegisterModule<MutagenModule>();
             builder.RegisterAssemblyTypes(typeof(IsolatedEngine).Assembly)
                 .AsImplementedInterfaces()
-                .AsSelf();
+                .AsSelf()
+                .SingleInstance();
+            builder.RegisterGeneric(typeof(InjectionDriverProvider<>))
+                .As(typeof(IDriverProvider<>))
+                .SingleInstance();
         }
     }
 }

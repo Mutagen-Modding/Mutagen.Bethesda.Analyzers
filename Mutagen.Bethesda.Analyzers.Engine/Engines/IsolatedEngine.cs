@@ -1,31 +1,42 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
-using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Engines
 {
-    public class IsolatedEngine
+    public interface IIsolatedEngine : IEngine
     {
-        private readonly IDriver[] _drivers;
+        void RunOn(ModPath modPath, IReportDropbox reportDropbox);
+    }
 
-        public IsolatedEngine(IModDriverProvider modDrivers)
+    public class IsolatedEngine : IIsolatedEngine
+    {
+        public IModImporter ModImporter { get; }
+        public IDriverProvider<IIsolatedDriver> IsolatedDrivers { get; }
+
+        public IEnumerable<IDriver> Drivers => IsolatedDrivers.Drivers;
+
+        public IsolatedEngine(
+            IModImporter modImporter,
+            IDriverProvider<IIsolatedDriver> isolatedDrivers)
         {
-            _drivers = modDrivers.Drivers
-                .ToArray();
+            ModImporter = modImporter;
+            IsolatedDrivers = isolatedDrivers;
         }
 
-        public void RunOn(IModGetter modGetter, IReportDropbox reportDropbox)
+        public void RunOn(ModPath modPath, IReportDropbox reportDropbox)
         {
-            var lo = new LoadOrder<IModListing<IModGetter>>();
-            lo.Add(new ModListing<IModGetter>(modGetter));
-            var driverParams = new DriverParams(
-                modGetter.ToUntypedImmutableLinkCache(),
-                lo,
+            var mod = ModImporter.Import(modPath);
+
+            var driverParams = new IsolatedDriverParams(
+                mod.ToUntypedImmutableLinkCache(),
                 reportDropbox,
-                modGetter);
-            foreach (var driver in _drivers)
+                mod,
+                modPath);
+
+            foreach (var driver in IsolatedDrivers.Drivers)
             {
                 driver.Drive(driverParams);
             }

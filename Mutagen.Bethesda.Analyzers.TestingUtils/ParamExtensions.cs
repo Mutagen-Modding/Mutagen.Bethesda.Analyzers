@@ -5,13 +5,10 @@ namespace Mutagen.Bethesda.Analyzers.TestingUtils
 {
     public static class ParamExtensions
     {
-        public static IRecordAnalyzerParams<TMajor> AsBasicParams<TMajor>(this TMajor maj)
+        public static IsolatedRecordAnalyzerParams<TMajor> AsIsolatedParams<TMajor>(this TMajor maj)
             where TMajor : IMajorRecordGetter
         {
-            return new RecordAnalyzerParams<TMajor>(null!, null!)
-            {
-                Record = maj
-            };
+            return new IsolatedRecordAnalyzerParams<TMajor>(maj);
         }
     }
 }

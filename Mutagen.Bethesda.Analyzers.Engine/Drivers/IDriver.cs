@@ -1,8 +1,11 @@
-﻿namespace Mutagen.Bethesda.Analyzers.Drivers
+﻿using System.Collections.Generic;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+
+namespace Mutagen.Bethesda.Analyzers.Drivers
 {
     public interface IDriver
     {
         bool Applicable { get; }
-        void Drive(DriverParams driverParams);
+        public IEnumerable<IAnalyzer> Analyzers { get; }
     }
 }
