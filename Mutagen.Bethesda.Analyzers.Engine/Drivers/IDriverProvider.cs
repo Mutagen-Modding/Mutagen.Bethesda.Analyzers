@@ -6,13 +6,13 @@ namespace Mutagen.Bethesda.Analyzers.Drivers
     public interface IDriverProvider<TDriver>
         where TDriver : IDriver
     {
-        IEnumerable<TDriver> Drivers { get; }
+        IReadOnlyCollection<TDriver> Drivers { get; }
     }
 
     public class InjectionDriverProvider<TDriver> : IDriverProvider<TDriver>
         where TDriver : IDriver
     {
-        public IEnumerable<TDriver> Drivers { get; }
+        public IReadOnlyCollection<TDriver> Drivers { get; }
 
         public InjectionDriverProvider(IEnumerable<TDriver> drivers)
         {

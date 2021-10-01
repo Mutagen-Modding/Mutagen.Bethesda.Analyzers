@@ -43,19 +43,25 @@ namespace Mutagen.Bethesda.Analyzers.Engines
                 env.LoadOrder,
                 reportDropbox);
 
-            foreach (var listing in env.LoadOrder.ListedOrder)
+            var isolatedDrivers = IsolatedModDrivers.Drivers;
+            if (isolatedDrivers.Count > 0)
             {
-                if (listing.Mod == null) continue;
-
-                var isolatedParam = new IsolatedDriverParams(
-                    listing.Mod.ToUntypedImmutableLinkCache(),
-                    reportDropbox,
-                    listing.Mod,
-                    Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName));
-
-                foreach (var driver in IsolatedModDrivers.Drivers)
+                foreach (var listing in env.LoadOrder.ListedOrder)
                 {
-                    driver.Drive(isolatedParam);
+                    if (listing.Mod == null) continue;
+
+                    var modPath = Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName);
+
+                    var isolatedParam = new IsolatedDriverParams(
+                        listing.Mod.ToUntypedImmutableLinkCache(),
+                        reportDropbox,
+                        listing.Mod,
+                        modPath);
+
+                    foreach (var driver in IsolatedModDrivers.Drivers)
+                    {
+                        driver.Drive(isolatedParam);
+                    }
                 }
             }
 

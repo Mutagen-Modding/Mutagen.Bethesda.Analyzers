@@ -1,7 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
 using Autofac;
 using Loqui;
 using Mutagen.Bethesda.Analyzers.Drivers;
+using Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 using Mutagen.Bethesda.Analyzers.Drivers.Records;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Noggog;
@@ -23,6 +24,10 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
                     .As<IIsolatedDriver>();
                 builder.RegisterType(typeof(ByGenericTypeRecordContextualDriver<>).MakeGenericType(analyzerType))
                     .As<IContextualDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordFrameIsolatedDriver<>).MakeGenericType(analyzerType))
+                    .As<IIsolatedRecordFrameAnalyzerDriver>();
+                builder.RegisterType(typeof(ByGenericTypeRecordFrameContextualDriver<>).MakeGenericType(analyzerType))
+                    .As<IContextualRecordFrameAnalyzerDriver>();
             }
         }
     }
