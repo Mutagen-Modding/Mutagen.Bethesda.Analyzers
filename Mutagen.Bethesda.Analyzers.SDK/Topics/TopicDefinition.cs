@@ -4,13 +4,27 @@ using JetBrains.Annotations;
 namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
     [PublicAPI]
-    public partial record TopicDefinition(
-        string Id,
-        string Title,
-        Severity Severity,
-        string? MessageFormat = null,
-        Uri? InformationUri = null) : ITopicDefinition
+    public partial record TopicDefinition : ITopicDefinition
     {
+        public string Id { get; init; }
+        public string Title { get; init; }
+        public Severity Severity { get; init; }
+        public string MessageFormat { get; init; }
+        public Uri? InformationUri { get; init; }
+
+        public TopicDefinition(string id,
+            string title,
+            Severity severity,
+            string? messageFormat = null,
+            Uri? informationUri = null)
+        {
+            Id = id;
+            Title = title;
+            Severity = severity;
+            MessageFormat = messageFormat ?? title;
+            InformationUri = informationUri;
+        }
+
         public static TopicDefinition FromDiscussion(
             int id,
             string title,
@@ -18,10 +32,10 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             string discussionsUri)
         {
             return new TopicDefinition(
-                Id: id.ToString(),
-                Title: title,
-                Severity: severity,
-                InformationUri: new Uri($"{discussionsUri.TrimEnd('/')}/{id.ToString()}"));
+                id: id.ToString(),
+                title: title,
+                severity: severity,
+                informationUri: new Uri($"{discussionsUri.TrimEnd('/')}/{id.ToString()}"));
         }
 
         public IFormattedTopicDefinition Format()
