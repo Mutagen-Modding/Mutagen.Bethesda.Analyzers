@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-        <PackageReference Include="Mutagen.Bethesda.Core" Version="0.33.1-pr001" />
-        <PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
+        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+        <PackageReference Include="Mutagen.Bethesda.Core" Version="0.34.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="16.1.4" />
     </ItemGroup>
 
 </Project>
