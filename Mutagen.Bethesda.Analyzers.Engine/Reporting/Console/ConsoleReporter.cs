@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
     {
         public void Dropoff(
             IModGetter sourceMod,
-            IMajorRecordCommonGetter majorRecord,
+            IMajorRecordGetter majorRecord,
             RecordAnalyzerResult? result)
         {
             if (result == null || result.Topics.Count == 0) return;

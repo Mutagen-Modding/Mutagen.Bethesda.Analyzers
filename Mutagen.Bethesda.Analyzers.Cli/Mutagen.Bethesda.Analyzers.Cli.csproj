@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
     </PropertyGroup>
@@ -7,6 +7,6 @@
         <ProjectReference Include="..\Mutagen.Bethesda.Analyzers.Skyrim\Mutagen.Bethesda.Analyzers.Skyrim.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Mutagen.Bethesda" Version="0.34.1" />
+        <PackageReference Include="Mutagen.Bethesda" Version="0.36.1.1-dev" />
     </ItemGroup>
 </Project>

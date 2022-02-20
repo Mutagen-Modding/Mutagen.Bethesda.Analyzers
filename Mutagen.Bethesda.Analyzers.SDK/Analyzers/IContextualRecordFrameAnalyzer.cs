@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
     [PublicAPI]
     public interface IContextualRecordFrameAnalyzer : IAnalyzer
     {
-        bool AcceptsType<TMajor>() where TMajor : IMajorRecordCommonGetter;
+        bool AcceptsType<TMajor>() where TMajor : IMajorRecordGetter;
 
         RecordAnalyzerResult? AnalyzeRecord(ContextualRecordFrameAnalyzerParams param);
     }
