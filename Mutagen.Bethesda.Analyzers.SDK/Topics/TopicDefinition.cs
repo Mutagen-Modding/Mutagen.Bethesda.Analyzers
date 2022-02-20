@@ -6,13 +6,14 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public partial record TopicDefinition : ITopicDefinition
     {
-        public string Id { get; init; }
+        public TopicId Id { get; init; }
         public string Title { get; init; }
         public Severity Severity { get; init; }
         public string MessageFormat { get; init; }
         public Uri? InformationUri { get; init; }
 
-        public TopicDefinition(string id,
+        public TopicDefinition(
+            TopicId id,
             string title,
             Severity severity,
             string? messageFormat = null,
@@ -26,13 +27,14 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         }
 
         public static TopicDefinition FromDiscussion(
-            int id,
+            string nickname,
+            ushort id,
             string title,
             Severity severity,
             string discussionsUri)
         {
             return new TopicDefinition(
-                id: id.ToString(),
+                id: new TopicId(nickname, id),
                 title: title,
                 severity: severity,
                 informationUri: new Uri($"{discussionsUri.TrimEnd('/')}/{id.ToString()}"));
@@ -50,7 +52,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 
     [PublicAPI]
     public record TopicDefinition<T1>(
-        string Id,
+        TopicId Id,
         string Title,
         string MessageFormat,
         Severity Severity,
@@ -66,7 +68,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 
     [PublicAPI]
     public record TopicDefinition<T1, T2>(
-        string Id,
+        TopicId Id,
         string Title,
         string MessageFormat,
         Severity Severity,
@@ -82,7 +84,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 
     [PublicAPI]
     public record TopicDefinition<T1, T2, T3>(
-        string Id,
+        TopicId Id,
         string Title,
         string MessageFormat,
         Severity Severity,
@@ -98,7 +100,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 
     [PublicAPI]
     public record TopicDefinition<T1, T2, T3, T4>(
-        string Id,
+        TopicId Id,
         string Title,
         string MessageFormat,
         Severity Severity,

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
@@ -9,11 +8,10 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Records.DI;
 using NSubstitute;
 using Xunit;
 
-namespace Mutagen.Bethesda.Analyzers.Tests
+namespace Mutagen.Bethesda.Analyzers.Tests.Engine
 {
     public class EngineTests
     {
