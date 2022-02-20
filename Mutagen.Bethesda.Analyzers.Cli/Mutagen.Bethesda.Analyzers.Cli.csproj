@@ -8,5 +8,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Mutagen.Bethesda" Version="0.36.1.1-dev" />
+        <PackageReference Include="CommandLineParser" Version="2.8.0" />
     </ItemGroup>
 </Project>
