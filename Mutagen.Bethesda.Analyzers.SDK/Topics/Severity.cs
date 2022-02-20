@@ -6,10 +6,11 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public enum Severity : byte
     {
-        Suggestion = 0,
-        Warning = 1,
-        Error = 2,
-        CTD = 3
+        Silent = 0,
+        Suggestion = 1,
+        Warning = 2,
+        Error = 3,
+        CTD = 4
     }
 
     public static class SeverityExt
