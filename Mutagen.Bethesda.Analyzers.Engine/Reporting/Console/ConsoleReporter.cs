@@ -11,10 +11,11 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
             RecordAnalyzerResult? result)
         {
             if (result == null || result.Topics.Count == 0) return;
-            System.Console.WriteLine($"{sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
             foreach (var error in result.Topics)
             {
-                System.Console.WriteLine($"  {error.FormattedTopicDefinition}");
+                System.Console.WriteLine($"{error.FormattedTopicDefinition.TopicDefinition}");
+                System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
+                System.Console.WriteLine($"   {error.FormattedTopicDefinition}");
             }
         }
     }

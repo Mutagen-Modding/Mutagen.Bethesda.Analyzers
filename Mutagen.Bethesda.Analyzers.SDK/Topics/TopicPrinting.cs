@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     {
         public static string ToShortString(this ITopicDefinition topic)
         {
-            return $"[{topic.Severity.ToShortString()}] [{topic.Id}] {topic.Title}";
+            return $"[{topic.Id}][{topic.Severity.ToShortString()}] {topic.Title}";
         }
 
         public static void Append(this ITopicDefinition topic, FileGeneration fg)
