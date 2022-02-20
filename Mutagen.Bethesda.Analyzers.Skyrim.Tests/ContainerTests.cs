@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Analyzers.Drivers;
 using FluentAssertions;
 using Mutagen.Bethesda.Analyzers.Drivers.Records;
 using Mutagen.Bethesda.Analyzers.Testing;
+using Mutagen.Bethesda.Environments.DI;
 using Xunit;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
@@ -15,16 +16,17 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<TestModule>();
+            builder.RegisterInstance(new GameReleaseInjection(GameRelease.SkyrimSE)).AsImplementedInterfaces();
             var container = builder.Build();
 
             var drivers = container.Resolve<IIsolatedDriver[]>();
             drivers
-                .Any(x => typeof(ByGenericTypeRecordIsolatedDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
+                .Any(x => x.GetType().IsGenericType && typeof(ByGenericTypeRecordIsolatedDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
                 .Should().BeTrue();
 
             var contextualDrivers = container.Resolve<IContextualDriver[]>();
             contextualDrivers
-                .Any(x => typeof(ByGenericTypeRecordContextualDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
+                .Any(x => x.GetType().IsGenericType && typeof(ByGenericTypeRecordContextualDriver<>).IsAssignableFrom(x.GetType().GetGenericTypeDefinition()))
                 .Should().BeTrue();
         }
     }
