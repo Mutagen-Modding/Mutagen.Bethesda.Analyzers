@@ -3,7 +3,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>9</LangVersion>
+        <LangVersion>default</LangVersion>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     </PropertyGroup>
 
