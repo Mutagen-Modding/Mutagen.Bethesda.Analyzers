@@ -7,6 +7,6 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers
     [PublicAPI]
     public interface IAnalyzer
     {
-        IEnumerable<ITopicDefinition> Topics { get; }
+        IEnumerable<TopicDefinition> Topics { get; }
     }
 }

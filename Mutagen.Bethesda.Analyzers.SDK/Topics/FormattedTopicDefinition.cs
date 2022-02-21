@@ -4,15 +4,15 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
     public interface IFormattedTopicDefinition
     {
-        ITopicDefinition TopicDefinition { get; }
+        TopicDefinition TopicDefinition { get; }
     }
 
     [PublicAPI]
     public class FormattedTopicDefinition : IFormattedTopicDefinition
     {
-        public ITopicDefinition TopicDefinition { get; }
+        public TopicDefinition TopicDefinition { get; }
 
-        public FormattedTopicDefinition(ITopicDefinition topicDefinition, string message)
+        public FormattedTopicDefinition(TopicDefinition topicDefinition, string message)
         {
             TopicDefinition = topicDefinition;
         }
@@ -26,11 +26,11 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public class FormattedTopicDefinition<T1> : IFormattedTopicDefinition
     {
-        public ITopicDefinition TopicDefinition { get; }
+        public TopicDefinition TopicDefinition { get; }
         public T1 Item1 { get; }
 
         public FormattedTopicDefinition(
-            ITopicDefinition topicDefinition,
+            TopicDefinition topicDefinition,
             T1 item1)
         {
             TopicDefinition = topicDefinition;
@@ -46,12 +46,12 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public class FormattedTopicDefinition<T1, T2> : IFormattedTopicDefinition
     {
-        public ITopicDefinition TopicDefinition { get; }
+        public TopicDefinition TopicDefinition { get; }
         public T1 Item1 { get; }
         public T2 Item2 { get; }
 
         public FormattedTopicDefinition(
-            ITopicDefinition topicDefinition,
+            TopicDefinition topicDefinition,
             T1 item1,
             T2 item2)
         {
@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public class FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
     {
-        public ITopicDefinition TopicDefinition { get; }
+        public TopicDefinition TopicDefinition { get; }
         public T1 Item1 { get; }
         public T2 Item2 { get; }
         public T3 Item3 { get; }
 
         public FormattedTopicDefinition(
-            ITopicDefinition topicDefinition,
+            TopicDefinition topicDefinition,
             T1 item1,
             T2 item2,
             T3 item3)
@@ -95,14 +95,14 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public class FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefinition
     {
-        public ITopicDefinition TopicDefinition { get; }
+        public TopicDefinition TopicDefinition { get; }
         public T1 Item1 { get; }
         public T2 Item2 { get; }
         public T3 Item3 { get; }
         public T4 Item4 { get; }
 
         public FormattedTopicDefinition(
-            ITopicDefinition topicDefinition,
+            TopicDefinition topicDefinition,
             T1 item1,
             T2 item2,
             T3 item3,

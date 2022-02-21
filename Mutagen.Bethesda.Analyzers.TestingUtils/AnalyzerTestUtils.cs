@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.TestingUtils
 {
     public static class AnalyzerTestUtils
     {
-        public static void HasTopic<TError>(IAnalyzerResult<TError> result, ITopicDefinition topicDefinition, int count = -1)
+        public static void HasTopic<TError>(IAnalyzerResult<TError> result, TopicDefinition topicDefinition, int count = -1)
             where TError : ITopic
         {
             if (count == -1)

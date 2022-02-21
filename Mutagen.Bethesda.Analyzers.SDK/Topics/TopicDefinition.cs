@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
     [PublicAPI]
-    public partial record TopicDefinition : ITopicDefinition
+    public partial record TopicDefinition
     {
         public TopicId Id { get; init; }
         public string Title { get; init; }
@@ -51,29 +51,48 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     }
 
     [PublicAPI]
-    public record TopicDefinition<T1>(
-        TopicId Id,
-        string Title,
-        string MessageFormat,
-        Severity Severity,
-        Uri? InformationUri = null) : ITopicDefinition
+    public record TopicDefinition<T1> : TopicDefinition
     {
+        public TopicDefinition(
+            TopicId id,
+            string title,
+            string messageFormat,
+            Severity severity,
+            Uri? informationUri = null)
+            : base(id, title, severity, messageFormat, informationUri)
+        {
+        }
+
         public IFormattedTopicDefinition Format(T1 item1)
         {
             return new FormattedTopicDefinition<T1>(this, item1);
         }
 
         public override string ToString() => this.ToShortString();
+
+        public void Deconstruct(out TopicId Id, out string Title, out string MessageFormat, out Severity Severity, out Uri? InformationUri)
+        {
+            Id = this.Id;
+            Title = this.Title;
+            MessageFormat = this.MessageFormat;
+            Severity = this.Severity;
+            InformationUri = this.InformationUri;
+        }
     }
 
     [PublicAPI]
-    public record TopicDefinition<T1, T2>(
-        TopicId Id,
-        string Title,
-        string MessageFormat,
-        Severity Severity,
-        Uri? InformationUri = null) : ITopicDefinition
+    public record TopicDefinition<T1, T2> : TopicDefinition
     {
+        public TopicDefinition(
+            TopicId id,
+            string title,
+            string messageFormat,
+            Severity severity,
+            Uri? informationUri = null)
+            : base(id, title, severity, messageFormat, informationUri)
+        {
+        }
+
         public IFormattedTopicDefinition Format(T1 item1, T2 item2)
         {
             return new FormattedTopicDefinition<T1, T2>(this, item1, item2);
@@ -83,13 +102,18 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     }
 
     [PublicAPI]
-    public record TopicDefinition<T1, T2, T3>(
-        TopicId Id,
-        string Title,
-        string MessageFormat,
-        Severity Severity,
-        Uri? InformationUri = null) : ITopicDefinition
+    public record TopicDefinition<T1, T2, T3> : TopicDefinition
     {
+        public TopicDefinition(
+            TopicId id,
+            string title,
+            string messageFormat,
+            Severity severity,
+            Uri? informationUri = null)
+            : base(id, title, severity, messageFormat, informationUri)
+        {
+        }
+
         public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3)
         {
             return new FormattedTopicDefinition<T1, T2, T3>(this, item1, item2, item3);
@@ -99,13 +123,18 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     }
 
     [PublicAPI]
-    public record TopicDefinition<T1, T2, T3, T4>(
-        TopicId Id,
-        string Title,
-        string MessageFormat,
-        Severity Severity,
-        Uri? InformationUri = null) : ITopicDefinition
+    public record TopicDefinition<T1, T2, T3, T4> : TopicDefinition
     {
+        public TopicDefinition(
+            TopicId id,
+            string title,
+            string messageFormat,
+            Severity severity,
+            Uri? informationUri = null)
+            : base(id, title, severity, messageFormat, informationUri)
+        {
+        }
+
         public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3, T4 item4)
         {
             return new FormattedTopicDefinition<T1, T2, T3, T4>(

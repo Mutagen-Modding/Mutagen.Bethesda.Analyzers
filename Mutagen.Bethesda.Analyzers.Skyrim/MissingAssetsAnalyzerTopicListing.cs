@@ -6,9 +6,9 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
     // Eventually can populate this via Source Generators
     public partial class MissingAssetsAnalyzer
     {
-        public IEnumerable<ITopicDefinition> Topics => GetTopics();
+        public IEnumerable<TopicDefinition> Topics => GetTopics();
 
-        private IEnumerable<ITopicDefinition> GetTopics()
+        private IEnumerable<TopicDefinition> GetTopics()
         {
             yield return MissingWeaponModel;
             yield return MissingTextureInTextureSet;

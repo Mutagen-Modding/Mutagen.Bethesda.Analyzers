@@ -31,6 +31,6 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
                     ListCounterWrong.Format(count, actualCount)));
         }
 
-        public IEnumerable<ITopicDefinition> Topics => ListCounterWrong.AsEnumerable();
+        public IEnumerable<TopicDefinition> Topics => ListCounterWrong.AsEnumerable();
     }
 }
