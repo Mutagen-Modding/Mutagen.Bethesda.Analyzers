@@ -31,7 +31,11 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame
 
             foreach (var analyzer in _isolatedRecordFrameAnalyzers)
             {
-                analyzer.AnalyzeRecord(param);
+                var result = analyzer.AnalyzeRecord(param);
+                if (result != null)
+                {
+                    driverParams.ReportDropbox.Dropoff(result);
+                }
             }
         }
     }

@@ -30,13 +30,15 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.Records
                 {
                     foreach (var analyzer in _contextualRecordAnalyzers)
                     {
+                        var result = analyzer.AnalyzeRecord(new ContextualRecordAnalyzerParams<TMajor>(
+                            driverParams.LinkCache,
+                            driverParams.LoadOrder,
+                            rec));
+                        if (result == null) continue;
                         driverParams.ReportDropbox.Dropoff(
                             listing.Mod,
                             rec,
-                            analyzer.AnalyzeRecord(new ContextualRecordAnalyzerParams<TMajor>(
-                                driverParams.LinkCache,
-                                driverParams.LoadOrder,
-                                rec)));
+                            result);
                     }
                 }
             }

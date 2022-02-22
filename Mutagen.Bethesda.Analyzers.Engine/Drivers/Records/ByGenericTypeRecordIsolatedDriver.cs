@@ -27,10 +27,12 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.Records
                 var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(rec);
                 foreach (var analyzer in _isolatedRecordAnalyzers)
                 {
+                    var record = analyzer.AnalyzeRecord(isolatedParam);
+                    if (record == null) continue;
                     driverParams.ReportDropbox.Dropoff(
                         driverParams.TargetMod,
                         rec,
-                        analyzer.AnalyzeRecord(isolatedParam));
+                        record);
                 }
             }
         }
