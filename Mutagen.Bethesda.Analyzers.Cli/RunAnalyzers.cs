@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +9,11 @@ using Loqui;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Console;
 using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
 using Mutagen.Bethesda.Analyzers.Engines;
-using Mutagen.Bethesda.Analyzers.Reporting.Console;
+using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
@@ -27,11 +29,10 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             var container = GetContainer(command);
 
             var engine = container.Resolve<ContextualEngine>();
-            var reporter = container.Resolve<ConsoleReporter>();
 
             PrintTopics(command, engine);
 
-            engine.Run(reporter);
+            engine.Run();
 
             return 0;
         }
@@ -65,6 +66,10 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             services.AddLogging(x => x.AddConsole());
 
             var builder = new ContainerBuilder();
+
+            builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
+            builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
+
             builder.Populate(services);
             builder.RegisterModule(new NoggogModule());
             builder.RegisterInstance(new FileSystem())
@@ -75,6 +80,8 @@ namespace Mutagen.Bethesda.Analyzers.Cli
                 .AsImplementedInterfaces();
             builder.RegisterInstance(new GameReleaseInjection(command.GameRelease))
                 .AsImplementedInterfaces();
+            builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
+            builder.RegisterInstance(command).AsImplementedInterfaces();
 
             return builder.Build();
         }

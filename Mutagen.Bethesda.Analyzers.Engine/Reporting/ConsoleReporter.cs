@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Analyzers.Reporting.Console;
+namespace Mutagen.Bethesda.Analyzers.Reporting;
 
 public class ConsoleReporter : IReportDropbox
 {

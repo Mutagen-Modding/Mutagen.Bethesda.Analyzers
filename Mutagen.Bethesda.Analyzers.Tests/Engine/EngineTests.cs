@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
             sut.IsolatedModDrivers.Drivers.Returns(drivers);
 
-            sut.Run(reportDropbox);
+            sut.Run();
 
             var modAPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modA.ModKey.FileName));
             var modBPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modB.ModKey.FileName));
@@ -79,7 +79,6 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             IReportDropbox reportDropbox,
             IContextualDriver[] drivers,
             IGameEnvironmentState gameEnv,
-            IGameEnvironmentProvider gameEnvironmentProvider,
             ContextualEngine sut)
         {
             var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
@@ -90,7 +89,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
             sut.ContextualModDrivers.Drivers.Returns(drivers);
 
-            sut.Run(reportDropbox);
+            sut.Run();
 
             foreach (var driver in drivers)
             {
