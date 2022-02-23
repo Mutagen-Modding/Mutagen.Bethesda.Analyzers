@@ -35,10 +35,13 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.Records
                             driverParams.LoadOrder,
                             rec));
                         if (result == null) continue;
-                        driverParams.ReportDropbox.Dropoff(
-                            listing.Mod,
-                            rec,
-                            result);
+                        foreach (var topic in result.Topics)
+                        {
+                            driverParams.ReportDropbox.Dropoff(
+                                listing.Mod,
+                                rec,
+                                topic);
+                        }
                     }
                 }
             }

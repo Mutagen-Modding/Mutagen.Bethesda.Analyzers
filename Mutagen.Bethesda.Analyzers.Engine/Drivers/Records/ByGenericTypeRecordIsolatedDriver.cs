@@ -29,10 +29,13 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.Records
                 {
                     var record = analyzer.AnalyzeRecord(isolatedParam);
                     if (record == null) continue;
-                    driverParams.ReportDropbox.Dropoff(
-                        driverParams.TargetMod,
-                        rec,
-                        record);
+                    foreach (var topic in record.Topics)
+                    {
+                        driverParams.ReportDropbox.Dropoff(
+                            driverParams.TargetMod,
+                            rec,
+                            topic);
+                    }
                 }
             }
         }

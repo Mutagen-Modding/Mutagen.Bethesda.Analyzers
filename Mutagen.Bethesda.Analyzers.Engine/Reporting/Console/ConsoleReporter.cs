@@ -6,25 +6,17 @@ namespace Mutagen.Bethesda.Analyzers.Reporting.Console
 {
     public class ConsoleReporter : IReportDropbox
     {
-        public void Dropoff<TError>(IModGetter sourceMod, IMajorRecordGetter majorRecord, IAnalyzerResult<TError> result) where TError : ITopic
+        public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
         {
-            if (result.Topics.Count == 0) return;
-            foreach (var error in result.Topics)
-            {
-                System.Console.WriteLine($"{error.FormattedTopicDefinition.TopicDefinition}");
-                System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
-                System.Console.WriteLine($"   {error.FormattedTopicDefinition}");
-            }
+            System.Console.WriteLine($"{topic.FormattedTopicDefinition.TopicDefinition}");
+            System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
+            System.Console.WriteLine($"   {topic.FormattedTopicDefinition}");
         }
 
-        public void Dropoff<TError>(IAnalyzerResult<TError> result) where TError : ITopic
+        public void Dropoff(ITopic topic)
         {
-            if (result.Topics.Count == 0) return;
-            foreach (var error in result.Topics)
-            {
-                System.Console.WriteLine($"{error.FormattedTopicDefinition.TopicDefinition}");
-                System.Console.WriteLine($"   {error.FormattedTopicDefinition}");
-            }
+            System.Console.WriteLine($"{topic.FormattedTopicDefinition.TopicDefinition}");
+            System.Console.WriteLine($"   {topic.FormattedTopicDefinition}");
         }
     }
 }
