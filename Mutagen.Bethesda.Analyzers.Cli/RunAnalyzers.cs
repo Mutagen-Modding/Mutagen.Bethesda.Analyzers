@@ -71,17 +71,17 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
 
             builder.Populate(services);
-            builder.RegisterModule(new NoggogModule());
             builder.RegisterInstance(new FileSystem())
                 .As<IFileSystem>();
             builder.RegisterModule<MainModule>();
-            builder.RegisterModule<ReflectionDriverModule>();
-            builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
-                .AsImplementedInterfaces();
             builder.RegisterInstance(new GameReleaseInjection(command.GameRelease))
                 .AsImplementedInterfaces();
             builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
             builder.RegisterInstance(command).AsImplementedInterfaces();
+
+            // Add Skyrim Analyzers
+            builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
+                .AsImplementedInterfaces();
 
             return builder.Build();
         }

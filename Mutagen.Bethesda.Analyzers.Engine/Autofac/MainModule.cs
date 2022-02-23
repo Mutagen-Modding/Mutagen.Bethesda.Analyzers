@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Autofac;
+using Noggog.Autofac.Modules;
 
 namespace Mutagen.Bethesda.Analyzers.Autofac
 {
@@ -9,7 +10,9 @@ namespace Mutagen.Bethesda.Analyzers.Autofac
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<NoggogModule>();
             builder.RegisterModule<MutagenModule>();
+            builder.RegisterModule<ReflectionDriverModule>();
             builder.RegisterAssemblyTypes(typeof(IsolatedEngine).Assembly)
                 .AsImplementedInterfaces()
                 .AsSelf()
