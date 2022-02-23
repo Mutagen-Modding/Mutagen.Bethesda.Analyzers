@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Loqui;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Mutagen.Bethesda.Analyzers.Autofac;
@@ -59,13 +61,14 @@ namespace Mutagen.Bethesda.Analyzers.Cli
 
         private static IContainer GetContainer(RunAnalyzersCommand command)
         {
+            var services = new ServiceCollection();
+            services.AddLogging(x => x.AddConsole());
+
             var builder = new ContainerBuilder();
+            builder.Populate(services);
             builder.RegisterModule(new NoggogModule());
             builder.RegisterInstance(new FileSystem())
                 .As<IFileSystem>();
-            builder.RegisterGeneric(typeof(NullLogger<>))
-                .As(typeof(ILogger<>))
-                .SingleInstance();
             builder.RegisterModule<MainModule>();
             builder.RegisterModule<ReflectionDriverModule>();
             builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)

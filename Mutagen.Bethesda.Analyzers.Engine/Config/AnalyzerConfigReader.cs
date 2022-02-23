@@ -10,9 +10,9 @@ public class AnalyzerConfigReader
 {
     public const string SettingEqualString = " = ";
 
-    private readonly ILogger _logger;
+    private readonly ILogger<AnalyzerConfigReader> _logger;
 
-    public AnalyzerConfigReader(ILogger logger)
+    public AnalyzerConfigReader(ILogger<AnalyzerConfigReader> logger)
     {
         _logger = logger;
     }
