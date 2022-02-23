@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
+using Noggog.Autofac.Modules;
 
 namespace Mutagen.Bethesda.Analyzers.Cli
 {
@@ -59,6 +60,7 @@ namespace Mutagen.Bethesda.Analyzers.Cli
         private static IContainer GetContainer(RunAnalyzersCommand command)
         {
             var builder = new ContainerBuilder();
+            builder.RegisterModule(new NoggogModule());
             builder.RegisterInstance(new FileSystem())
                 .As<IFileSystem>();
             builder.RegisterGeneric(typeof(NullLogger<>))
