@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using NSubstitute;
 using Xunit;
 
-namespace Mutagen.Bethesda.Analyzers.Tests.Engine;
+namespace Mutagen.Bethesda.Analyzers.Tests.Config;
 
 public class AnalyzerConfigReaderTests
 {
