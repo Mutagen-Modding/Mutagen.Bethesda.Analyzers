@@ -5,6 +5,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     [PublicAPI]
     public interface ITopic
     {
-        IFormattedTopicDefinition FormattedTopicDefinition { get; }
+        TopicDefinition TopicDefinition { get; }
+        string FormattedMessage { get; }
+        Severity Severity { get; set; }
     }
 }

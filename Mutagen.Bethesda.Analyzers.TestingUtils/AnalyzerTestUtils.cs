@@ -12,12 +12,12 @@ namespace Mutagen.Bethesda.Analyzers.TestingUtils
         {
             if (count == -1)
             {
-                Assert.True(result.Topics.Any(x => x.FormattedTopicDefinition.TopicDefinition.Equals(topicDefinition)));
+                Assert.True(result.Topics.Any(x => x.TopicDefinition.Equals(topicDefinition)));
             }
             else
             {
                 var errors = result.Topics
-                    .Where(x => x.FormattedTopicDefinition.TopicDefinition.Equals(topicDefinition))
+                    .Where(x => x.TopicDefinition.Equals(topicDefinition))
                     .ToList();
 
                 Assert.Equal(count, errors.Count);

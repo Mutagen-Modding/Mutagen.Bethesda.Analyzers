@@ -69,15 +69,6 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
         }
 
         public override string ToString() => this.ToShortString();
-
-        public void Deconstruct(out TopicId Id, out string Title, out string MessageFormat, out Severity Severity, out Uri? InformationUri)
-        {
-            Id = this.Id;
-            Title = this.Title;
-            MessageFormat = this.MessageFormat;
-            Severity = this.Severity;
-            InformationUri = this.InformationUri;
-        }
     }
 
     [PublicAPI]
