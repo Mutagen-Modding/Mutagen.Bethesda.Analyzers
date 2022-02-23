@@ -5,6 +5,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
     public interface IFormattedTopicDefinition
     {
         TopicDefinition TopicDefinition { get; }
+        string FormattedMessage { get; }
     }
 
     [PublicAPI]
@@ -17,10 +18,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             TopicDefinition = topicDefinition;
         }
 
-        public override string ToString()
-        {
-            return TopicDefinition.MessageFormat;
-        }
+        public override string ToString() => FormattedMessage;
+
+        public string FormattedMessage => TopicDefinition.MessageFormat;
     }
 
     [PublicAPI]
@@ -37,10 +37,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             Item1 = item1;
         }
 
-        public override string ToString()
-        {
-            return string.Format(TopicDefinition.MessageFormat, Item1);
-        }
+        public override string ToString() => FormattedMessage;
+
+        public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1);
     }
 
     [PublicAPI]
@@ -60,10 +59,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             Item2 = item2;
         }
 
-        public override string ToString()
-        {
-            return string.Format(TopicDefinition.MessageFormat, Item1, Item2);
-        }
+        public override string ToString() => FormattedMessage;
+
+        public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2);
     }
 
     [PublicAPI]
@@ -86,10 +84,9 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             Item3 = item3;
         }
 
-        public override string ToString()
-        {
-            return string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3);
-        }
+        public override string ToString() => FormattedMessage;
+
+        public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3);
     }
 
     [PublicAPI]
@@ -115,9 +112,8 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             Item4 = item4;
         }
 
-        public override string ToString()
-        {
-            return string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3, Item4);
-        }
+        public override string ToString() => FormattedMessage;
+
+        public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3, Item4);
     }
 }
