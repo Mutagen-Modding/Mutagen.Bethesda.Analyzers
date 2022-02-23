@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-namespace Mutagen.Bethesda.Analyzers.SDK.Results
+namespace Mutagen.Bethesda.Analyzers.SDK.Results;
+
+public interface IAnalyzerResult<TError>
+    where TError : ITopic
 {
-    [PublicAPI]
-    public interface IAnalyzerResult<TError>
-        where TError : ITopic
-    {
-        IReadOnlyCollection<TError> Topics { get; }
-    }
+    IReadOnlyCollection<TError> Topics { get; }
 }

@@ -1,12 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿namespace Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-namespace Mutagen.Bethesda.Analyzers.SDK.Topics
+public interface ITopic
 {
-    [PublicAPI]
-    public interface ITopic
-    {
-        TopicDefinition TopicDefinition { get; }
-        string FormattedMessage { get; }
-        Severity Severity { get; set; }
-    }
+    TopicDefinition TopicDefinition { get; }
+    string FormattedMessage { get; }
+    Severity Severity { get; set; }
 }

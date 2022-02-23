@@ -1,28 +1,25 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-namespace Mutagen.Bethesda.Analyzers.SDK.Results
+namespace Mutagen.Bethesda.Analyzers.SDK.Results;
+
+public class RecordAnalyzerResult : IAnalyzerResult<RecordTopic>
 {
-    [PublicAPI]
-    public class RecordAnalyzerResult : IAnalyzerResult<RecordTopic>
+    private List<RecordTopic> _topics = new();
+    public IReadOnlyCollection<RecordTopic> Topics => _topics;
+
+    public RecordAnalyzerResult(RecordTopic topic)
     {
-        private List<RecordTopic> _topics = new();
-        public IReadOnlyCollection<RecordTopic> Topics => _topics;
+        _topics.Add(topic);
+    }
 
-        public RecordAnalyzerResult(RecordTopic topic)
-        {
-            _topics.Add(topic);
-        }
+    public RecordAnalyzerResult(params RecordTopic[] topics)
+    {
+        _topics.AddRange(topics);
+    }
 
-        public RecordAnalyzerResult(params RecordTopic[] topics)
-        {
-            _topics.AddRange(topics);
-        }
-
-        public void AddTopic(RecordTopic topic)
-        {
-            _topics.Add(topic);
-        }
+    public void AddTopic(RecordTopic topic)
+    {
+        _topics.Add(topic);
     }
 }
