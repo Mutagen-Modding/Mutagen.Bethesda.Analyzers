@@ -22,6 +22,11 @@ public record TopicId
         return _str;
     }
 
+    public static implicit operator TopicId(string str)
+    {
+        return Parse(str);
+    }
+
     public static TopicId Parse(ReadOnlySpan<char> str)
     {
         if (str.IsEmpty)

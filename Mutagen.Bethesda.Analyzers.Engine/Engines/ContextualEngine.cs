@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines
 
     public class ContextualEngine : IContextualEngine
     {
-        private readonly IReportDropbox _reportDropbox;
+        public IReportDropbox ReportDropbox { get; }
         public IGameEnvironmentProvider EnvGetter { get; }
         public IDataDirectoryProvider DataDirectoryProvider { get; }
         public IDriverProvider<IContextualDriver> ContextualModDrivers { get; }
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines
             IDriverProvider<IIsolatedDriver> isolatedDrivers,
             IReportDropbox reportDropbox)
         {
-            _reportDropbox = reportDropbox;
+            ReportDropbox = reportDropbox;
             EnvGetter = envGetter;
             DataDirectoryProvider = dataDataDirectoryProvider;
             ContextualModDrivers = contextualDrivers;
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines
             var contextualParam = new ContextualDriverParams(
                 env.LinkCache,
                 env.LoadOrder,
-                _reportDropbox);
+                ReportDropbox);
 
             var isolatedDrivers = IsolatedModDrivers.Drivers;
             if (isolatedDrivers.Count > 0)
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines
 
                     var isolatedParam = new IsolatedDriverParams(
                         listing.Mod.ToUntypedImmutableLinkCache(),
-                        _reportDropbox,
+                        ReportDropbox,
                         listing.Mod,
                         modPath);
 

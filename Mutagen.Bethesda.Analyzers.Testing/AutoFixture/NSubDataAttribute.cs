@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using AutoFixture.AutoMoq;
+using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
 using Mutagen.Bethesda;

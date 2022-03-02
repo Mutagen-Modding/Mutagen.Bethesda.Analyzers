@@ -1,6 +1,7 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using AutoFixture.Xunit2;
+using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog.Testing.AutoFixture;
 using Xunit;
@@ -82,6 +83,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests
             fixture.Customize(new MutagenBaseCustomization());
             fixture.Customize(new MutagenReleaseCustomization(GameRelease.SkyrimSE));
             fixture.Customize(new DefaultCustomization(_useMockFilesystem));
+            fixture.Customizations.Add(new TopicPrefixBuilder());
         }
     }
 }

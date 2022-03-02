@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
@@ -41,7 +42,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
         public void ContextualEngineCallsIsolatedRecordAnalyzers(
             IModGetter modA,
             IModGetter modB,
-            IReportDropbox reportDropbox,
+            [Frozen] IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
             IGameEnvironmentState gameEnv,
             ContextualEngine sut)
@@ -63,11 +64,11 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             {
                 driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
-                         && x.TargetMod == modA
+                         && ReferenceEquals(x.TargetMod, modA)
                          && x.TargetModPath == modAPath));
                 driver.Received(1).Drive(Arg.Is<IsolatedDriverParams>(
                     x => x.ReportDropbox == reportDropbox
-                         && x.TargetMod == modB
+                         && ReferenceEquals(x.TargetMod, modB)
                          && x.TargetModPath == modBPath));
             }
         }
@@ -76,7 +77,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
         public void ContextualEngineCallsContextualRecordAnalyzers(
             IModGetter modA,
             IModGetter modB,
-            IReportDropbox reportDropbox,
+            [Frozen] IReportDropbox reportDropbox,
             IContextualDriver[] drivers,
             IGameEnvironmentState gameEnv,
             ContextualEngine sut)
