@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Mutagen.Bethesda.Analyzers.Drivers;
 
-namespace Mutagen.Bethesda.Analyzers.Engines
+namespace Mutagen.Bethesda.Analyzers.Engines;
+
+public interface IEngine
 {
-    public interface IEngine
-    {
-        IEnumerable<IDriver> Drivers { get; }
-    }
+    IEnumerable<IDriver> Drivers { get; }
 }
