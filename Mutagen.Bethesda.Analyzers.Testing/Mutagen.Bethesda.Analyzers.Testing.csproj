@@ -10,8 +10,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.0" />
-      <PackageReference Include="Mutagen.Bethesda.Testing" Version="0.41.0" />
+      <PackageReference Include="AutoFixture.AutoMoq" />
+      <PackageReference Include="Mutagen.Bethesda.Testing" />
     </ItemGroup>
 
     <ItemGroup>

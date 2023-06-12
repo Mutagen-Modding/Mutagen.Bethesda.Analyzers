@@ -10,7 +10,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.41.0" />
+      <PackageReference Include="Mutagen.Bethesda.Skyrim" />
     </ItemGroup>
     
     <ItemGroup>

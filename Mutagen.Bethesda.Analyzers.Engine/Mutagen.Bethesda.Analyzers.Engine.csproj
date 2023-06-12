@@ -9,8 +9,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="7.0.1" />
-      <PackageReference Include="Mutagen.Bethesda.Autofac" Version="0.41.0" />
+      <PackageReference Include="Autofac" />
+      <PackageReference Include="Mutagen.Bethesda.Autofac" />
     </ItemGroup>
 
 </Project>
