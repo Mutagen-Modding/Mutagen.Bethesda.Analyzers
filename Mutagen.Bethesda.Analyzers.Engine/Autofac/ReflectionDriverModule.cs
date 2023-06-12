@@ -1,4 +1,3 @@
-using System.Linq;
 using Autofac;
 using Loqui;
 using Mutagen.Bethesda.Analyzers.Drivers;

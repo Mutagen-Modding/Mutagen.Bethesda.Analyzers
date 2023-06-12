@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO.Abstractions;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;

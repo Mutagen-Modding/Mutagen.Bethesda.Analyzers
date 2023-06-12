@@ -1,5 +1,4 @@
-﻿using System;
-using Mutagen.Bethesda.Analyzers.Config;
+﻿using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using NSubstitute;
 using Xunit;

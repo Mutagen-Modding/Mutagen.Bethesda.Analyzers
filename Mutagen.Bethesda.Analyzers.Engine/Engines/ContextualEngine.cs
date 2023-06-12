@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Mutagen.Bethesda.Analyzers.Drivers;
+﻿using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Environments.DI;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Mutagen.Bethesda.Analyzers.Drivers;
+﻿namespace Mutagen.Bethesda.Analyzers.Drivers;
 
 public interface IDriverProvider<TDriver>
     where TDriver : IDriver

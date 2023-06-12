@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using CommandLine;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
 

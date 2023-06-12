@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Autofac;
+﻿using Autofac;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using FluentAssertions;
 using Mutagen.Bethesda.Analyzers.Drivers.Records;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;

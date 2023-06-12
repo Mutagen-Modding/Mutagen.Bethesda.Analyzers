@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Analyzers.Drivers;
+﻿using Mutagen.Bethesda.Analyzers.Drivers;
 
 namespace Mutagen.Bethesda.Analyzers.Engines;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Xunit;
 

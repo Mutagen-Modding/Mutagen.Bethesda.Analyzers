@@ -1,5 +1,4 @@
-﻿using System.IO;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
