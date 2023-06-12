@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
@@ -21,8 +20,8 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim
 
         public RecordFrameAnalyzerResult? AnalyzeRecord(IsolatedRecordFrameAnalyzerParams<IArmorGetter> param)
         {
-            if (!param.Frame.TryLocateSubrecordFrame(RecordTypes.KSIZ, out var ksizFrame)) return null;
-            if (!param.Frame.TryLocateSubrecordFrame(RecordTypes.KWDA, out var kwdaFrame)) return null;
+            if (!param.Frame.TryFindSubrecord(RecordTypes.KSIZ, out var ksizFrame)) return null;
+            if (!param.Frame.TryFindSubrecord(RecordTypes.KWDA, out var kwdaFrame)) return null;
             var count = ksizFrame.AsUInt32();
             var actualCount = kwdaFrame.ContentLength / 4;
             if (count == actualCount) return null;

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
+using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Analyzers.Cli
 {
@@ -39,16 +40,16 @@ namespace Mutagen.Bethesda.Analyzers.Cli
             if (!command.PrintTopics) return;
 
             Console.WriteLine("Topics:");
-            var fg = new FileGeneration();
+            var sb = new StructuredStringBuilder();
             foreach (var topic in engine.Drivers
                          .SelectMany(d => d.Analyzers)
                          .SelectMany(a => a.Topics)
                          .Distinct(x => x.Id))
             {
-                topic.Append(fg);
+                topic.Append(sb);
             }
 
-            foreach (var line in fg)
+            foreach (var line in sb)
             {
                 Console.WriteLine(line);
             }

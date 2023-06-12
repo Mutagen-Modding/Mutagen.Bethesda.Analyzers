@@ -1,4 +1,4 @@
-﻿using Loqui;
+﻿using Noggog.StructuredStrings;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Topics
 {
@@ -9,14 +9,14 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Topics
             return $"[{topic.Id}][{topic.Severity.ToShortString()}] {topic.Title}";
         }
 
-        public static void Append(this TopicDefinition topic, FileGeneration fg)
+        public static void Append(this TopicDefinition topic, StructuredStringBuilder sb)
         {
-            fg.AppendLine(topic.ToShortString());
-            using (new DepthWrapper(fg))
+            sb.AppendLine(topic.ToShortString());
+            using (sb.IncreaseDepth())
             {
                 if (topic.InformationUri != null)
                 {
-                    fg.AppendLine(topic.InformationUri.ToString());
+                    sb.AppendLine(topic.InformationUri.ToString());
                 }
             }
         }

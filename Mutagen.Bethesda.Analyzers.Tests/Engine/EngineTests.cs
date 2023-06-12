@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             IModGetter modB,
             [Frozen] IReportDropbox reportDropbox,
             IIsolatedDriver[] drivers,
-            IGameEnvironmentState gameEnv,
+            IGameEnvironment gameEnv,
             ContextualEngine sut)
         {
             var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine
             IModGetter modB,
             [Frozen] IReportDropbox reportDropbox,
             IContextualDriver[] drivers,
-            IGameEnvironmentState gameEnv,
+            IGameEnvironment gameEnv,
             ContextualEngine sut)
         {
             var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();

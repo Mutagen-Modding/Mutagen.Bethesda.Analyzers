@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
         {
             weapon.Setup(x => x.Model).Returns(() => new Model
             {
-                File = existingModelFile
+                File = existingModelFile.Path
             });
 
             var result = analyzer.AnalyzeRecord(weapon.Object.AsIsolatedParams());
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
         {
             staticGetter.Setup(x => x.Model).Returns(() => new Model
             {
-                File = existingModelFile
+                File = existingModelFile.Path
             });
 
             var result = analyzer.AnalyzeRecord(staticGetter.Object.AsIsolatedParams());
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests
         {
             headPart.Setup(x => x.Model).Returns(() => new Model
             {
-                File = existingModelFile
+                File = existingModelFile.Path
             });
 
             var result = analyzer.AnalyzeRecord(headPart.Object.AsIsolatedParams());
