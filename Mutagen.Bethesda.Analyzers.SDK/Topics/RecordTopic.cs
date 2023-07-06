@@ -6,7 +6,7 @@ public record RecordTopic(IFormattedTopicDefinition _formattedTopicDefinition, E
 {
     private readonly IFormattedTopicDefinition _formattedTopicDefinition = _formattedTopicDefinition;
 
-    public static RecordTopic Create<T>(T obj, IFormattedTopicDefinition formattedTopicDefinition, Expression<Func<T, object>> memberExpression)
+    public static RecordTopic Create<T>(T obj, IFormattedTopicDefinition formattedTopicDefinition, Expression<Func<T, object?>> memberExpression)
     {
         return new RecordTopic(formattedTopicDefinition, memberExpression);
     }
