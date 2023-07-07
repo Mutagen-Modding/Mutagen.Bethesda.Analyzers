@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Results;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
@@ -12,6 +13,7 @@ public interface IIsolatedRecordAnalyzer<TMajor> : IAnalyzer
 public interface IIsolatedRecordFixer<TMajor>
     where TMajor : IMajorRecord
 {
+    TopicDefinition HandledTopic { get; }
     void FixRecord(IsolatedRecordFixerParams<TMajor> param);
 }
 
