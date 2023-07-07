@@ -9,10 +9,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 public class CellUnderscoreAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
 {
     public static readonly TopicDefinition<string?> CellUnderscoreWrong = MutagenTopicBuilder.FromDiscussion(
-            33,
-            "EDID (Editor ID) for Cells should not have underscores in them",
+            112,
+            "Cell Editor Id Has Underscore",
             Severity.Error)
-        .WithFormatting<string?>("Cell editor ids must not have underscores");
+        .WithFormatting<string?>("Cell editor ids must not have underscores: {0}");
 
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ICellGetter> param)
     {
