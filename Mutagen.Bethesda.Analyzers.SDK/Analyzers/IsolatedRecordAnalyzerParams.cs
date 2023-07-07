@@ -9,3 +9,13 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
         Record = record;
     }
 }
+
+public readonly struct IsolatedRecordFixerParams<TMajor>
+{
+    public readonly TMajor Record;
+
+    public IsolatedRecordFixerParams(TMajor @record)
+    {
+        Record = record;
+    }
+}
