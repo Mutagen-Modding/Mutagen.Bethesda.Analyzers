@@ -1,59 +1,56 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.SDK.Results;
-using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Analyzers.TestingUtils;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Tests;
 
 public class MissingAssetsAnalyzerTests
 {
-    [Fact]
-    public void TestMissingArmorModel()
+    [Theory, MutagenModAutoData]
+    public void TestMissingArmorModel(
+        IFileSystem fileSystem,
+        Armor armorRecord,
+        MissingAssetsAnalyzer sut)
     {
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var analyzer = new MissingAssetsAnalyzer(NullLogger<MissingAssetsAnalyzer>.Instance, fileSystem);
+        armorRecord.WorldModel = new GenderedItem<ArmorModel?>(CreateArmorModel(), CreateArmorModel());
 
-        var armorRecord = Mock.Of<IArmorGetter>();
-        Mock.Get(armorRecord)
-            .Setup(x => x.WorldModel)
-            .Returns(() => new GenderedItem<IArmorModelGetter?>(CreateArmorModel(), CreateArmorModel()));
-
-        var result = analyzer.AnalyzeRecord(armorRecord.AsIsolatedParams());
+        var result = sut.AnalyzeRecord(armorRecord.AsIsolatedParams<IArmorGetter>());
         AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingArmorModel, 2);
     }
 
-    [Fact]
-    public void TestMissingTextureSetTextures()
+    [Theory, MutagenModAutoData]
+    public void TestMissingTextureSetTextures(
+        IFileSystem fileSystem,
+        TextureSet textureSetRecord,
+        MissingAssetsAnalyzer sut)
     {
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var analyzer = new MissingAssetsAnalyzer(NullLogger<MissingAssetsAnalyzer>.Instance, fileSystem);
+        textureSetRecord.Diffuse = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.NormalOrGloss = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.EnvironmentMaskOrSubsurfaceTint = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.GlowOrDetailMap = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.Height = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.Environment = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.Multilayer = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
+        textureSetRecord.BacklightMaskOrSpecular = new AssetLink<SkyrimTextureAssetType>(Path.GetRandomFileName());
 
-        var textureSetRecord = Mock.Of<ITextureSetGetter>();
-        var mock = Mock.Get(textureSetRecord);
-
-        mock.Setup(x => x.Diffuse).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.NormalOrGloss).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.EnvironmentMaskOrSubsurfaceTint).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.GlowOrDetailMap).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.Height).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.Environment).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.Multilayer).Returns(Path.GetRandomFileName());
-        mock.Setup(x => x.BacklightMaskOrSpecular).Returns(Path.GetRandomFileName());
-
-        var result = analyzer.AnalyzeRecord(textureSetRecord.AsIsolatedParams());
+        var result = sut.AnalyzeRecord(textureSetRecord.AsIsolatedParams<ITextureSetGetter>());
         AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingTextureInTextureSet, 8);
     }
 
-    [Theory, MoqData]
+    [Theory, MutagenAutoData]
     public void TestExistingTextureSetTextures(
-        Mock<ITextureSetGetter> textureSet,
+        ITextureSetGetter textureSet,
         FilePath existingDiffuse,
         FilePath existingNormal,
         FilePath existingSubsurfaceTint,
@@ -64,106 +61,96 @@ public class MissingAssetsAnalyzerTests
         FilePath existingSpecular,
         MissingAssetsAnalyzer analyzer)
     {
-        textureSet.Setup(x => x.Diffuse).Returns(existingDiffuse);
-        textureSet.Setup(x => x.NormalOrGloss).Returns(existingNormal);
-        textureSet.Setup(x => x.EnvironmentMaskOrSubsurfaceTint).Returns(existingSubsurfaceTint);
-        textureSet.Setup(x => x.GlowOrDetailMap).Returns(existingGlow);
-        textureSet.Setup(x => x.Height).Returns(existingHeight);
-        textureSet.Setup(x => x.Environment).Returns(existingEnvironment);
-        textureSet.Setup(x => x.Multilayer).Returns(existingMultilayer);
-        textureSet.Setup(x => x.BacklightMaskOrSpecular).Returns(existingSpecular);
+        textureSet.Diffuse.Returns(existingDiffuse);
+        textureSet.NormalOrGloss.Returns(existingNormal);
+        textureSet.EnvironmentMaskOrSubsurfaceTint.Returns(existingSubsurfaceTint);
+        textureSet.GlowOrDetailMap.Returns(existingGlow);
+        textureSet.Height.Returns(existingHeight);
+        textureSet.Environment.Returns(existingEnvironment);
+        textureSet.Multilayer.Returns(existingMultilayer);
+        textureSet.BacklightMaskOrSpecular.Returns(existingSpecular);
 
-        var result = analyzer.AnalyzeRecord(textureSet.Object.AsIsolatedParams());
+        var result = analyzer.AnalyzeRecord(textureSet.AsIsolatedParams());
         Assert.Empty(result.Topics);
     }
 
-    [Fact]
-    public void TestMissingWeaponModel()
+    [Theory, MutagenModAutoData]
+    public void TestMissingWeaponModel(Weapon weapon)
     {
-        var weapon = Mock.Of<IWeaponGetter>();
-        TestMissingModelFile(weapon, x => x.AnalyzeRecord(weapon.AsIsolatedParams()), MissingAssetsAnalyzer.MissingWeaponModel);
+        TestMissingModelFile(weapon, x => x.AnalyzeRecord(weapon.AsIsolatedParams<IWeaponGetter>()), MissingAssetsAnalyzer.MissingWeaponModel);
     }
 
-    [Theory, MoqData]
+    [Theory, MutagenAutoData]
     public void TestExistingWeaponModel(
-        Mock<IWeaponGetter> weapon,
-        FilePath existingModelFile,
+        IWeaponGetter weapon,
+        IFileSystem fs,
+        AssetLink<SkyrimModelAssetType> existingModelFile,
         MissingAssetsAnalyzer analyzer)
     {
-        weapon.Setup(x => x.Model).Returns(() => new Model
+        weapon.Model.Returns(new Model
         {
-            File = existingModelFile.Path
+            File = existingModelFile
         });
 
-        var result = analyzer.AnalyzeRecord(weapon.Object.AsIsolatedParams());
+        var result = analyzer.AnalyzeRecord(weapon.AsIsolatedParams());
         Assert.Empty(result.Topics);
     }
 
-    [Fact]
-    public void TestMissingStaticsModel()
+    [Theory, MutagenModAutoData]
+    public void TestMissingStaticsModel(Static stat)
     {
-        var staticGetter = Mock.Of<IStaticGetter>();
-        TestMissingModelFile(staticGetter, x => x.AnalyzeRecord(staticGetter.AsIsolatedParams()), MissingAssetsAnalyzer.MissingStaticModel);
+        TestMissingModelFile(stat, x => x.AnalyzeRecord(stat.AsIsolatedParams<IStaticGetter>()), MissingAssetsAnalyzer.MissingStaticModel);
     }
 
-    [Theory, MoqData]
+    [Theory, MutagenAutoData]
     public void TestExistingStaticsModel(
-        Mock<IStaticGetter> staticGetter,
+        IStaticGetter staticGetter,
         FilePath existingModelFile,
         MissingAssetsAnalyzer analyzer)
     {
-        staticGetter.Setup(x => x.Model).Returns(() => new Model
+        staticGetter.Model.Returns(new Model
         {
             File = existingModelFile.Path
         });
 
-        var result = analyzer.AnalyzeRecord(staticGetter.Object.AsIsolatedParams());
+        var result = analyzer.AnalyzeRecord(staticGetter.AsIsolatedParams());
         Assert.Empty(result.Topics);
     }
 
-    [Fact]
-    public void TestMissingHeadPartModel()
+    [Theory, MutagenModAutoData]
+    public void TestMissingHeadPartModel(HeadPart headPart)
     {
-        var headPart = Mock.Of<IHeadPartGetter>();
-        Mock.Get(headPart)
-            .Setup(x => x.Parts)
-            .Returns(() => new List<IPartGetter>());
-        TestMissingModelFile(headPart, x => x.AnalyzeRecord(headPart.AsIsolatedParams()), MissingAssetsAnalyzer.MissingHeadPartModel);
+        TestMissingModelFile(headPart, x => x.AnalyzeRecord(headPart.AsIsolatedParams<IHeadPartGetter>()), MissingAssetsAnalyzer.MissingHeadPartModel);
     }
 
-    [Theory, MoqData]
+    [Theory, MutagenAutoData]
     public void TestExistingHeadPartModel(
-        Mock<IHeadPartGetter> headPart,
+        IHeadPartGetter headPart,
         FilePath existingModelFile,
         MissingAssetsAnalyzer analyzer)
     {
-        headPart.Setup(x => x.Model).Returns(() => new Model
+        headPart.Model.Returns(new Model
         {
             File = existingModelFile.Path
         });
-
-        var result = analyzer.AnalyzeRecord(headPart.Object.AsIsolatedParams());
-        Assert.Empty(result.Topics);
-    }
-
-    [Fact]
-    public void TestMissingHeadPartFile()
-    {
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var analyzer = new MissingAssetsAnalyzer(NullLogger<MissingAssetsAnalyzer>.Instance, fileSystem);
-
-        var headPart = Mock.Of<IHeadPartGetter>();
-        Mock.Get(headPart)
-            .Setup(x => x.Parts)
-            .Returns(() => new List<IPartGetter>
-            {
-                new Part
-                {
-                    FileName = Path.GetRandomFileName()
-                }
-            });
 
         var result = analyzer.AnalyzeRecord(headPart.AsIsolatedParams());
+        Assert.Empty(result.Topics);
+    }
+
+    [Theory, MutagenModAutoData]
+    public void TestMissingHeadPartFile(
+        IFileSystem fileSystem,
+        HeadPart headPart,
+        MissingAssetsAnalyzer sut)
+    {
+        headPart.Parts.Add(
+            new Part
+            {
+                FileName = Path.GetRandomFileName()
+            });
+
+        var result = sut.AnalyzeRecord(headPart.AsIsolatedParams<IHeadPartGetter>());
         AnalyzerTestUtils.HasTopic(result, MissingAssetsAnalyzer.MissingHeadPartFile);
     }
 
@@ -171,17 +158,15 @@ public class MissingAssetsAnalyzerTests
         TMajorRecordGetter mock,
         Func<MissingAssetsAnalyzer, RecordAnalyzerResult> func,
         TopicDefinition<string> topicDefinition)
-        where TMajorRecordGetter : class, IMajorRecordGetter, IModeledGetter
+        where TMajorRecordGetter : class, IMajorRecordGetter, IModeled
     {
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
         var analyzer = new MissingAssetsAnalyzer(NullLogger<MissingAssetsAnalyzer>.Instance, fileSystem);
 
-        Mock.Get(mock)
-            .Setup(x => x.Model)
-            .Returns(() => new Model
-            {
-                File = Path.GetRandomFileName()
-            });
+        mock.Model = new Model
+        {
+            File = Path.GetRandomFileName()
+        };
 
         var res = func(analyzer);
         AnalyzerTestUtils.HasTopic(res, topicDefinition);

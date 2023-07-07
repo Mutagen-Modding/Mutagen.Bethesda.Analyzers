@@ -42,9 +42,9 @@ public class EngineTests
         IModGetter modB,
         [Frozen] IReportDropbox reportDropbox,
         IIsolatedDriver[] drivers,
-        IGameEnvironment gameEnv,
         ContextualEngine sut)
     {
+        var gameEnv = Substitute.For<IGameEnvironment>();
         var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
         loadOrder.Add(new ModListing<IModGetter>(modA));
         loadOrder.Add(new ModListing<IModGetter>(modB));
@@ -77,9 +77,9 @@ public class EngineTests
         IModGetter modB,
         [Frozen] IReportDropbox reportDropbox,
         IContextualDriver[] drivers,
-        IGameEnvironment gameEnv,
         ContextualEngine sut)
     {
+        var gameEnv = Substitute.For<IGameEnvironment>();
         var loadOrder = new LoadOrder<IModListingGetter<IModGetter>>();
         loadOrder.Add(new ModListing<IModGetter>(modA));
         loadOrder.Add(new ModListing<IModGetter>(modB));

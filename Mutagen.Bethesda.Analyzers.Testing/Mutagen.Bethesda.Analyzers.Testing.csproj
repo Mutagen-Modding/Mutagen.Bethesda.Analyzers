@@ -10,7 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoFixture.AutoMoq" />
       <PackageReference Include="Mutagen.Bethesda.Testing" />
     </ItemGroup>
 
