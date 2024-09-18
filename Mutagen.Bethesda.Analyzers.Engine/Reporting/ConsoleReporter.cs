@@ -8,7 +8,7 @@ public class ConsoleReporter : IReportDropbox
     public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
     {
         System.Console.WriteLine($"{topic.TopicDefinition}");
-        System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()}");
+        System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
         System.Console.WriteLine($"   {topic.FormattedMessage}");
     }
 
