@@ -11,7 +11,7 @@ public class NSubDataAttribute : AutoDataAttribute
     public NSubDataAttribute(
         bool ConfigureMembers = false,
         GameRelease Release = GameRelease.SkyrimSE,
-        bool UseMockFileSystem = true)
+        TargetFileSystem TargetFileSystem = TargetFileSystem.Fake)
         : base(() =>
         {
             var fixture = new Fixture();
@@ -22,7 +22,7 @@ public class NSubDataAttribute : AutoDataAttribute
             });
             fixture.Customize(new MutagenBaseCustomization());
             fixture.Customize(new MutagenReleaseCustomization(Release));
-            fixture.Customize(new DefaultCustomization(UseMockFileSystem));
+            fixture.Customize(new DefaultCustomization(TargetFileSystem));
             return fixture;
         })
     {

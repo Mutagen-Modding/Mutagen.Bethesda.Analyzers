@@ -2,7 +2,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 

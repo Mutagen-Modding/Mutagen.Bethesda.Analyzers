@@ -12,13 +12,13 @@ public class AnalyzerAutoData : AutoDataAttribute
 {
     public AnalyzerAutoData(
         bool ConfigureMembers = true,
-        bool UseMockFileSystem = true,
+        TargetFileSystem TargetFileSystem = TargetFileSystem.Fake,
         bool GenerateDelegates = false,
         bool OmitAutoProperties = false)
         : base(() =>
         {
             return Factory(
-                UseMockFileSystem: UseMockFileSystem,
+                TargetFileSystem: TargetFileSystem,
                 ConfigureMembers: ConfigureMembers,
                 GenerateDelegates: GenerateDelegates,
                 OmitAutoProperties: OmitAutoProperties);
@@ -28,13 +28,13 @@ public class AnalyzerAutoData : AutoDataAttribute
 
     public static AutoFixture.IFixture Factory(
         bool ConfigureMembers = true,
-        bool UseMockFileSystem = true,
+        TargetFileSystem TargetFileSystem = TargetFileSystem.Fake,
         bool GenerateDelegates = false,
         bool OmitAutoProperties = false)
     {
         return new AutoFixture.Fixture()
             .Customize(new AnalyzerAutoDataCustomization(
-                useMockFilesystem: UseMockFileSystem,
+                targetFileSystem: TargetFileSystem,
                 configureMembers: ConfigureMembers,
                 generateDelegates: GenerateDelegates,
                 omitAutoProperties: OmitAutoProperties));
@@ -54,18 +54,18 @@ public class AnalyzerInlineData : CompositeDataAttribute
 
 public class AnalyzerAutoDataCustomization : ICustomization
 {
-    private readonly bool _useMockFilesystem;
+    private readonly TargetFileSystem _targetFileSystem = TargetFileSystem.Fake;
     private readonly bool _generateDelegates;
     private readonly bool _omitAutoProperties;
     private readonly bool _configureMembers;
 
     public AnalyzerAutoDataCustomization(
         bool configureMembers,
-        bool useMockFilesystem,
+        TargetFileSystem targetFileSystem,
         bool generateDelegates,
         bool omitAutoProperties)
     {
-        _useMockFilesystem = useMockFilesystem;
+        _targetFileSystem = targetFileSystem;
         _generateDelegates = generateDelegates;
         _omitAutoProperties = omitAutoProperties;
         _configureMembers = configureMembers;
@@ -82,7 +82,7 @@ public class AnalyzerAutoDataCustomization : ICustomization
         fixture.OmitAutoProperties = _omitAutoProperties;
         fixture.Customize(new MutagenBaseCustomization());
         fixture.Customize(new MutagenReleaseCustomization(GameRelease.SkyrimSE));
-        fixture.Customize(new DefaultCustomization(_useMockFilesystem));
+        fixture.Customize(new DefaultCustomization(_targetFileSystem));
         fixture.Customizations.Add(new TopicPrefixBuilder());
     }
 }

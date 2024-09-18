@@ -35,6 +35,7 @@
       <Compile Update="MissingAssetsAnalyzerTopicListing.cs">
         <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
       </Compile>
+      <Compile Remove="CellUnderscoreAnalyzer.cs" />
     </ItemGroup>
 
 </Project>

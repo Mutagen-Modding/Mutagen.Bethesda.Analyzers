@@ -4,6 +4,9 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -59,9 +62,9 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
             var modPath = Path.Combine(_dataDataDirectoryProvider.Path, listing.ModKey.FileName);
 
-            using var stream = File.OpenRead(modPath);
-
-            var locs = RecordLocator.GetLocations(modPath, _gameReleaseContext.Release);
+            var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, modPath);
+            using var stream = new MutagenBinaryReadStream(modPath, parsingMeta);
+            var locs = RecordLocator.GetLocations(stream);
 
             foreach (var recordLocationMarker in locs.ListedRecords)
             {
@@ -108,9 +111,9 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     public void Drive(IsolatedDriverParams driverParams)
     {
-        using var stream = File.OpenRead(driverParams.TargetModPath);
-
-        var locs = RecordLocator.GetLocations(driverParams.TargetModPath, _gameReleaseContext.Release);
+        var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, driverParams.TargetModPath);
+        using var stream = new MutagenBinaryReadStream(driverParams.TargetModPath, parsingMeta);
+        var locs = RecordLocator.GetLocations(stream);
 
         foreach (var recordLocationMarker in locs.ListedRecords)
         {
