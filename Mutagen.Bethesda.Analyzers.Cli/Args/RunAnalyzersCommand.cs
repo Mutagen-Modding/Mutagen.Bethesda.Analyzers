@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 namespace Mutagen.Bethesda.Analyzers.Cli.Args;
 
 [Verb("run-analyzers", HelpText = "Run analyzers on a game installation")]
-public class RunAnalyzersCommand : IMinimumSeverityConfiguration
+public class RunAnalyzersCommand : IMinimumSeverityConfiguration, IReportOutputConfiguration
 {
     [Option('g', "GameRelease", Required = true, HelpText = "Game Release to target")]
     public GameRelease GameRelease { get; set; }
@@ -14,6 +14,8 @@ public class RunAnalyzersCommand : IMinimumSeverityConfiguration
     public bool PrintTopics { get; set; } = false;
 
     [Option('s', "Severity", HelpText = "Minimum severity required in order to report")]
-
     public Severity MinimumSeverity { get; set; } = Severity.Suggestion;
+
+    [Option('o', "OutputFilePath", HelpText = "Optional output file path to save the report")]
+    public string? OutputFilePath { get; set; } = null;
 }
