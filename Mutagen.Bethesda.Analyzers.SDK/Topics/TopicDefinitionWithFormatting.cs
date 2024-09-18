@@ -2,6 +2,16 @@
 
 public partial record TopicDefinition
 {
+    public TopicDefinition WithoutFormatting(string messageFormat)
+    {
+        return new TopicDefinition(
+            id: Id,
+            title: Title,
+            messageFormat: messageFormat,
+            severity: Severity,
+            informationUri: InformationUri);
+    }
+
     public TopicDefinition<T1> WithFormatting<T1>(string messageFormat)
     {
         return new TopicDefinition<T1>(
