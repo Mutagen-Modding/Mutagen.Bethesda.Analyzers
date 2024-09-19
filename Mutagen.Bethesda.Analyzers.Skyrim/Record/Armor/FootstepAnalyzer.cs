@@ -8,26 +8,22 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<ArmorType> UnknownArmorType = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<ArmorType> UnknownArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Unknown Armor Type",
             Severity.Suggestion)
         .WithFormatting<ArmorType>("Armor type is set to unkown value {0}");
 
-    public static readonly TopicDefinition<string, string> ArmorMatchingFootstepArmorType = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> ArmorMatchingFootstepArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Footsteps on armor don't match their equipped armor type",
             Severity.Suggestion)
         .WithFormatting<string, string>("Armor has armor type {0} but armor addon doesn't have footstep {1}");
 
-    public static readonly TopicDefinition ArmorMissingFootstep = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition ArmorMissingFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has no footstep sound",
             Severity.Warning)
         .WithoutFormatting("Armor has no armor addon that adds footstep sounds");
 
-    public static readonly TopicDefinition<string, string> ArmorDuplicateFootstep = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has more than one armor addon that adds footstep sound",
             Severity.Suggestion)
         .WithFormatting<string, string>("Armor has multiple armor addons {0} that have footstep sounds which are enabled for the same races {1}");

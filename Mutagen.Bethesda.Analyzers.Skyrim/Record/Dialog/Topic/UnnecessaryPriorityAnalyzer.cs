@@ -9,8 +9,7 @@ public class UnnecessaryPriorityAnalyzer : IContextualRecordAnalyzer<IDialogTopi
 {
     private const int DefaultDialogTopicPriority = 50;
 
-    public static readonly TopicDefinition<float> UnnecessaryPriority = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<float> UnnecessaryPriority = MutagenTopicBuilder.DevelopmentTopic(
             "Unnecessary Priority",
             Severity.Suggestion)
         .WithFormatting<float>("Topic has a custom priority of {0} but is not a starting topic, this does not have any effect on the dialog order");

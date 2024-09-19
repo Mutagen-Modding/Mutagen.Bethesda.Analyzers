@@ -6,26 +6,22 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
 {
-    public static readonly TopicDefinition NoMusic = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoMusic = MutagenTopicBuilder.DevelopmentTopic(
             "No Music",
             Severity.Suggestion)
         .WithoutFormatting("Interior cell has no music");
 
-    public static readonly TopicDefinition NoLightingTemplate = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoLightingTemplate = MutagenTopicBuilder.DevelopmentTopic(
             "No Lighting Template",
             Severity.Suggestion)
         .WithoutFormatting("Interior cell has no lighting template");
 
-    public static readonly TopicDefinition NoAcousticSpace = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoAcousticSpace = MutagenTopicBuilder.DevelopmentTopic(
             "No Acoustic Space",
             Severity.Suggestion)
         .WithoutFormatting("Interior cell has no acoustic space");
 
-    public static readonly TopicDefinition NoLocation = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoLocation = MutagenTopicBuilder.DevelopmentTopic(
             "No Location",
             Severity.Suggestion)
         .WithoutFormatting("Interior cell has no location");

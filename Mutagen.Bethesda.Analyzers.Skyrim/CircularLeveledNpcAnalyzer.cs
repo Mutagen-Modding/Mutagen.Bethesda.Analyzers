@@ -8,8 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILeveledNpcGetter>
 {
-    public static readonly TopicDefinition<string> CircularLeveledNpc = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string> CircularLeveledNpc = MutagenTopicBuilder.DevelopmentTopic(
             "Circular Leveled Npc",
             Severity.Suggestion)
         .WithFormatting<string>("Leveled Npc contains itself in path {0}");

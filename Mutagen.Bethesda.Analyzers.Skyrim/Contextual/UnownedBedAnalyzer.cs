@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class UnownedBedAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string, string?> UnownedBed = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string?> UnownedBed = MutagenTopicBuilder.DevelopmentTopic(
             "Unowned Bed in Owned Cell",
             Severity.Suggestion)
         .WithFormatting<string, string?>("Unowned bed placement {0} in owned cell {1}");

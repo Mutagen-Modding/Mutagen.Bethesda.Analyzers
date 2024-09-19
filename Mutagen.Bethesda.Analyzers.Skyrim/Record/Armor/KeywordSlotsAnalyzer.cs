@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string, string> ArmorMatchingKeywordSlots = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> ArmorMatchingKeywordSlots = MutagenTopicBuilder.DevelopmentTopic(
             "Armor keywords don't match their equipped slot",
             Severity.Suggestion)
         .WithFormatting<string, string>(" Equipped in slot {0} but doesn't have keyword {1}");

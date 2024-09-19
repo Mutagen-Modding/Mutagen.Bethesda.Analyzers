@@ -8,8 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
 {
 
-    public static readonly TopicDefinition<string?, int, string, string?> NpcsWithSameVoiceType = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string?, int, string, string?> NpcsWithSameVoiceType = MutagenTopicBuilder.DevelopmentTopic(
             "NPCs with the same voice type in same cell",
             Severity.Suggestion)
         .WithFormatting<string?, int, string, string?>("Cell {0} includes {1} npcs {2} with the same voice type {3}");

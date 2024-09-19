@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IBookGetter>
 {
-    public static readonly TopicDefinition<string> InvalidCharactersBookText = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string> InvalidCharactersBookText = MutagenTopicBuilder.DevelopmentTopic(
             "Book Text Contains Invalid Characters",
             Severity.Warning)
         .WithFormatting<string>("Book text contains invalid characters: {0}");

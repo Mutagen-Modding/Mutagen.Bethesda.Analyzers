@@ -6,14 +6,12 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition<string> NonPlayerSkillCheck = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string> NonPlayerSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
             "Non-Player Skill Check",
             Severity.Warning)
         .WithFormatting<string>("Skill check in dialog are not checked on the player but on {0} - this is usually a sign of a mistake");
 
-    public static readonly TopicDefinition<string> NonGlobalSkillCheck = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string> NonGlobalSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
             "Non-Global Skill Check",
             Severity.Suggestion)
         .WithFormatting<string>("Skill check in dialog doesn't use global to evaluate skill level but {0} - this is usually a sign of a mistake");

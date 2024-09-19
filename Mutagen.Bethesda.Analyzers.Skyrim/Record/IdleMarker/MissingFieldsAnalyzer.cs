@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.IdleMarker;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIdleMarkerGetter>
 {
-    public static readonly TopicDefinition NoIdles = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoIdles = MutagenTopicBuilder.DevelopmentTopic(
             "No Idles",
             Severity.Warning)
         .WithoutFormatting("Idle Marker has no animations");

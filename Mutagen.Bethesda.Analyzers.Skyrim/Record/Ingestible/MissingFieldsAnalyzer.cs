@@ -6,14 +6,12 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Ingestible;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
 {
-    public static readonly TopicDefinition EmptyEffectList = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition EmptyEffectList = MutagenTopicBuilder.DevelopmentTopic(
             "Empty Effect List",
             Severity.Warning)
         .WithoutFormatting("Ingestible has no effect");
 
-    public static readonly TopicDefinition NoConsumeSound = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoConsumeSound = MutagenTopicBuilder.DevelopmentTopic(
             "No Consume Sound",
             Severity.Suggestion)
         .WithoutFormatting("Ingestible has no consume sound");

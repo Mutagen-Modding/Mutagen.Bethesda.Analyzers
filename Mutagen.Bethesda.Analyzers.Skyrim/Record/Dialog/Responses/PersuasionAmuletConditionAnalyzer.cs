@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class PersuasionAmuletConditionAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition MissingCreatedObject = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition MissingCreatedObject = MutagenTopicBuilder.DevelopmentTopic(
             "Missing Amulet of Articulation Condition",
             Severity.Suggestion)
         .WithoutFormatting("Persuasion check is missing auto pass condition when Amulet of Articulation is equipped");

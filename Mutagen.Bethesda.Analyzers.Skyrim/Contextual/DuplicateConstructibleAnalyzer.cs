@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateConstructibleAnalyzer : IContextualAnalyzer
 {
-    private static readonly TopicDefinition<string?> DuplicateConstructibleReference = MutagenTopicBuilder.FromDiscussion(
-            0,
+    private static readonly TopicDefinition<string?> DuplicateConstructibleReference = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate Constructible Object",
             Severity.Warning)
         .WithFormatting<string?>("Constructibles {0} are creating the same item, all but one should be removed.");

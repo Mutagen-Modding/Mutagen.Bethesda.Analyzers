@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string?, string?> NpcNotInCellFaction = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string?, string?> NpcNotInCellFaction = MutagenTopicBuilder.DevelopmentTopic(
             "Npc Not In Cell Faction",
             Severity.Suggestion)
         .WithFormatting<string?, string?>("Npc {0} is not in their cell owner faction {1}");

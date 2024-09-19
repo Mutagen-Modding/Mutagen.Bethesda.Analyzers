@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string, string> ArmorMatchingKeywordArmorType = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> ArmorMatchingKeywordArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Armor keywords don't match their equipped armor type",
             Severity.Suggestion)
         .WithFormatting<string, string>("Has armor type {0} but doesn't have keyword {1}");

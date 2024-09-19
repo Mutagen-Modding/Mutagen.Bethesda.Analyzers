@@ -8,8 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string?> ArmorMissingRaceAddons = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string?> ArmorMissingRaceAddons = MutagenTopicBuilder.DevelopmentTopic(
             "Armor is missing race addons",
             Severity.Warning)
         .WithFormatting<string?>("Missing race addon for race: {0}");

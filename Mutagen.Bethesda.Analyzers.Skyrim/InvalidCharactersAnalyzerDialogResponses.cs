@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition<string, string> InvalidCharactersDialogResponses = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> InvalidCharactersDialogResponses = MutagenTopicBuilder.DevelopmentTopic(
             "Dialog Responses Contains Invalid Characters",
             Severity.Warning)
         .WithFormatting<string, string>("Dialog response {0} contain invalid characters: {1}");

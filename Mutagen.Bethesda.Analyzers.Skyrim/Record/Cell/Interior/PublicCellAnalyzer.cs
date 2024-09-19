@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior;
 
 public class PublicCellAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
 {
-    public static readonly TopicDefinition HasLockList = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition HasLockList = MutagenTopicBuilder.DevelopmentTopic(
             "Public Cell has Lock List",
             Severity.Warning)
         .WithoutFormatting("Public cell has lock list");

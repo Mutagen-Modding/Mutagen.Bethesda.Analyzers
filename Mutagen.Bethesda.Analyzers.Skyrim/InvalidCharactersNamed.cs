@@ -8,8 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGetter>
 {
-    public static readonly TopicDefinition<string> InvalidCharactersName = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string> InvalidCharactersName = MutagenTopicBuilder.DevelopmentTopic(
             "Invalid Characters in Name",
             Severity.Warning)
         .WithFormatting<string>("The name contains invalid characters: {0}");

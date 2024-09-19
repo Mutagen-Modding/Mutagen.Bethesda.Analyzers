@@ -7,8 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateReferencesAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string, string> DuplicateReferences = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> DuplicateReferences = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate References",
             Severity.Suggestion)
         .WithFormatting<string, string>("The following references are duplicate records of {0} and can be deleted: {1}");

@@ -8,8 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string, string> ArmorMissingVendorKeyword = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition<string, string> ArmorMissingVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
             "Armor is missing Vendor Keyword",
             Severity.Suggestion)
         .WithFormatting<string, string>("Missing vendor keyword {0} but has {1}");

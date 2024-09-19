@@ -6,8 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Constructible;
 
 public class MissingCreatedObjectAnalyzer : IIsolatedRecordAnalyzer<IConstructibleObjectGetter>
 {
-    public static readonly TopicDefinition MissingCreatedObject = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition MissingCreatedObject = MutagenTopicBuilder.DevelopmentTopic(
             "Missing Created Object",
             Severity.Warning)
         .WithoutFormatting("Constructible doesn't create any object");

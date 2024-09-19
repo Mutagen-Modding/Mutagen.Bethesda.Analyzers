@@ -7,14 +7,12 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.LoadScreen;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILoadScreenGetter>
 {
-    public static readonly TopicDefinition NoDescription = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition NoDescription = MutagenTopicBuilder.DevelopmentTopic(
             "No Description",
             Severity.Suggestion)
         .WithoutFormatting("LoadScreen has no description");
 
-    public static readonly TopicDefinition No3DModel = MutagenTopicBuilder.FromDiscussion(
-            0,
+    public static readonly TopicDefinition No3DModel = MutagenTopicBuilder.DevelopmentTopic(
             "No 3D Model",
             Severity.Suggestion)
         .WithoutFormatting("LoadScreen has no 3D model");
