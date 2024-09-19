@@ -10,7 +10,7 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IBookGe
     public static readonly TopicDefinition<string> InvalidCharactersBookText = MutagenTopicBuilder.FromDiscussion(
             0,
             "Book Text Contains Invalid Characters",
-            Severity.Suggestion)
+            Severity.Warning)
         .WithFormatting<string>("Book text contains invalid characters: {0}");
 
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IBookGetter> param)

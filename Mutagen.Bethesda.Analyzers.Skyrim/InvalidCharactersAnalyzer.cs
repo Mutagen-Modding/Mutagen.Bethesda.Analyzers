@@ -19,6 +19,8 @@ public partial class InvalidCharactersAnalyzer
 
     public IEnumerable<TopicDefinition> Topics =>
     [
-        InvalidCharactersBookText
+        InvalidCharactersBookText,
+        InvalidCharactersDialogResponses,
+        InvalidCharactersName
     ];
 }
