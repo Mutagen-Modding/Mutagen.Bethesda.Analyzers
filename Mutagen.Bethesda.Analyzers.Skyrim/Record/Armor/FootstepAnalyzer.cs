@@ -8,6 +8,12 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 {
+    public static readonly TopicDefinition<ArmorType> UnknownArmorType = MutagenTopicBuilder.FromDiscussion(
+            0,
+            "Unknown Armor Type",
+            Severity.Suggestion)
+        .WithFormatting<ArmorType>("Armor type is set to unkown value {0}");
+
     public static readonly TopicDefinition<string, string> ArmorMatchingFootstepArmorType = MutagenTopicBuilder.FromDiscussion(
             0,
             "Footsteps on armor don't match their equipped armor type",
@@ -69,13 +75,28 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         }
 
         // Check if the footstep sound is correct
-        var (correctFootstepSound, correctFootstepEditorID) = armor.BodyTemplate.ArmorType switch
+        FormKey correctFootstepSound;
+        string? correctFootstepEditorID;
+        switch (armor.BodyTemplate.ArmorType)
         {
-            ArmorType.LightArmor => (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet)),
-            ArmorType.HeavyArmor => (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet)),
-            ArmorType.Clothing => (FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet)),
-            _ => throw new InvalidOperationException()
-        };
+            case ArmorType.LightArmor:
+                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet));
+                break;
+            case ArmorType.HeavyArmor:
+                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet));
+                break;
+            case ArmorType.Clothing:
+                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet));
+                break;
+            default:
+                result.AddTopic(
+                    RecordTopic.Create(
+                        armor,
+                        UnknownArmorType.Format(armor.BodyTemplate.ArmorType),
+                        x => x.BodyTemplate));
+
+                return result;
+        }
 
         foreach (var armorAddon in armorAddons)
         {
