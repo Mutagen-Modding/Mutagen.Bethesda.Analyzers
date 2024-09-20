@@ -3,15 +3,14 @@ using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
-using Noggog;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string?> ArmorMissingRaceAddons = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IFormLinkGetter<IRaceGetter>> ArmorMissingRaceAddons = MutagenTopicBuilder.DevelopmentTopic(
             "Armor is missing race addons",
             Severity.Warning)
-        .WithFormatting<string?>("Missing race addon for race: {0}");
+        .WithFormatting<IFormLinkGetter<IRaceGetter>>("Missing race addon for race: {0}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMissingRaceAddons];
 
@@ -61,13 +60,10 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
         foreach (var race in missingRaces)
         {
-            if (param.LinkCache.TryResolve(race, out var r))
-            {
-                result.AddTopic(RecordTopic.Create(
-                    armor,
-                    ArmorMissingRaceAddons.Format(r.EditorID),
-                    x => x.EditorID));
-            }
+            result.AddTopic(RecordTopic.Create(
+                armor,
+                ArmorMissingRaceAddons.Format(race),
+                x => x.Armature));
         }
 
         return result;

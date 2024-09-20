@@ -12,6 +12,7 @@ public record RecordTopic(IFormattedTopicDefinition _formattedTopicDefinition, E
     }
 
     public TopicDefinition TopicDefinition => _formattedTopicDefinition.TopicDefinition;
-    public string FormattedMessage => _formattedTopicDefinition.FormattedMessage;
+    public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Items);
     public Severity Severity { get; set; } = _formattedTopicDefinition.TopicDefinition.Severity;
+    public IEnumerable<object?> Items => _formattedTopicDefinition.Items;
 }
