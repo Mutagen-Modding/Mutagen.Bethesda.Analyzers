@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateConstructibleAnalyzer : IContextualAnalyzer
 {
-    private static readonly TopicDefinition<string?> DuplicateConstructibleReference = MutagenTopicBuilder.DevelopmentTopic(
+    private static readonly TopicDefinition<List<IConstructibleObjectGetter>> DuplicateConstructibleReference = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate Constructible Object",
             Severity.Warning)
-        .WithFormatting<string?>("Constructibles {0} are creating the same item, all but one should be removed.");
+        .WithFormatting<List<IConstructibleObjectGetter>>("Constructibles {0} are creating the same item, all but one should be removed.");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [DuplicateConstructibleReference];
 
@@ -33,15 +33,12 @@ public class DuplicateConstructibleAnalyzer : IContextualAnalyzer
         {
             if (duplicateGroup.Count() == 1) continue;
 
-            foreach (var duplicate in duplicateGroup)
-            {
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        duplicate,
-                        DuplicateConstructibleReference.Format(duplicate.FormKey.ToString())
-                    )
-                );
-            }
+            result.AddTopic(
+                ContextualTopic.Create(
+                    duplicateGroup.Key,
+                    DuplicateConstructibleReference.Format(duplicateGroup.ToList())
+                )
+            );
         }
 
         return result;
