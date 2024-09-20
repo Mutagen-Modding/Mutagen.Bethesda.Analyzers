@@ -18,13 +18,14 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoBranch, NoQuest];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
+    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
     {
         var dialogTopic = param.Record;
 
         var result = new RecordAnalyzerResult();
 
-        if (dialogTopic.Branch.IsNull)
+        if (dialogTopic.Subtype is DialogTopic.SubtypeEnum.Rumors or DialogTopic.SubtypeEnum.ForceGreet or DialogTopic.SubtypeEnum.Custom
+            && dialogTopic.Branch.IsNull)
         {
             result.AddTopic(
                 RecordTopic.Create(
