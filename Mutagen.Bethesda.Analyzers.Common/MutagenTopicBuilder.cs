@@ -18,8 +18,11 @@ public static class MutagenTopicBuilder
         string title,
         Severity severity)
     {
+        var hash = title.GetHashCode();
+        var ushortHash = (ushort) ((hash >> 16) ^ hash);
+
         return new TopicDefinition(
-            new TopicId($"Dev-{title}", 0),
+            new TopicId("Dev", ushortHash),
             title,
             severity);
     }
