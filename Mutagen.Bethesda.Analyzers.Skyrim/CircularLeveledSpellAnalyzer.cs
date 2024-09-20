@@ -26,6 +26,6 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             }
 
             return Array.Empty<FormKey>();
-        }, param.LinkCache);
+        }, param.LinkCache, CircularLeveledSpell);
     }
 }
