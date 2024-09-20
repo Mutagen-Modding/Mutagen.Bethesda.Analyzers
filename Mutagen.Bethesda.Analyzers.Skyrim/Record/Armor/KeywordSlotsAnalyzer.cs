@@ -7,32 +7,35 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<string, string> ArmorMatchingKeywordSlots = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string, FormLink<IKeywordGetter>> ArmorMatchingKeywordSlots = MutagenTopicBuilder.DevelopmentTopic(
             "Armor keywords don't match their equipped slot",
             Severity.Suggestion)
-        .WithFormatting<string, string>(" Equipped in slot {0} but doesn't have keyword {1}");
+        .WithFormatting<string, FormLink<IKeywordGetter>>(" Equipped in slot {0} but doesn't have keyword {1}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingKeywordSlots];
 
-    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword, string KeywordEditorID)> ClothingKeywords = [
-        (BipedObjectFlag.Body, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingBody, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingBody)),
-        (BipedObjectFlag.Feet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingFeet, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingFeet)),
-        (BipedObjectFlag.Hands, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHands, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHands)),
-        (BipedObjectFlag.Head | BipedObjectFlag.Hair, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHead, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHead)),
+    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword)> ClothingKeywords =
+    [
+        (BipedObjectFlag.Body, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingBody),
+        (BipedObjectFlag.Feet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingFeet),
+        (BipedObjectFlag.Hands, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHands),
+        (BipedObjectFlag.Head | BipedObjectFlag.Hair, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingHead),
     ];
 
-    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword, string KeywordEditorID)> ArmorKeywords = [
-        (BipedObjectFlag.Body, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorCuirass, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ArmorCuirass)),
-        (BipedObjectFlag.Feet, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorBoots, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ArmorBoots)),
-        (BipedObjectFlag.Hands, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorGauntlets, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ArmorGauntlets)),
-        (BipedObjectFlag.Head | BipedObjectFlag.Hair, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorHelmet, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ArmorHelmet)),
+    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword)> ArmorKeywords =
+    [
+        (BipedObjectFlag.Body, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorCuirass),
+        (BipedObjectFlag.Feet, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorBoots),
+        (BipedObjectFlag.Hands, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorGauntlets),
+        (BipedObjectFlag.Head | BipedObjectFlag.Hair, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorHelmet),
     ];
 
-    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword, string KeywordEditorID)> MiscKeywords = [
-        (BipedObjectFlag.Shield, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorShield, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ArmorShield)),
-        (BipedObjectFlag.Circlet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingCirclet, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingCirclet)),
-        (BipedObjectFlag.Amulet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingNecklace, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingNecklace)),
-        (BipedObjectFlag.Ring, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingRing, nameof(FormKeys.SkyrimSE.Skyrim.Keyword.ClothingRing)),
+    public static readonly List<(BipedObjectFlag Slots, FormLink<IKeywordGetter> Keyword)> MiscKeywords =
+    [
+        (BipedObjectFlag.Shield, FormKeys.SkyrimSE.Skyrim.Keyword.ArmorShield),
+        (BipedObjectFlag.Circlet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingCirclet),
+        (BipedObjectFlag.Amulet, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingNecklace),
+        (BipedObjectFlag.Ring, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingRing),
     ];
 
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
@@ -59,7 +62,7 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         // Armor type independent conditions
         conditions.AddRange(MiscKeywords);
 
-        foreach (var (slots, keyword, keywordEditorID) in conditions)
+        foreach (var (slots, keyword) in conditions)
         {
             // Check if any of the slots are selected
             if ((armor.BodyTemplate.FirstPersonFlags & slots) != 0)
@@ -71,7 +74,7 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 
                 return new RecordAnalyzerResult(RecordTopic.Create(
                     armor,
-                    ArmorMatchingKeywordSlots.Format(slots.ToString(), keywordEditorID),
+                    ArmorMatchingKeywordSlots.Format(slots.ToString(), keyword),
                     x => x.Keywords));
             }
         }
