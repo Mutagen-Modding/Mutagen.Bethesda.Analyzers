@@ -2,12 +2,12 @@
 using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
 {
-
     public static readonly TopicDefinition<string?, int, string, string?> NpcsWithSameVoiceType = MutagenTopicBuilder.DevelopmentTopic(
             "NPCs with the same voice type in same cell",
             Severity.Suggestion)
@@ -23,14 +23,14 @@ public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
         {
             if (cell.IsExteriorCell()) continue;
 
-            var npcVoiceTypes = new Dictionary<INpcGetter, FormKey>();
+            var npcVoiceTypes = new Dictionary<IMajorRecordIdentifier, IFormLinkGetter<IVoiceTypeGetter>>();
             foreach (var placedNpc in cell.GetAllPlaced(param.LinkCache).OfType<IPlacedNpcGetter>())
             {
                 if (!param.LinkCache.TryResolve<INpcGetter>(placedNpc.Base.FormKey, out var npc)) continue;
                 if (!npc.IsUnique()) continue;
                 if (npc.Voice.IsNull) continue;
 
-                npcVoiceTypes.TryAdd(npc, npc.Voice.FormKey);
+                npcVoiceTypes.TryAdd(npc, npc.Voice);
             }
 
             foreach (var grouping in npcVoiceTypes.GroupBy(x => x.Value))
@@ -39,7 +39,7 @@ public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
                 var count = npcNames.Count;
                 if (count <= 1) continue;
 
-                if (param.LinkCache.TryResolve<IVoiceTypeGetter>(grouping.Key, out var voiceType))
+                if (param.LinkCache.TryResolve(grouping.Key, out var voiceType))
                 {
                     result.AddTopic(
                         ContextualTopic.Create(
