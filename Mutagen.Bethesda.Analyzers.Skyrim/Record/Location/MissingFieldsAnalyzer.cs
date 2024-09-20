@@ -15,30 +15,35 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILocationGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoParentLocation];
 
-    private static readonly HashSet<FormKey> ValidTopLevelLocations =
+    private static readonly HashSet<IFormLinkGetter<ILocationGetter>> ValidTopLevelLocations =
     [
-        FormKeys.SkyrimSE.Skyrim.Location.PersistAll.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Location.HoldingCell.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Location.VirtualLocation.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Location.TamrielLocation.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Location.SovngardeLocation.FormKey,
-        FormKeys.SkyrimSE.Dragonborn.Location.DLC2SolstheimLocation.FormKey,
+        FormKeys.SkyrimSE.Skyrim.Location.PersistAll,
+        FormKeys.SkyrimSE.Skyrim.Location.HoldingCell,
+        FormKeys.SkyrimSE.Skyrim.Location.VirtualLocation,
+        FormKeys.SkyrimSE.Skyrim.Location.TamrielLocation,
+        FormKeys.SkyrimSE.Skyrim.Location.SovngardeLocation,
+        FormKeys.SkyrimSE.Dragonborn.Location.DLC2SolstheimLocation,
     ];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<ILocationGetter> param)
+    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ILocationGetter> param)
     {
         var location = param.Record;
 
-        var result = new RecordAnalyzerResult();
+        // Ignore some well known top level locations
+        if (ValidTopLevelLocations.Contains(location))
+        {
+            return null;
+        }
 
         if (location.ParentLocation.IsNull)
         {
-            result.AddTopic(RecordTopic.Create(
-                location,
-                NoParentLocation.Format(),
-                x => x.ParentLocation));
+            return new RecordAnalyzerResult(
+                RecordTopic.Create(
+                    location,
+                    NoParentLocation.Format(),
+                    x => x.ParentLocation));
         }
 
-        return result;
+        return null;
     }
 }
