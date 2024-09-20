@@ -2,7 +2,7 @@
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
-public static class WorldspaceExtension
+public static class WorldspaceExtensions
 {
     public static IEnumerable<ILocationGetter> GetWorldLocations(this IWorldspaceGetter world, ILinkCache linkCache)
     {

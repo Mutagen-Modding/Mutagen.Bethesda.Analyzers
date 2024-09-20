@@ -23,7 +23,7 @@ public class InvalidSayOnceAnalyzer : IContextualRecordAnalyzer<IDialogResponses
         if (context.Parent?.Record is not IDialogTopicGetter topic) return null;
 
         var quest = topic.Quest.TryResolve(param.LinkCache);
-        if (quest is null || quest.Flags.HasFlag(Quest.Flag.StartGameEnabled))
+        if (quest is null || quest.Flags.HasFlag(Bethesda.Skyrim.Quest.Flag.StartGameEnabled))
         {
             return null;
         }

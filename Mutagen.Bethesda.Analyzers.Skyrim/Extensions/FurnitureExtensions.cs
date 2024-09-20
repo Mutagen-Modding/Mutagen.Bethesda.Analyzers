@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
-public static class FurnitureExtension
+public static class FurnitureExtensions
 {
     public static bool IsBed(this IFurnitureGetter furniture)
     {
