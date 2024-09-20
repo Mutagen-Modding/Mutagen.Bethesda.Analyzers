@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Location;
 
-public class MissingFieldsAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
+public class NoParentLocationAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
 {
     public static readonly TopicDefinition NoParentLocation = MutagenTopicBuilder.DevelopmentTopic(
             "No Parent Location",
