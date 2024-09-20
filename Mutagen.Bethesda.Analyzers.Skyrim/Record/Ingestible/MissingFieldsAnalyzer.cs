@@ -8,7 +8,7 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
 {
     public static readonly TopicDefinition EmptyEffectList = MutagenTopicBuilder.DevelopmentTopic(
             "Empty Effect List",
-            Severity.Warning)
+            Severity.Suggestion)
         .WithoutFormatting("Ingestible has no effect");
 
     public static readonly TopicDefinition NoConsumeSound = MutagenTopicBuilder.DevelopmentTopic(
