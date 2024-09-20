@@ -1,15 +1,9 @@
-﻿using System.Collections.Concurrent;
-using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Cache;
+﻿using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public static class CellExtensions {
-    private static readonly ConcurrentDictionary<FormKey, IReadOnlySet<ILocationGetter>> CellLocationCache = new();
-
     public static IEnumerable<ILocationGetter> GetAllLocations(this ICellGetter cell, ILinkCache linkCache) {
-        if (CellLocationCache.TryGetValue(cell.FormKey, out var locations)) return locations;
-
         // Add all parent location form keys
         var cellLocations = new HashSet<ILocationGetter>();
         var location = cell.Location.TryResolve(linkCache);
@@ -28,8 +22,6 @@ public static class CellExtensions {
                 }
             }
         }
-
-        CellLocationCache.TryAdd(cell.FormKey, cellLocations);
 
         return cellLocations;
     }
