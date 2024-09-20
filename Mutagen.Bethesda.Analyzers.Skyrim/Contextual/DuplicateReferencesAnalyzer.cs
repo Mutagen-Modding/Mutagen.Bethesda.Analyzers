@@ -44,7 +44,7 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
                 // TODO: Exclude any placed objects with references to it
                 var dispensableDuplicates = duplicates
                     .Where(placed => placed is { VirtualMachineAdapter: null, EnableParent: null, NavigationDoorLink: null, Patrol: null, LinkedReferences.Count: 0 })
-                    .Where(placed => (placed.SkyrimMajorRecordFlags & (SkyrimMajorRecord.SkyrimMajorRecordFlag) PlacedObject.DefaultMajorFlag.Persistent) == 0)
+                    .Where(placed => placed.SkyrimMajorRecordFlags.HasFlag((SkyrimMajorRecord.SkyrimMajorRecordFlag) PlacedObject.DefaultMajorFlag.Persistent))
                     .ToList();
 
                 // All duplicates are indispensable

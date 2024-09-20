@@ -26,7 +26,7 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
             foreach (var analyzer in _isolatedRecordAnalyzers)
             {
                 var record = analyzer.AnalyzeRecord(isolatedParam);
-                if (record == null) continue;
+                if (record is null) continue;
                 foreach (var topic in record.Topics)
                 {
                     driverParams.ReportDropbox.Dropoff(

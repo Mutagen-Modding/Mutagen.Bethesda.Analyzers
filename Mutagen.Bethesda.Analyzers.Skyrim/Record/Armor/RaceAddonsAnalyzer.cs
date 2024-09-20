@@ -47,7 +47,7 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         foreach (var armorAddon in armor.Armature)
         {
             var addon = armorAddon.TryResolve(param.LinkCache);
-            if (addon == null) continue;
+            if (addon is null) continue;
 
             foreach (var additionalRace in addon.AdditionalRaces)
             {

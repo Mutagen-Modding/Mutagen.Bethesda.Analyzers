@@ -33,7 +33,7 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
         foreach (var analyzer in _contextualRecordFrameAnalyzers)
         {
             var result = analyzer.AnalyzeRecord(param);
-            if (result == null) continue;
+            if (result is null) continue;
             foreach (var topic in result.Topics)
             {
                 driverParams.ReportDropbox.Dropoff(topic);

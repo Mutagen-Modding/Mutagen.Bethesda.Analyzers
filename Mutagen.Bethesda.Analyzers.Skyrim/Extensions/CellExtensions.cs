@@ -9,7 +9,7 @@ public static class CellExtensions
         // Add all parent location form keys
         var cellLocations = new HashSet<ILocationGetter>();
         var location = cell.Location.TryResolve(linkCache);
-        while (location != null)
+        while (location is not null)
         {
             cellLocations.Add(location);
             location = location.ParentLocation.TryResolve(linkCache);
@@ -20,7 +20,7 @@ public static class CellExtensions
         {
             var context = linkCache.ResolveSimpleContext<ICellGetter>(cell.FormKey);
             var world = (IWorldspaceGetter?)context.Parent?.Record;
-            if (world != null)
+            if (world is not null)
             {
                 foreach (var worldLocation in world.GetWorldLocations(linkCache))
                 {

@@ -9,7 +9,7 @@ public static class WorldspaceExtension
         var worldLocations = new List<ILocationGetter>();
 
         var worldLocation = world.Location.TryResolve(linkCache);
-        while (worldLocation != null)
+        while (worldLocation is not null)
         {
             worldLocations.Add(worldLocation);
             worldLocation = worldLocation.ParentLocation.TryResolve(linkCache);

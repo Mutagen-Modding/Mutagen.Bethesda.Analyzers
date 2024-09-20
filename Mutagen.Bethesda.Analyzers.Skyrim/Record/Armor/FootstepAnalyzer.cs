@@ -58,7 +58,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
                 if (armorAddon.FormKey != otherArmorAddon.FormKey)
                 {
                     var duplicateRaces = races.Intersect(otherRaces).ToArray();
-                    if (duplicateRaces.Any())
+                    if (duplicateRaces.Length != 0)
                     {
                         result.AddTopic(
                             RecordTopic.Create(

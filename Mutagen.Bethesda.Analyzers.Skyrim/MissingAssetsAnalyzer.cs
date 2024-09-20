@@ -30,7 +30,7 @@ public partial class MissingAssetsAnalyzer
         where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
     {
         var path = modeledGetter.Model?.File;
-        if (path == null) return;
+        if (path is null) return;
         if (FileExists(path)) return;
 
         var error = RecordTopic.Create(
@@ -43,7 +43,7 @@ public partial class MissingAssetsAnalyzer
 
     private void CheckForMissingAsset(string? path, RecordAnalyzerResult result, Func<RecordTopic> func)
     {
-        if (path == null) return;
+        if (path is null) return;
         if (FileExists(path)) return;
 
         var error = func();

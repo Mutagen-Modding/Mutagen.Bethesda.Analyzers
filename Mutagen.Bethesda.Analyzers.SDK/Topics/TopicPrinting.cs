@@ -14,7 +14,7 @@ public static class TopicPrinting
         sb.AppendLine(topic.ToShortString());
         using (sb.IncreaseDepth())
         {
-            if (topic.InformationUri != null)
+            if (topic.InformationUri is not null)
             {
                 sb.AppendLine(topic.InformationUri.ToString());
             }

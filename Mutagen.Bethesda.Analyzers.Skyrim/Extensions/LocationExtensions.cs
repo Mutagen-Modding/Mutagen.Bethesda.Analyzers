@@ -76,7 +76,7 @@ public static class LocationExtensions
 
     public static bool IsInnLocation(this ILocationGetter location)
     {
-        if (location.Keywords == null) return false;
+        if (location.Keywords is null) return false;
 
         return location.Keywords.Any(k => k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn.FormKey);
     }

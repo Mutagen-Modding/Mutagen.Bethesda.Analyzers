@@ -19,7 +19,7 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIdleMarkerGetter>
 
         var result = new RecordAnalyzerResult();
 
-        if (idleMarker.Animations is not null && idleMarker.Animations.Any())
+        if (idleMarker.Animations is not null && idleMarker.Animations.Count == 0)
         {
             result.AddTopic(
                 RecordTopic.Create(

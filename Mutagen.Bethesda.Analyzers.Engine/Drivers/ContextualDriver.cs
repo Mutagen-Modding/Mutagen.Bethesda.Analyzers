@@ -19,7 +19,7 @@ public class ContextualDriver : IContextualDriver
         foreach (var contextualAnalyzer in _contextualAnalyzers)
         {
             var result = contextualAnalyzer.Analyze(analyzerParams);
-            if (result == null) continue;
+            if (result is null) continue;
             foreach (var topic in result.Topics)
             {
                 driverParams.ReportDropbox.Dropoff(topic);

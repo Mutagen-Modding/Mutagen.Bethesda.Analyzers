@@ -46,7 +46,7 @@ public record TopicId
             break;
         }
 
-        if (id == null)
+        if (id is null)
         {
             throw new ArgumentException($"Input was not able to yield a numeric ID: {str}", nameof(str));
         }

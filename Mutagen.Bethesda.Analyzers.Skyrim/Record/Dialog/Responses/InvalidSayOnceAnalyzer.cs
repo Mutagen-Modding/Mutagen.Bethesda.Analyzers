@@ -17,7 +17,7 @@ public class InvalidSayOnceAnalyzer : IContextualRecordAnalyzer<IDialogResponses
     {
         var dialogResponses = param.Record;
 
-        if (dialogResponses.Flags is null || (dialogResponses.Flags.Flags & DialogResponses.Flag.SayOnce) == 0) return null;
+        if (dialogResponses.Flags is null || !dialogResponses.Flags.Flags.HasFlag(DialogResponses.Flag.SayOnce)) return null;
 
         var context = param.LinkCache.ResolveSimpleContext<IDialogResponsesGetter>(dialogResponses.FormKey);
         if (context.Parent?.Record is not IDialogTopicGetter topic) return null;

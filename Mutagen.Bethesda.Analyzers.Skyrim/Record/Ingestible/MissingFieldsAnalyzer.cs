@@ -24,7 +24,7 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
 
         var result = new RecordAnalyzerResult();
 
-        if (!ingestible.Effects.Any())
+        if (ingestible.Effects.Count == 0)
         {
             result.AddTopic(
                 RecordTopic.Create(

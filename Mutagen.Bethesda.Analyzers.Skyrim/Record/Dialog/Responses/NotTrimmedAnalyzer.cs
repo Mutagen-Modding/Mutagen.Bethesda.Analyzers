@@ -25,7 +25,7 @@ public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
         var result = new RecordAnalyzerResult();
 
         // Check prompt
-        if (dialogResponses.Prompt?.String != null && NotTrimmed(dialogResponses.Prompt.String))
+        if (dialogResponses.Prompt?.String is not null && NotTrimmed(dialogResponses.Prompt.String))
         {
             result.AddTopic(
                 RecordTopic.Create(

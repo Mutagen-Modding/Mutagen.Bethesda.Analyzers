@@ -17,7 +17,7 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
     {
         return FindCircularList(param.Record, l =>
         {
-            if (l.Entries != null)
+            if (l.Entries is not null)
             {
                 return l.Entries
                     .Select(x => x.Data)

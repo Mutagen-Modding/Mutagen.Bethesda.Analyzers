@@ -28,7 +28,7 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
         var result = new RecordAnalyzerResult();
 
         // Check prompt
-        if (dialogResponses.Prompt?.String != null)
+        if (dialogResponses.Prompt?.String is not null)
         {
             CheckInconsistentCharacters(dialogResponses.Prompt.String, PromptInconsistentCharacters);
         }

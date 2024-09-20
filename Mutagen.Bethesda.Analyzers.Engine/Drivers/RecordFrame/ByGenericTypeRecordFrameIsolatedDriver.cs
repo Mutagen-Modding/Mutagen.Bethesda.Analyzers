@@ -30,7 +30,7 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
         foreach (var analyzer in _isolatedRecordFrameAnalyzers)
         {
             var result = analyzer.AnalyzeRecord(param);
-            if (result == null) continue;
+            if (result is null) continue;
             foreach (var topic in result.Topics)
             {
                 driverParams.ReportDropbox.Dropoff(topic);

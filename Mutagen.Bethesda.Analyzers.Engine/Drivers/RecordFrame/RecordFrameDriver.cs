@@ -58,7 +58,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
     {
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
-            if (listing.Mod == null) continue;
+            if (listing.Mod is null) continue;
 
             var modPath = Path.Combine(_dataDataDirectoryProvider.Path, listing.ModKey.FileName);
 
