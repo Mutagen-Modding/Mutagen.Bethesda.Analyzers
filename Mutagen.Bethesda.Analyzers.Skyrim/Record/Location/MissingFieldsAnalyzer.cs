@@ -3,10 +3,9 @@ using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
-using Noggog;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Location;
 
-public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILocationGetter>
+public class MissingFieldsAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
 {
     public static readonly TopicDefinition NoParentLocation = MutagenTopicBuilder.DevelopmentTopic(
             "No Parent Location",
@@ -25,12 +24,20 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILocationGetter>
         FormKeys.SkyrimSE.Dragonborn.Location.DLC2SolstheimLocation,
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ILocationGetter> param)
+    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<ILocationGetter> param)
     {
         var location = param.Record;
 
         // Ignore some well known top level locations
         if (ValidTopLevelLocations.Contains(location))
+        {
+            return null;
+        }
+
+        // Ignore locations that are assigned on a worldspace level
+        if (param.LinkCache.PriorityOrder.WinningOverrides<IWorldspaceGetter>()
+            .Select(x => x.Location)
+            .Any(x => x.FormKey == location.FormKey))
         {
             return null;
         }
