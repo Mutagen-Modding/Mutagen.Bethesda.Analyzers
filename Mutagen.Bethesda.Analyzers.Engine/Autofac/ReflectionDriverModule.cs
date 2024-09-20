@@ -15,6 +15,15 @@ public class ReflectionDriverModule : Module
         foreach (var analyzerType in TypeExt.GetInheritingFromGenericInterface(
                          typeof(IIsolatedRecordAnalyzer<>),
                          loadAssemblies: true)
+                     .Concat(TypeExt.GetInheritingFromGenericInterface(
+                         typeof(IIsolatedRecordFrameAnalyzer<>),
+                         loadAssemblies: true))
+                     .Concat(TypeExt.GetInheritingFromGenericInterface(
+                         typeof(IContextualRecordAnalyzer<>),
+                         loadAssemblies: true))
+                     .Concat(TypeExt.GetInheritingFromGenericInterface(
+                         typeof(IContextualRecordFrameAnalyzer<>),
+                         loadAssemblies: true))
                      .Select(x => x.Key.GetGenericArguments()[0])
                      .Select(x => LoquiRegistration.GetRegister(x).GetterType)
                      .Distinct())
