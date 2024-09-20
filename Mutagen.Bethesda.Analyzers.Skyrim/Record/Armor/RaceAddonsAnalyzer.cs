@@ -15,18 +15,18 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMissingRaceAddons];
 
-    private static readonly List<FormKey> DefaultPlayerRaces =
+    private static readonly HashSet<IFormLinkGetter<IRaceGetter>> DefaultPlayerRaces =
     [
-        FormKeys.SkyrimSE.Skyrim.Race.ArgonianRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.ArgonianRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.BretonRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.BretonRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.DarkElfRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.DarkElfRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.HighElfRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.HighElfRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.ImperialRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.ImperialRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.KhajiitRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.KhajiitRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.NordRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.NordRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.OrcRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.OrcRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.RedguardRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.RedguardRaceVampire.FormKey,
-        FormKeys.SkyrimSE.Skyrim.Race.WoodElfRace.FormKey, FormKeys.SkyrimSE.Skyrim.Race.WoodElfRaceVampire.FormKey
+        FormKeys.SkyrimSE.Skyrim.Race.ArgonianRace, FormKeys.SkyrimSE.Skyrim.Race.ArgonianRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.BretonRace, FormKeys.SkyrimSE.Skyrim.Race.BretonRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.DarkElfRace, FormKeys.SkyrimSE.Skyrim.Race.DarkElfRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.HighElfRace, FormKeys.SkyrimSE.Skyrim.Race.HighElfRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.ImperialRace, FormKeys.SkyrimSE.Skyrim.Race.ImperialRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.KhajiitRace, FormKeys.SkyrimSE.Skyrim.Race.KhajiitRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.NordRace, FormKeys.SkyrimSE.Skyrim.Race.NordRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.OrcRace, FormKeys.SkyrimSE.Skyrim.Race.OrcRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.RedguardRace, FormKeys.SkyrimSE.Skyrim.Race.RedguardRaceVampire,
+        FormKeys.SkyrimSE.Skyrim.Race.WoodElfRace, FormKeys.SkyrimSE.Skyrim.Race.WoodElfRaceVampire
     ];
 
     public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
@@ -41,10 +41,10 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
         // Exclude non player race armor
         if (armor.Race.FormKey != FormKeys.SkyrimSE.Skyrim.Race.DefaultRace.FormKey
-            && !DefaultPlayerRaces.Contains(armor.Race.FormKey)) return null;
+            && !DefaultPlayerRaces.Contains(armor.Race)) return null;
 
         // Build list of all races in armor addons
-        var missingRaces = new List<FormKey>(DefaultPlayerRaces);
+        var missingRaces = new List<IFormLinkGetter<IRaceGetter>>(DefaultPlayerRaces);
         foreach (var armorAddon in armor.Armature)
         {
             var addon = armorAddon.TryResolve(param.LinkCache);
@@ -61,7 +61,7 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
         foreach (var race in missingRaces)
         {
-            if (param.LinkCache.TryResolve<IRaceGetter>(race, out var r))
+            if (param.LinkCache.TryResolve(race, out var r))
             {
                 result.AddTopic(RecordTopic.Create(
                     armor,
