@@ -25,7 +25,7 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
                     .Select(x => x.Reference.FormKey);
             }
 
-            return Array.Empty<FormKey>();
+            return [];
         }, param.LinkCache, CircularLeveledItem);
     }
 }

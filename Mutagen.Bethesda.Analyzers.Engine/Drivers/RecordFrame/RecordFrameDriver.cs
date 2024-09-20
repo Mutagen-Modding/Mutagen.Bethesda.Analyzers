@@ -19,8 +19,8 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     private class Drivers
     {
-        public IIsolatedRecordFrameAnalyzerDriver[] Isolated = Array.Empty<IIsolatedRecordFrameAnalyzerDriver>();
-        public IContextualRecordFrameAnalyzerDriver[] Contextual = Array.Empty<IContextualRecordFrameAnalyzerDriver>();
+        public IIsolatedRecordFrameAnalyzerDriver[] Isolated = [];
+        public IContextualRecordFrameAnalyzerDriver[] Contextual = [];
     }
 
     private readonly Dictionary<RecordType, Drivers> _mapping = new();
