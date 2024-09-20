@@ -20,34 +20,47 @@ public static class LocationExtensions
         return interiorLocations.Contains(location.FormKey);
     }
 
+    private static readonly HashSet<IFormLinkGetter<IKeywordGetter>> SettlementKeywords =
+    [
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHabitation,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHabitationHasInn,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeFarm,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeCity,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeSettlement,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore
+    ];
+
     public static bool IsSettlementLocation(this ILocationGetter location)
     {
         if (location.Keywords is null) return false;
 
-        var isSettlement = location.Keywords.Any(k =>
-            k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHabitation.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHabitationHasInn.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeFarm.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeCity.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeSettlement.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore.FormKey);
-
-        return isSettlement;
+        return location.Keywords.Any(k => SettlementKeywords.Contains(k));
     }
+
+    private static readonly HashSet<IFormLinkGetter<IKeywordGetter>> SettlementHouseKeywords =
+    [
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore
+    ];
 
     public static bool IsSettlementHouseLocation(this ILocationGetter location)
     {
         if (location.Keywords is null) return false;
 
-        return location.Keywords.Any(k =>
-            k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore.FormKey);
+        return location.Keywords.Any(k => SettlementHouseKeywords.Contains(k));
     }
+
+    private static readonly HashSet<IFormLinkGetter<IKeywordGetter>> SettlementHouseNotPlayerHomeKeywords =
+    [
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn,
+        FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore
+    ];
 
     public static bool IsSettlementHouseLocationNotPlayerHome(this ILocationGetter location)
     {
@@ -58,10 +71,7 @@ public static class LocationExtensions
             return false;
         }
 
-        return location.Keywords.Any(k =>
-            k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeHouse.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeInn.FormKey
-            || k.FormKey == FormKeys.SkyrimSE.Skyrim.Keyword.LocTypeStore.FormKey);
+        return location.Keywords.Any(k => SettlementHouseNotPlayerHomeKeywords.Contains(k));
     }
 
     public static bool IsInnLocation(this ILocationGetter location)
