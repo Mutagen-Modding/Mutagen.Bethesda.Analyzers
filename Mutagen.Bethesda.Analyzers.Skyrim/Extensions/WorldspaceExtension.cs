@@ -6,7 +6,7 @@ public static class WorldspaceExtension
 {
     public static IEnumerable<ILocationGetter> GetWorldLocations(this IWorldspaceGetter world, ILinkCache linkCache)
     {
-        var worldLocations = new HashSet<ILocationGetter>();
+        var worldLocations = new List<ILocationGetter>();
 
         var worldLocation = world.Location.TryResolve(linkCache);
         while (worldLocation != null)
