@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class UnownedWorkMarkerAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string, string?> UnownedBed = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IPlacedObjectGetter, ICellGetter> UnownedBed = MutagenTopicBuilder.DevelopmentTopic(
             "Unowned Work Marker in Owned Cell",
             Severity.Suggestion)
-        .WithFormatting<string, string?>("Unowned work marker {0} in owned cell {1}");
+        .WithFormatting<IPlacedObjectGetter, ICellGetter>("Unowned work marker {0} in owned cell {1}");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [UnownedBed];
 
@@ -37,7 +37,7 @@ public class UnownedWorkMarkerAnalyzer : IContextualAnalyzer
                     result.AddTopic(
                         ContextualTopic.Create(
                             placedObject,
-                            UnownedBed.Format(placedObject.FormKey.ToString(), cell.EditorID)
+                            UnownedBed.Format(placedObject, cell)
                         )
                     );
                 }

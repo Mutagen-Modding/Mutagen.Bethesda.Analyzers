@@ -21,25 +21,25 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
             Severity.Error)
         .WithFormatting<string?>("Alias {0} isn't Find Matching Reference From Event");
 
-    public static readonly TopicDefinition<string?> AliasWithoutSameNumberOfConditionsAsNpcs = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?, int, int> AliasWithoutSameNumberOfConditionsAsNpcs = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without same number of conditions as npcs",
             Severity.Error)
-        .WithFormatting<string?>("Alias {0} doesn't have the same number of conditions as the number of npcs in the scene");
+        .WithFormatting<string?, int, int>("Alias {0} has {1} conditions, which doesn't match the {2} npcs in the scene");
 
-    public static readonly TopicDefinition<string?> AliasWithoutGetIsIDCondition = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?, IEnumerable<Condition.Function>> AliasWithoutGetIsIDCondition = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without GetIsID condition",
             Severity.Error)
-        .WithFormatting<string?>("Alias {0} has a condition that isn't GetIsID");
+        .WithFormatting<string?, IEnumerable<Condition.Function>>("Alias {0} uses conditions with function {1} which are not GetIsID");
 
-    public static readonly TopicDefinition<string?> AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?, int, int> AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without same number of GetIsID conditions as npcs",
             Severity.Error)
-        .WithFormatting<string?>("Alias {0} doesn't have the same number of GetIsID conditions as the number of npcs in the scene");
+        .WithFormatting<string?, int, int>("Alias {0} has {1} GetIsID conditions, which doesn't match the {2} npcs in the scene");
 
-    public static readonly TopicDefinition<string?> AliasWithoutGetDistanceCondition = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?, int> AliasWithoutGetDistanceCondition = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without GetDistance condition",
             Severity.Error)
-        .WithFormatting<string?>("Alias {0} doesn't have exactly one GetDistance condition");
+        .WithFormatting<string?, int>("Alias {0} has {1} GetDistance conditions, not 1");
 
     public static readonly TopicDefinition<string?> AliasWithoutUniqueActor = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without Unique Actor",
@@ -117,16 +117,17 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
                     result.AddTopic(
                         RecordTopic.Create(
                             eventAlias,
-                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name),
+                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
                             x => x.Conditions));
                 }
 
-                if (eventAlias.Conditions.Any(condition => condition.Data is not IGetIsIDConditionDataGetter))
+                var conditions = eventAlias.Conditions.Where(condition => condition.Data is not IGetIsIDConditionDataGetter).ToList();
+                if (conditions.Count > 0)
                 {
                     result.AddTopic(
                         RecordTopic.Create(
                             eventAlias,
-                            AliasWithoutGetIsIDCondition.Format(eventAlias.Name),
+                            AliasWithoutGetIsIDCondition.Format(eventAlias.Name, conditions.Select(x => x.Data.Function).Distinct()),
                             x => x.Conditions));
                 }
             }
@@ -137,7 +138,7 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
                     result.AddTopic(
                         RecordTopic.Create(
                             eventAlias,
-                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name),
+                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count + 1),
                             x => x.Conditions));
                 }
 
@@ -146,16 +147,17 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
                     result.AddTopic(
                         RecordTopic.Create(
                             eventAlias,
-                            AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs.Format(eventAlias.Name),
+                            AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
                             x => x.Conditions));
                 }
 
-                if (eventAlias.Conditions.Count(condition => condition.Data is IGetDistanceConditionDataGetter) != 1)
+                var count = eventAlias.Conditions.Count(condition => condition.Data is IGetDistanceConditionDataGetter);
+                if (count != 1)
                 {
                     result.AddTopic(
                         RecordTopic.Create(
                             eventAlias,
-                            AliasWithoutGetDistanceCondition.Format(eventAlias.Name),
+                            AliasWithoutGetDistanceCondition.Format(eventAlias.Name, count),
                             x => x.Conditions));
                 }
             }

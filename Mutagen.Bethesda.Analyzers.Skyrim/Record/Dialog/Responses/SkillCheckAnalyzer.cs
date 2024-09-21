@@ -6,15 +6,15 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition<string> NonPlayerSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<float> NonPlayerSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
             "Non-Player Skill Check",
             Severity.Warning)
-        .WithFormatting<string>("Skill check in dialog are not checked on the player but on {0} - this is usually a sign of a mistake");
+        .WithFormatting<float>("Skill check in dialog are not checked on the player but on {0} - this is usually a sign of a mistake");
 
-    public static readonly TopicDefinition<string> NonGlobalSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<Condition.RunOnType> NonGlobalSkillCheck = MutagenTopicBuilder.DevelopmentTopic(
             "Non-Global Skill Check",
             Severity.Suggestion)
-        .WithFormatting<string>("Skill check in dialog doesn't use global to evaluate skill level but {0} - this is usually a sign of a mistake");
+        .WithFormatting<Condition.RunOnType>("Skill check in dialog doesn't use global to evaluate skill level but {0} - this is usually a sign of a mistake");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NonPlayerSkillCheck, NonGlobalSkillCheck];
 
@@ -35,7 +35,7 @@ public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
                 result.AddTopic(
                     RecordTopic.Create(
                         dialogResponses,
-                        NonGlobalSkillCheck.Format(condition.Data.RunOnType.ToString()),
+                        NonGlobalSkillCheck.Format(condition.Data.RunOnType),
                         x => x.Conditions
                     ));
             }
@@ -46,7 +46,7 @@ public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
                 result.AddTopic(
                     RecordTopic.Create(
                         dialogResponses,
-                        NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue.ToString("N2")),
+                        NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue),
                         x => x.Conditions
                     ));
             }

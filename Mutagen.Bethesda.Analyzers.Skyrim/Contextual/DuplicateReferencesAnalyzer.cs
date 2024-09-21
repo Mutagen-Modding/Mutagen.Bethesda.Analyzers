@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateReferencesAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string, string> DuplicateReferences = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<List<IPlacedObjectGetter>, List<IPlacedObjectGetter>> DuplicateReferences = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate References",
             Severity.Suggestion)
-        .WithFormatting<string, string>("The following references are duplicate records of {0} and can be deleted: {1}");
+        .WithFormatting<List<IPlacedObjectGetter>, List<IPlacedObjectGetter>>("The following references are duplicate records of {0} and can be deleted: {1}");
 
     private static readonly FuncEqualityComparer<IPlacedObjectGetter> DuplicatePlacedComparer = new(
         (a, b) =>
@@ -67,9 +67,7 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
                 result.AddTopic(
                     ContextualTopic.Create(
                         cell,
-                        DuplicateReferences.Format(
-                            string.Join(", ", keptDuplicates.Select(x => x.FormKey)),
-                            string.Join(", ", removedDuplicates.Select(x => x.FormKey)))
+                        DuplicateReferences.Format(keptDuplicates, removedDuplicates)
                     )
                 );
             }

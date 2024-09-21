@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition<string, string> PromptInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string, char[]> PromptInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
             "Prompt Has Inconsistent Characters",
             Severity.Suggestion)
-        .WithFormatting<string, string>("Response {0} contains characters {1} which are not usually used in dialog");
+        .WithFormatting<string, char[]>("Response {0} contains characters {1} which are not usually used in dialog");
 
-    public static readonly TopicDefinition<string, string> ResponseInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string, char[]> ResponseInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
             "Response Has Inconsistent Characters",
             Severity.Suggestion)
-        .WithFormatting<string, string>("Response {0} contains characters {1} which are not usually used in dialog");
+        .WithFormatting<string, char[]>("Response {0} contains characters {1} which are not usually used in dialog");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [PromptInconsistentCharacters, ResponseInconsistentCharacters];
 
@@ -44,16 +44,15 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
 
         return result;
 
-        void CheckInconsistentCharacters(string text, TopicDefinition<string, string> topic)
+        void CheckInconsistentCharacters(string text, TopicDefinition<string, char[]> topic)
         {
-
-            var foundCharacters = InvalidCharacters.Where(c => text.Contains(c)).ToArray();
+            var foundCharacters = InvalidCharacters.Where(text.Contains).ToArray();
             if (foundCharacters.Length == 0) return;
 
             result.AddTopic(
                 RecordTopic.Create(
                     text,
-                    topic.Format(text, string.Join(", ", foundCharacters)),
+                    topic.Format(text, foundCharacters),
                     x => x));
         }
     }

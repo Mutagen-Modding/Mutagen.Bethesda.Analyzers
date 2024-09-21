@@ -6,10 +6,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<string?, string?> NpcNotInCellFaction = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<INpcGetter, IFactionGetter> NpcNotInCellFaction = MutagenTopicBuilder.DevelopmentTopic(
             "Npc Not In Cell Faction",
             Severity.Suggestion)
-        .WithFormatting<string?, string?>("Npc {0} is not in their cell owner faction {1}");
+        .WithFormatting<INpcGetter, IFactionGetter>("Npc {0} is not in their cell owner faction {1}");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NpcNotInCellFaction];
 
@@ -47,7 +47,7 @@ public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
                 result.AddTopic(
                     ContextualTopic.Create(
                         placedNpc,
-                        NpcNotInCellFaction.Format(npc.EditorID, cellOwnerFaction.EditorID)
+                        NpcNotInCellFaction.Format(npc, cellOwnerFaction)
                     )
                 );
             }

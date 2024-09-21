@@ -8,10 +8,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGetter>
 {
-    public static readonly TopicDefinition<string> InvalidCharactersName = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IEnumerable<string>> InvalidCharactersName = MutagenTopicBuilder.DevelopmentTopic(
             "Invalid Characters in Name",
             Severity.Warning)
-        .WithFormatting<string>("The name contains invalid characters: {0}");
+        .WithFormatting<IEnumerable<string>>("The name contains invalid characters: {0}");
 
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ISkyrimMajorRecordGetter> param)
     {
@@ -23,7 +23,7 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrim
         return new RecordAnalyzerResult(
             RecordTopic.Create(
                 named,
-                InvalidCharactersBookText.Format(string.Join(", ", invalidStrings.Select(x => x.Key))),
+                InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
                 x => x.Name
             )
         );

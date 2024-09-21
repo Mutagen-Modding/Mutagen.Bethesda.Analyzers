@@ -13,20 +13,20 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             Severity.Suggestion)
         .WithFormatting<ArmorType>("Armor type is set to unkown value {0}");
 
-    public static readonly TopicDefinition<string, string> ArmorMatchingFootstepArmorType = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<ArmorType, IFormLinkGetter<IFootstepSetGetter>> ArmorMatchingFootstepArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Footsteps on armor don't match their equipped armor type",
             Severity.Suggestion)
-        .WithFormatting<string, string>("Armor has armor type {0} but armor addon doesn't have footstep {1}");
+        .WithFormatting<ArmorType, IFormLinkGetter<IFootstepSetGetter>>("Armor has armor type {0} but armor addon doesn't have footstep {1}");
 
     public static readonly TopicDefinition ArmorMissingFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has no footstep sound",
             Severity.Warning)
         .WithoutFormatting("Armor has no armor addon that adds footstep sounds");
 
-    public static readonly TopicDefinition<string, string> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<List<IArmorAddonGetter>, IFormLinkGetter<IRaceGetter>> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has more than one armor addon that adds footstep sound",
             Severity.Suggestion)
-        .WithFormatting<string, string>("Armor has multiple armor addons {0} that have footstep sounds which are enabled for the same races {1}");
+        .WithFormatting<List<IArmorAddonGetter>, IFormLinkGetter<IRaceGetter>>("Armor has multiple armor addons {0} that have footstep sounds which are enabled for the same race {1}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingFootstepArmorType, ArmorMissingFootstep, ArmorDuplicateFootstep];
 
@@ -48,41 +48,34 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
         // Check duplicate footsteps
         var armorAddonRaces = armorAddons
-            .Where(x => !x.FootstepSound.IsNull)
-            .Select(x => (x, (List<FormKey>) [x.Race.FormKey, ..x.AdditionalRaces.Select(r => r.FormKey)])).ToList();
+            .Where(x => !x.FootstepSound.IsNull && !x.Race.IsNull)
+            .SelectMany<IArmorAddonGetter, (IArmorAddonGetter ArmorAddon, IFormLinkGetter<IRaceGetter> Race)>(x =>
+                [(ArmorAddon: x, Race: new FormLink<IRaceGetter>(x.Race.FormKey)), ..x.AdditionalRaces.Select(race => (ArmorAddon: x, Race: race))])
+            .GroupBy(x => x.Race)
+            .ToDictionary(x => x.Key, x => x.Select(x => x.ArmorAddon).ToList());
 
-        foreach (var (armorAddon, races) in armorAddonRaces)
-        {
-            foreach (var (otherArmorAddon, otherRaces) in armorAddonRaces)
-            {
-                if (armorAddon.FormKey != otherArmorAddon.FormKey)
-                {
-                    var duplicateRaces = races.Intersect(otherRaces).ToArray();
-                    if (duplicateRaces.Length != 0)
-                    {
-                        result.AddTopic(
-                            RecordTopic.Create(
-                                armor,
-                                ArmorDuplicateFootstep.Format(armorAddon.EditorID + ", " + otherArmorAddon.EditorID, string.Join(", ", duplicateRaces.Select(r => r.ToString()))),
-                                x => x.Armature));
-                    }
-                }
-            }
+        foreach (var (race, addons) in armorAddonRaces) {
+            if (addons.Count == 0) continue;
+
+            result.AddTopic(
+                RecordTopic.Create(
+                    armor,
+                    ArmorDuplicateFootstep.Format(addons, race),
+                    x => x.Armature));
         }
 
         // Check if the footstep sound is correct
-        FormKey correctFootstepSound;
-        string? correctFootstepEditorID;
+        IFormLinkGetter<IFootstepSetGetter> correctFootstepSound;
         switch (armor.BodyTemplate.ArmorType)
         {
             case ArmorType.LightArmor:
-                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet));
+                correctFootstepSound = FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorLightFootstepSet;
                 break;
             case ArmorType.HeavyArmor:
-                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet));
+                correctFootstepSound = FormKeys.SkyrimSE.Skyrim.FootstepSet.FSTArmorHeavyFootstepSet;
                 break;
             case ArmorType.Clothing:
-                (correctFootstepSound, correctFootstepEditorID) = (FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet.FormKey, nameof(FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet));
+                correctFootstepSound = FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet;
                 break;
             default:
                 result.AddTopic(
@@ -96,14 +89,13 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
         foreach (var armorAddon in armorAddons)
         {
-            if (armorAddon.FootstepSound.FormKey != correctFootstepSound)
-            {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        armorAddon,
-                        ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType.ToString(), correctFootstepEditorID),
-                        x => x.FootstepSound));
-            }
+            if (armorAddon.FootstepSound.FormKey == correctFootstepSound.FormKey) continue;
+
+            result.AddTopic(
+                RecordTopic.Create(
+                    armorAddon,
+                    ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound),
+                    x => x.FootstepSound));
         }
 
         // Check if there are any footstep sounds

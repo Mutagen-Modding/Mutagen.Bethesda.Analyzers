@@ -9,7 +9,7 @@ public partial class CircularLeveledListAnalyzer
 {
     public IEnumerable<TopicDefinition> Topics => [CircularLeveledItem, CircularLeveledNpc, CircularLeveledSpell];
 
-    private static RecordAnalyzerResult FindCircularList<T>(T leveled, Func<T, IEnumerable<FormKey>> nestedEntriesSelector, ILinkCache linkCache, TopicDefinition<string> topic)
+    private static RecordAnalyzerResult FindCircularList<T>(T leveled, Func<T, IEnumerable<FormKey>> nestedEntriesSelector, ILinkCache linkCache, TopicDefinition<List<T>> topic)
         where T : class, IMajorRecordGetter
     {
         var report = new RecordAnalyzerResult();
@@ -26,7 +26,7 @@ public partial class CircularLeveledListAnalyzer
                 report.AddTopic(
                     RecordTopic.Create(
                         t,
-                        topic.Format(string.Join(" -> ", stack.Select(x => x.EditorID))),
+                        topic.Format(stack.ToList()),
                         x => x
                     )
                 );

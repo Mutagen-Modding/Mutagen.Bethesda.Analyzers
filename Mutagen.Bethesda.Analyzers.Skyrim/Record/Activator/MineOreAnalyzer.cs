@@ -16,10 +16,10 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
             Severity.Warning)
         .WithoutFormatting("Mine ore has no Ore property on MineOreScript");
 
-    public static readonly TopicDefinition<string?> IncorrectVeinOre = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IMiscItemGetter> IncorrectVeinOre = MutagenTopicBuilder.DevelopmentTopic(
             "Correct Vein/Ore",
             Severity.Warning)
-        .WithFormatting<string?>("Mine ore uses incorrect ore: {0}");
+        .WithFormatting<IMiscItemGetter>("Mine ore uses incorrect ore: {0}");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoMineOreScript, IncorrectVeinOre];
 
@@ -92,7 +92,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         return new RecordAnalyzerResult(
             RecordTopic.Create(
                 activator,
-                IncorrectVeinOre.Format(ore.EditorID),
+                IncorrectVeinOre.Format(ore),
                 x => x.VirtualMachineAdapter));
     }
 }

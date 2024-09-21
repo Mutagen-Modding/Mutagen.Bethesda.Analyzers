@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IBookGetter>
 {
-    public static readonly TopicDefinition<string> InvalidCharactersBookText = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IEnumerable<string>> InvalidCharactersBookText = MutagenTopicBuilder.DevelopmentTopic(
             "Book Text Contains Invalid Characters",
             Severity.Warning)
-        .WithFormatting<string>("Book text contains invalid characters: {0}");
+        .WithFormatting<IEnumerable<string>>("Book text contains invalid characters: {0}");
 
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IBookGetter> param)
     {
@@ -23,7 +23,7 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IBookGe
         return new RecordAnalyzerResult(
             RecordTopic.Create(
                 book,
-                InvalidCharactersBookText.Format(string.Join(", ", invalidStrings.Select(x => x.Key))),
+                InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
                 x => x.BookText
             )
         );

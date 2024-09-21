@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Placed;
 
-public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter>
+public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
 {
     public static readonly TopicDefinition UnnecessaryPersistence = MutagenTopicBuilder.DevelopmentTopic(
             "Unnecessary Persistence",
@@ -23,7 +23,7 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter
         FormKeys.SkyrimSE.Skyrim.Static.MultiBoundMarker.FormKey,
     ];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedObjectGetter> param)
+    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedGetter> param)
     {
         var placed = param.Record;
 
