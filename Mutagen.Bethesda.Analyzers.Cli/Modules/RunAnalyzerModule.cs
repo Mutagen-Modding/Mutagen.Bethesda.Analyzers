@@ -5,11 +5,13 @@ using Mutagen.Bethesda.Analyzers.Reporting;
 
 namespace Mutagen.Bethesda.Analyzers.Cli.Modules;
 
-public class RunAnalyzerModule(RunAnalyzersCommand command) : Module
+public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
 {
+    public RunAnalyzerModule() : this(null) {}
+
     protected override void Load(ContainerBuilder builder)
     {
-        if (command.OutputFilePath is not null)
+        if (command?.OutputFilePath is not null)
         {
             builder.RegisterDecorator<IReportDropbox>((_, _, dropbox) => new CsvDropbox(dropbox, command.OutputFilePath));
         }
