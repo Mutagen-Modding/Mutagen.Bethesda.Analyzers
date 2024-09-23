@@ -10,7 +10,7 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
     public static readonly TopicDefinition<string, FormLink<IKeywordGetter>> ArmorMatchingKeywordSlots = MutagenTopicBuilder.DevelopmentTopic(
             "Armor keywords don't match their equipped slot",
             Severity.Suggestion)
-        .WithFormatting<string, FormLink<IKeywordGetter>>(" Equipped in slot {0} but doesn't have keyword {1}");
+        .WithFormatting<string, FormLink<IKeywordGetter>>("Equipped in slot {0} but doesn't have keyword {1}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingKeywordSlots];
 
