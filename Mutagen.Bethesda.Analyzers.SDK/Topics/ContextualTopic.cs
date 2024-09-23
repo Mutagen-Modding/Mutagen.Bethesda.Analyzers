@@ -10,7 +10,7 @@ public record ContextualTopic(IFormattedTopicDefinition _formattedTopicDefinitio
     }
 
     public TopicDefinition TopicDefinition => _formattedTopicDefinition.TopicDefinition;
-    public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Items);
+    public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Items.ToArray());
     public Severity Severity { get; set; } = _formattedTopicDefinition.TopicDefinition.Severity;
     public IEnumerable<object?> Items => _formattedTopicDefinition.Items;
 }
