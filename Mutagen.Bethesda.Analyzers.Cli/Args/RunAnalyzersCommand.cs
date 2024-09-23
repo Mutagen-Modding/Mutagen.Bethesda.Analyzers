@@ -21,4 +21,7 @@ public class RunAnalyzersCommand : IMinimumSeverityConfiguration
 
     [Option("CustomDataFolder", HelpText = "Optional custom data folder to use for the analysis")]
     public string? CustomDataFolder { get; set; } = null;
+
+    [Option("UseDataFolderForLoadOrder", HelpText = "Whether to use all plugins in the data folder for load order resolution instead of plugins.txt")]
+    public bool UseDataFolderForLoadOrder { get; set; } = false;
 }

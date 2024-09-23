@@ -77,8 +77,11 @@ public static class RunAnalyzers
         {
             var dataDirectoryProvider = new DataDirectoryInjection(command.CustomDataFolder);
             builder.RegisterInstance(dataDirectoryProvider).As<IDataDirectoryProvider>();
-            var enabledPluginListingsProvider = new CustomEnabledPluginListingsProvider(command.CustomDataFolder);
-            builder.RegisterInstance(enabledPluginListingsProvider).As<IEnabledPluginListingsProvider>();
+        }
+
+        if (command.UseDataFolderForLoadOrder)
+        {
+            builder.RegisterType<DataDirectoryEnabledPluginListingsProvider>().As<IEnabledPluginListingsProvider>();
         }
 
         // Add Skyrim Analyzers
