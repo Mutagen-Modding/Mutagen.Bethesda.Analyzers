@@ -96,7 +96,7 @@ public class ScaleAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter>
         return new RecordAnalyzerResult(
             RecordTopic.Create(
                 placedObject,
-                ScaleTooSmall.Format(scale),
+                (scale < 1 ? ScaleTooSmall : ScaleTooLarge).Format(scale),
                 x => x.Scale));
     }
 }
