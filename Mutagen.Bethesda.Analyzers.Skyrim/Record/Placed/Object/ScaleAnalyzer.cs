@@ -10,12 +10,12 @@ public class ScaleAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter>
     public static readonly TopicDefinition<float> ScaleTooSmall = MutagenTopicBuilder.DevelopmentTopic(
             "Scale Too Small",
             Severity.Warning)
-        .WithFormatting<float>("The object is scaled too small");
+        .WithFormatting<float>("The object with scale {0} is too small");
 
     public static readonly TopicDefinition<float> ScaleTooLarge = MutagenTopicBuilder.DevelopmentTopic(
             "Scale Too Large",
             Severity.Warning)
-        .WithFormatting<float>("The object is scaled too large");
+        .WithFormatting<float>("The object with scale {0} is too large");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [ScaleTooSmall, ScaleTooLarge];
 
