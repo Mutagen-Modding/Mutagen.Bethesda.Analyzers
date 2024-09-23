@@ -31,7 +31,7 @@ public class CsvDropbox : IReportDropbox
     private static string BuildLine(ITopic topic, IModGetter? sourceMod, IMajorRecordGetter? majorRecord)
     {
         return $"""
-        "{topic.TopicDefinition}","{sourceMod?.ModKey.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedMessage}"
+        "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ModKey.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedMessage}"
         """;
     }
 
