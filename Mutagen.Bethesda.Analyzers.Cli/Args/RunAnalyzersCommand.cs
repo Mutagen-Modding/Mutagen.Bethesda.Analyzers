@@ -18,4 +18,7 @@ public class RunAnalyzersCommand : IMinimumSeverityConfiguration
 
     [Option('o', "OutputFilePath", HelpText = "Optional output file path to save the report")]
     public string? OutputFilePath { get; set; } = null;
+
+    [Option("CustomDataFolder", HelpText = "Optional custom data folder to use for the analysis")]
+    public string? CustomDataFolder { get; set; } = null;
 }
