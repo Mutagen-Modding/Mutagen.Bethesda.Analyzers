@@ -66,18 +66,11 @@ public static class RunAnalyzers
         builder.Populate(services);
         builder.RegisterInstance(new FileSystem())
             .As<IFileSystem>();
-        builder.RegisterModule<RunAnalyzerModule>();
+        builder.RegisterModule(new RunAnalyzerModule(command));
         builder.RegisterInstance(new GameReleaseInjection(command.GameRelease))
             .AsImplementedInterfaces();
         builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
         builder.RegisterInstance(command).AsImplementedInterfaces();
-
-        if (command.OutputFilePath is not null)
-        {
-            var reportOutputConfiguration = new ReportOutputConfiguration(command.OutputFilePath);
-            builder.RegisterInstance(reportOutputConfiguration).As<IReportOutputConfiguration>();
-            builder.RegisterDecorator<CsvDropbox, IReportDropbox>();
-        }
 
         if (command.CustomDataFolder is not null)
         {

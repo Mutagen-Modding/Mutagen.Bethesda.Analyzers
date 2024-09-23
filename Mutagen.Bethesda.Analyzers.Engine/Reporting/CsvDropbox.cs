@@ -1,31 +1,30 @@
-﻿using Mutagen.Bethesda.Analyzers.Config;
-using Mutagen.Bethesda.Analyzers.SDK.Topics;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 namespace Mutagen.Bethesda.Analyzers.Reporting;
 
 public class CsvDropbox : IReportDropbox
 {
     private readonly IReportDropbox _dropbox;
-    private readonly IReportOutputConfiguration _reportOutputConfiguration;
+    private readonly string _outputPath;
 
     public CsvDropbox(
         IReportDropbox dropbox,
-        IReportOutputConfiguration reportOutputConfiguration)
+        string outputPath)
     {
         _dropbox = dropbox;
-        _reportOutputConfiguration = reportOutputConfiguration;
+        _outputPath = outputPath;
     }
 
     public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
     {
-        Append(BuildLine(topic, sourceMod, majorRecord));
         _dropbox.Dropoff(sourceMod, majorRecord, topic);
+        Append(BuildLine(topic, sourceMod, majorRecord));
     }
 
     public void Dropoff(ITopic topic)
     {
-        Append(BuildLine(topic, null, null));
         _dropbox.Dropoff(topic);
+        Append(BuildLine(topic, null, null));
     }
 
     private static string BuildLine(ITopic topic, IModGetter? sourceMod, IMajorRecordGetter? majorRecord)
@@ -37,7 +36,7 @@ public class CsvDropbox : IReportDropbox
 
     private void Append(string line)
     {
-        using var writer = new StreamWriter(_reportOutputConfiguration.OutputFilePath, true);
+        using var writer = new StreamWriter(_outputPath, true);
         writer.WriteLine(line);
     }
 }
