@@ -7,14 +7,14 @@ public class ConsoleReporter : IReportDropbox
 {
     public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
     {
-        System.Console.WriteLine($"{topic.TopicDefinition}");
-        System.Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
-        System.Console.WriteLine($"   {topic.FormattedMessage}");
+        Console.WriteLine($"{topic.TopicDefinition}");
+        Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
+        Console.WriteLine($"   {topic.FormattedMessage}");
     }
 
     public void Dropoff(ITopic topic)
     {
-        System.Console.WriteLine($"{topic.TopicDefinition}");
-        System.Console.WriteLine($"   {topic.FormattedMessage}");
+        Console.WriteLine($"{topic.TopicDefinition}");
+        Console.WriteLine($"   {topic.FormattedMessage}");
     }
 }

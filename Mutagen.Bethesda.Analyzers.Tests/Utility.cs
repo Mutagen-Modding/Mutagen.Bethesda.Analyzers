@@ -15,7 +15,7 @@ public static class Utility
         "TestTitle",
         Severity.Suggestion);
     public static readonly FormattedTopicDefinition FormattedSuggestion = new FormattedTopicDefinition(
-        Utility.Suggestion,
+        Suggestion,
         "Test");
     public static readonly IContextualAnalyzer SuggestionAnalyzer;
     public static readonly TopicDefinition Warning = new TopicDefinition(
@@ -23,7 +23,7 @@ public static class Utility
         "TestTitle",
         Severity.Warning);
     public static readonly FormattedTopicDefinition FormattedWarning = new FormattedTopicDefinition(
-        Utility.Warning,
+        Warning,
         "Test");
     public static readonly IContextualAnalyzer WarningAnalyzer;
 

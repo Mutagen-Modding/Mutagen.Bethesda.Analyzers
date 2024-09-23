@@ -1,5 +1,4 @@
 using Autofac;
-using Loqui;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 using Mutagen.Bethesda.Analyzers.Drivers.Records;

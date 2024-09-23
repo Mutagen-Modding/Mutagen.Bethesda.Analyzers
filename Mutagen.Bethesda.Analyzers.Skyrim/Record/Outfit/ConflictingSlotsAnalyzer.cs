@@ -4,7 +4,6 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
-using Noggog;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Outfit;
 
 public class ConflictingSlotsAnalyzer : IContextualRecordAnalyzer<IOutfitGetter>

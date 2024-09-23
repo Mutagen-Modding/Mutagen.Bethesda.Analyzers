@@ -5,7 +5,6 @@ using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog.Testing.AutoFixture;
 using Xunit;
-
 namespace Mutagen.Bethesda.Analyzers.Tests;
 
 public class AnalyzerAutoData : AutoDataAttribute
@@ -26,13 +25,13 @@ public class AnalyzerAutoData : AutoDataAttribute
     {
     }
 
-    public static AutoFixture.IFixture Factory(
+    public static IFixture Factory(
         bool ConfigureMembers = true,
         TargetFileSystem TargetFileSystem = TargetFileSystem.Fake,
         bool GenerateDelegates = false,
         bool OmitAutoProperties = false)
     {
-        return new AutoFixture.Fixture()
+        return new Fixture()
             .Customize(new AnalyzerAutoDataCustomization(
                 targetFileSystem: TargetFileSystem,
                 configureMembers: ConfigureMembers,
