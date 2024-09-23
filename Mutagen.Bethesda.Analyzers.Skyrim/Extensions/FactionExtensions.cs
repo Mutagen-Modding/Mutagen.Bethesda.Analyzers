@@ -1,5 +1,5 @@
 ﻿using Mutagen.Bethesda.Skyrim;
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Extensions;
 
 public static class FactionExtensions
 {
