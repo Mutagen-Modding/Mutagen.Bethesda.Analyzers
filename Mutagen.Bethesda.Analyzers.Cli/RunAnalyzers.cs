@@ -75,7 +75,7 @@ public static class RunAnalyzers
 
         if (command.CustomDataFolder is not null)
         {
-            var dataDirectoryProvider = new CustomDataDirectoryProvider(command.CustomDataFolder);
+            var dataDirectoryProvider = new DataDirectoryInjection(command.CustomDataFolder);
             builder.RegisterInstance(dataDirectoryProvider).As<IDataDirectoryProvider>();
             var enabledPluginListingsProvider = new CustomEnabledPluginListingsProvider(command.CustomDataFolder);
             builder.RegisterInstance(enabledPluginListingsProvider).As<IEnabledPluginListingsProvider>();
