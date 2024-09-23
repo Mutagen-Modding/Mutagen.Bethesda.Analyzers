@@ -48,7 +48,7 @@ public class ContextualEngine : IContextualEngine
         {
             foreach (var listing in env.LoadOrder.ListedOrder)
             {
-                if (listing.Mod == null) continue;
+                if (listing.Mod is null) continue;
 
                 var modPath = Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName);
 

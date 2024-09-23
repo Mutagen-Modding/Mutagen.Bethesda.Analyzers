@@ -1,5 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Results;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Xunit;
 
 namespace Mutagen.Bethesda.Analyzers.TestingUtils;

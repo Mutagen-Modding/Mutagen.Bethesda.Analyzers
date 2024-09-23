@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using Mutagen.Bethesda.Analyzers.Drivers;
 using FluentAssertions;
+using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Drivers.Records;
 using Mutagen.Bethesda.Analyzers.Testing;
 using Mutagen.Bethesda.Environments.DI;

@@ -22,7 +22,7 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
     {
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
-            if (listing.Mod == null) continue;
+            if (listing.Mod is null) continue;
 
             foreach (var rec in listing.Mod.EnumerateMajorRecords<TMajor>())
             {
@@ -32,7 +32,7 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
                         driverParams.LinkCache,
                         driverParams.LoadOrder,
                         rec));
-                    if (result == null) continue;
+                    if (result is null) continue;
                     foreach (var topic in result.Topics)
                     {
                         driverParams.ReportDropbox.Dropoff(

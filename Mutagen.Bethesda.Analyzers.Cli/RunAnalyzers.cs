@@ -5,13 +5,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
 using Mutagen.Bethesda.Analyzers.Cli.Modules;
+using Mutagen.Bethesda.Analyzers.Cli.Overrides;
+using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using Noggog.StructuredStrings;
+using IContainer = Autofac.IContainer;
 
 namespace Mutagen.Bethesda.Analyzers.Cli;
 
@@ -62,14 +67,26 @@ public static class RunAnalyzers
         builder.Populate(services);
         builder.RegisterInstance(new FileSystem())
             .As<IFileSystem>();
-        builder.RegisterModule<RunAnalyzerModule>();
+        builder.RegisterModule(new RunAnalyzerModule(command));
         builder.RegisterInstance(new GameReleaseInjection(command.GameRelease))
             .AsImplementedInterfaces();
         builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
         builder.RegisterInstance(command).AsImplementedInterfaces();
 
+        if (command.CustomDataFolder is not null)
+        {
+            var dataDirectoryProvider = new DataDirectoryInjection(command.CustomDataFolder);
+            builder.RegisterInstance(dataDirectoryProvider).As<IDataDirectoryProvider>();
+        }
+
+        if (command.UseDataFolderForLoadOrder)
+        {
+            builder.RegisterType<DataDirectoryEnabledPluginListingsProvider>().As<IEnabledPluginListingsProvider>();
+        }
+
         // Add Skyrim Analyzers
         builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
+            .AssignableTo<IAnalyzer>()
             .AsImplementedInterfaces();
 
         return builder.Build();

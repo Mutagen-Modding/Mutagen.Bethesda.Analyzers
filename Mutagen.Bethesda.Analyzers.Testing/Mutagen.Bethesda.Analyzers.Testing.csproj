@@ -3,9 +3,8 @@
     <PropertyGroup>
         <RootNamespace>Mutagen.Bethesda.Analyzers.Testing</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     </PropertyGroup>
 

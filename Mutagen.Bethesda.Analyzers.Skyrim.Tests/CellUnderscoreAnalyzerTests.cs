@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.TestingUtils;
+﻿using Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell;
+using Mutagen.Bethesda.Analyzers.TestingUtils;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;

@@ -14,6 +14,14 @@ public class RunAnalyzersCommand : IMinimumSeverityConfiguration
     public bool PrintTopics { get; set; } = false;
 
     [Option('s', "Severity", HelpText = "Minimum severity required in order to report")]
-
     public Severity MinimumSeverity { get; set; } = Severity.Suggestion;
+
+    [Option('o', "OutputFilePath", HelpText = "Optional output file path to save the report")]
+    public string? OutputFilePath { get; set; } = null;
+
+    [Option("CustomDataFolder", HelpText = "Optional custom data folder to use for the analysis")]
+    public string? CustomDataFolder { get; set; } = null;
+
+    [Option("UseDataFolderForLoadOrder", HelpText = "Whether to use all plugins in the data folder for load order resolution instead of plugins.txt")]
+    public bool UseDataFolderForLoadOrder { get; set; } = false;
 }

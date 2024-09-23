@@ -2,7 +2,7 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
+using Mutagen.Bethesda.Plugins.Records.Mapping;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 
@@ -33,7 +33,7 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
         foreach (var analyzer in _contextualRecordFrameAnalyzers)
         {
             var result = analyzer.AnalyzeRecord(param);
-            if (result == null) continue;
+            if (result is null) continue;
             foreach (var topic in result.Topics)
             {
                 driverParams.ReportDropbox.Dropoff(topic);

@@ -15,6 +15,7 @@ public static class SeverityExt
     {
         return sev switch
         {
+            Severity.Silent => "SIL",
             Severity.Suggestion => "SUG",
             Severity.Warning => "WAR",
             Severity.Error => "ERR",

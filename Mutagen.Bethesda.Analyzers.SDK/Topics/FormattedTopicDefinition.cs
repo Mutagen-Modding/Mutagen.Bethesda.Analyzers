@@ -4,6 +4,7 @@ public interface IFormattedTopicDefinition
 {
     TopicDefinition TopicDefinition { get; }
     string FormattedMessage { get; }
+    IEnumerable<object?> Items { get; }
 }
 
 public class FormattedTopicDefinition : IFormattedTopicDefinition
@@ -18,6 +19,7 @@ public class FormattedTopicDefinition : IFormattedTopicDefinition
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => TopicDefinition.MessageFormat;
+    public IEnumerable<object?> Items => [];
 }
 
 public class FormattedTopicDefinition<T1> : IFormattedTopicDefinition
@@ -36,6 +38,7 @@ public class FormattedTopicDefinition<T1> : IFormattedTopicDefinition
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1);
+    public IEnumerable<object?> Items => [Item1];
 }
 
 public class FormattedTopicDefinition<T1, T2> : IFormattedTopicDefinition
@@ -57,6 +60,7 @@ public class FormattedTopicDefinition<T1, T2> : IFormattedTopicDefinition
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2);
+    public IEnumerable<object?> Items => [Item1, Item2];
 }
 
 public class FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
@@ -81,6 +85,7 @@ public class FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3);
+    public IEnumerable<object?> Items => [Item1, Item2, Item3];
 }
 
 public class FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefinition
@@ -108,4 +113,5 @@ public class FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefinitio
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3, Item4);
+    public IEnumerable<object?> Items => [Item1, Item2, Item3, Item4];
 }

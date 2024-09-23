@@ -4,6 +4,8 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
@@ -16,8 +18,8 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     private class Drivers
     {
-        public IIsolatedRecordFrameAnalyzerDriver[] Isolated = Array.Empty<IIsolatedRecordFrameAnalyzerDriver>();
-        public IContextualRecordFrameAnalyzerDriver[] Contextual = Array.Empty<IContextualRecordFrameAnalyzerDriver>();
+        public IIsolatedRecordFrameAnalyzerDriver[] Isolated = [];
+        public IContextualRecordFrameAnalyzerDriver[] Contextual = [];
     }
 
     private readonly Dictionary<RecordType, Drivers> _mapping = new();
@@ -55,13 +57,13 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
     {
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
-            if (listing.Mod == null) continue;
+            if (listing.Mod is null) continue;
 
             var modPath = Path.Combine(_dataDataDirectoryProvider.Path, listing.ModKey.FileName);
 
-            using var stream = File.OpenRead(modPath);
-
-            var locs = RecordLocator.GetLocations(modPath, _gameReleaseContext.Release);
+            var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, modPath);
+            using var stream = new MutagenBinaryReadStream(modPath, parsingMeta);
+            var locs = RecordLocator.GetLocations(stream);
 
             foreach (var recordLocationMarker in locs.ListedRecords)
             {
@@ -108,9 +110,9 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     public void Drive(IsolatedDriverParams driverParams)
     {
-        using var stream = File.OpenRead(driverParams.TargetModPath);
-
-        var locs = RecordLocator.GetLocations(driverParams.TargetModPath, _gameReleaseContext.Release);
+        var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, driverParams.TargetModPath);
+        using var stream = new MutagenBinaryReadStream(driverParams.TargetModPath, parsingMeta);
+        var locs = RecordLocator.GetLocations(stream);
 
         foreach (var recordLocationMarker in locs.ListedRecords)
         {

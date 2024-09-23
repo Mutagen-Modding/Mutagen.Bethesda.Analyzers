@@ -10,6 +10,7 @@
     </ItemGroup>
     
     <ItemGroup>
+      <PackageReference Include="Mutagen.Bethesda.FormKeys.SkyrimSE" />
       <PackageReference Include="Mutagen.Bethesda.Skyrim" />
     </ItemGroup>
     
@@ -34,6 +35,25 @@
       </Compile>
       <Compile Update="MissingAssetsAnalyzerTopicListing.cs">
         <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Remove="CellUnderscoreAnalyzer.cs" />
+      <Compile Update="InvalidCharactersAnalyzerBook.cs">
+        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="InvalidCharactersAnalyzerDialogResponses.cs">
+        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="InvalidCharactersNamed.cs">
+        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CircularLeveledItemAnalyzer.cs">
+        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CircularLeveledNpcAnalyzer.cs">
+        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CircularLeveledSpellAnalyzer.cs">
+        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 
