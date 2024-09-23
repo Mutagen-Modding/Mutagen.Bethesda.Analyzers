@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 namespace Mutagen.Bethesda.Analyzers.Cli.Args;
 
 [Verb("run-analyzers", HelpText = "Run analyzers on a game installation")]
-public class RunAnalyzersCommand : IMinimumSeverityConfiguration, IReportOutputConfiguration
+public class RunAnalyzersCommand : IMinimumSeverityConfiguration
 {
     [Option('g', "GameRelease", Required = true, HelpText = "Game Release to target")]
     public GameRelease GameRelease { get; set; }

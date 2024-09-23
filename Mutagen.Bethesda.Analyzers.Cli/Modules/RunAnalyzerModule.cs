@@ -10,7 +10,6 @@ public class RunAnalyzerModule : Module
     {
         builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
         builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
-        builder.RegisterDecorator<CsvDropbox, IReportDropbox>();
         builder.RegisterDecorator<TopicListJoin, IReportDropbox>();
         builder.RegisterDecorator<TopicEnricher, IReportDropbox>();
         builder.RegisterModule<MainModule>();

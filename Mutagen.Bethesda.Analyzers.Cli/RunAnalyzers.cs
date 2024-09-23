@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
 using Mutagen.Bethesda.Analyzers.Cli.Modules;
+using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
@@ -12,6 +13,7 @@ using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using Noggog.StructuredStrings;
+using IContainer = Autofac.IContainer;
 
 namespace Mutagen.Bethesda.Analyzers.Cli;
 
@@ -67,6 +69,13 @@ public static class RunAnalyzers
             .AsImplementedInterfaces();
         builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
         builder.RegisterInstance(command).AsImplementedInterfaces();
+
+        if (command.OutputFilePath is not null)
+        {
+            var reportOutputConfiguration = new ReportOutputConfiguration(command.OutputFilePath);
+            builder.RegisterInstance(reportOutputConfiguration).As<IReportOutputConfiguration>();
+            builder.RegisterDecorator<CsvDropbox, IReportDropbox>();
+        }
 
         // Add Skyrim Analyzers
         builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)

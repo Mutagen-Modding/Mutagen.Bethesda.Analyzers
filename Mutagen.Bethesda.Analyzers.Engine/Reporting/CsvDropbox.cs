@@ -37,11 +37,6 @@ public class CsvDropbox : IReportDropbox
 
     private void Append(string line)
     {
-        if (_reportOutputConfiguration.OutputFilePath is null)
-        {
-            return;
-        }
-
         using var writer = new StreamWriter(_reportOutputConfiguration.OutputFilePath, true);
         writer.WriteLine(line);
     }

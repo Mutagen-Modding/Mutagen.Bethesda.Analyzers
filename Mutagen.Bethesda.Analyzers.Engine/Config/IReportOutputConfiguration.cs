@@ -2,5 +2,5 @@
 
 public interface IReportOutputConfiguration
 {
-    string? OutputFilePath { get; set; }
+    string OutputFilePath { get; set; }
 }
