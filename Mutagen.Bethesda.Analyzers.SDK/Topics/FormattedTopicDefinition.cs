@@ -4,114 +4,106 @@ public interface IFormattedTopicDefinition
 {
     TopicDefinition TopicDefinition { get; }
     string FormattedMessage { get; }
-    IEnumerable<object?> Items { get; }
+    IFormattedTopicDefinition Transform(Func<object?, object?> transformer);
 }
 
-public class FormattedTopicDefinition : IFormattedTopicDefinition
+public record FormattedTopicDefinition : IFormattedTopicDefinition
 {
-    public TopicDefinition TopicDefinition { get; }
-
-    public FormattedTopicDefinition(TopicDefinition topicDefinition, string message)
-    {
-        TopicDefinition = topicDefinition;
-    }
+    public required TopicDefinition TopicDefinition { get; init; }
 
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => TopicDefinition.MessageFormat;
-    public IEnumerable<object?> Items => [];
+
+    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    {
+        return this;
+    }
 }
 
-public class FormattedTopicDefinition<T1> : IFormattedTopicDefinition
+public record FormattedTopicDefinition<T1> : IFormattedTopicDefinition
 {
-    public TopicDefinition TopicDefinition { get; }
-    public T1 Item1 { get; }
-
-    public FormattedTopicDefinition(
-        TopicDefinition topicDefinition,
-        T1 item1)
-    {
-        TopicDefinition = topicDefinition;
-        Item1 = item1;
-    }
-
+    public required TopicDefinition TopicDefinition { get; init; }
+    public required T1 Item1 { get; init; }
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1);
-    public IEnumerable<object?> Items => [Item1];
+
+    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    {
+        return new FormattedTopicDefinition<object?>()
+        {
+            TopicDefinition = TopicDefinition,
+            Item1 = transformer(Item1)
+        };
+    }
 }
 
 public class FormattedTopicDefinition<T1, T2> : IFormattedTopicDefinition
 {
-    public TopicDefinition TopicDefinition { get; }
-    public T1 Item1 { get; }
-    public T2 Item2 { get; }
-
-    public FormattedTopicDefinition(
-        TopicDefinition topicDefinition,
-        T1 item1,
-        T2 item2)
-    {
-        TopicDefinition = topicDefinition;
-        Item1 = item1;
-        Item2 = item2;
-    }
+    public required TopicDefinition TopicDefinition { get; init; }
+    public required T1 Item1 { get; init; }
+    public required T2 Item2 { get; init; }
 
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2);
-    public IEnumerable<object?> Items => [Item1, Item2];
+
+    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    {
+        return new FormattedTopicDefinition<object?, object?>()
+        {
+            TopicDefinition = TopicDefinition,
+            Item1 = transformer(Item1),
+            Item2 = transformer(Item2)
+        };
+    }
 }
 
-public class FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
+public record FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
 {
-    public TopicDefinition TopicDefinition { get; }
-    public T1 Item1 { get; }
-    public T2 Item2 { get; }
-    public T3 Item3 { get; }
-
-    public FormattedTopicDefinition(
-        TopicDefinition topicDefinition,
-        T1 item1,
-        T2 item2,
-        T3 item3)
-    {
-        TopicDefinition = topicDefinition;
-        Item1 = item1;
-        Item2 = item2;
-        Item3 = item3;
-    }
+    public required TopicDefinition TopicDefinition { get; init; }
+    public required T1 Item1 { get; init; }
+    public required T2 Item2 { get; init; }
+    public required T3 Item3 { get; init; }
 
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3);
-    public IEnumerable<object?> Items => [Item1, Item2, Item3];
+
+    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    {
+        return new FormattedTopicDefinition<object?, object?, object?>()
+        {
+            TopicDefinition = TopicDefinition,
+            Item1 = transformer(Item1),
+            Item2 = transformer(Item2),
+            Item3 = transformer(Item3)
+        };
+    }
 }
 
-public class FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefinition
+public record FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefinition
 {
-    public TopicDefinition TopicDefinition { get; }
-    public T1 Item1 { get; }
-    public T2 Item2 { get; }
-    public T3 Item3 { get; }
-    public T4 Item4 { get; }
-
-    public FormattedTopicDefinition(
-        TopicDefinition topicDefinition,
-        T1 item1,
-        T2 item2,
-        T3 item3,
-        T4 item4)
-    {
-        TopicDefinition = topicDefinition;
-        Item1 = item1;
-        Item2 = item2;
-        Item3 = item3;
-        Item4 = item4;
-    }
+    public required TopicDefinition TopicDefinition { get; init; }
+    public required T1 Item1 { get; init; }
+    public required T2 Item2 { get; init; }
+    public required T3 Item3 { get; init; }
+    public required T4 Item4 { get; init; }
 
     public override string ToString() => FormattedMessage;
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3, Item4);
-    public IEnumerable<object?> Items => [Item1, Item2, Item3, Item4];
+
+    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    {
+        return new FormattedTopicDefinition<object?, object?, object?, object?>()
+        {
+            TopicDefinition = TopicDefinition,
+            Item1 = transformer(Item1),
+            Item2 = transformer(Item2),
+            Item3 = transformer(Item3),
+            Item4 = transformer(Item4)
+        };
+    }
 }

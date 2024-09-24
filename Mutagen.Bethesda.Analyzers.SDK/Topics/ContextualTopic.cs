@@ -1,16 +1,31 @@
 ﻿namespace Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-public record ContextualTopic(IFormattedTopicDefinition _formattedTopicDefinition) : ITopic
+public record ContextualTopic : ITopic
 {
-    private readonly IFormattedTopicDefinition _formattedTopicDefinition = _formattedTopicDefinition;
-
     public static ContextualTopic Create<T>(T obj, IFormattedTopicDefinition formattedTopicDefinition)
     {
-        return new ContextualTopic(formattedTopicDefinition);
+        return new ContextualTopic
+        {
+            FormattedTopic = formattedTopicDefinition,
+            Severity = formattedTopicDefinition.TopicDefinition.Severity
+        };
     }
 
-    public TopicDefinition TopicDefinition => _formattedTopicDefinition.TopicDefinition;
-    public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Items.ToArray());
-    public Severity Severity { get; set; } = _formattedTopicDefinition.TopicDefinition.Severity;
-    public IEnumerable<object?> Items => _formattedTopicDefinition.Items;
+    public TopicDefinition TopicDefinition => FormattedTopic.TopicDefinition;
+    public required IFormattedTopicDefinition FormattedTopic { get; init; }
+    public required Severity Severity { get; init; }
+    public ITopic WithFormattedTopic(IFormattedTopicDefinition formattedTopicDefinition)
+    {
+        return this with
+        {
+            FormattedTopic = formattedTopicDefinition
+        };
+    }
+    public ITopic WithSeverity(Severity severity)
+    {
+        return this with
+        {
+            Severity = severity
+        };
+    }
 }
