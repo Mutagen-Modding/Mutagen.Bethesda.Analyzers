@@ -16,7 +16,7 @@ public class CsvReportHandler : IReportHandler
     }
 
     public void Dropoff(
-        HandlerParameters parameters,
+        ReportContextParameters parameters,
         IModGetter sourceMod,
         IMajorRecordGetter majorRecord,
         ITopic topic)
@@ -25,7 +25,7 @@ public class CsvReportHandler : IReportHandler
     }
 
     public void Dropoff(
-        HandlerParameters parameters,
+        ReportContextParameters parameters,
         ITopic topic)
     {
         Append(BuildLine(topic, null, null));

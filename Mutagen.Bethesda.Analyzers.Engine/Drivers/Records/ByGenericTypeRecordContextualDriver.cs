@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;
@@ -20,6 +21,8 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
 
     public void Drive(ContextualDriverParams driverParams)
     {
+        var reportContext = new ReportContextParameters(driverParams.LinkCache);
+
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
             if (listing.Mod is null) continue;
@@ -36,6 +39,7 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
                     foreach (var topic in result.Topics)
                     {
                         driverParams.ReportDropbox.Dropoff(
+                            reportContext,
                             listing.Mod,
                             rec,
                             topic);

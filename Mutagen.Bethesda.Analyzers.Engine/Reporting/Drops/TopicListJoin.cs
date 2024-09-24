@@ -2,25 +2,30 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Analyzers.Reporting;
+namespace Mutagen.Bethesda.Analyzers.Reporting.Drops;
 
 public class TopicListJoin : IReportDropbox
 {
-    private readonly IReportDropbox _dropbox;
-
-    public TopicListJoin(IReportDropbox dropbox)
+    private readonly IReportDropbox _reportDropbox;
+    public TopicListJoin(IReportDropbox reportDropbox)
     {
-        _dropbox = dropbox;
+        _reportDropbox = reportDropbox;
     }
 
-    public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
+    public void Dropoff(
+        ReportContextParameters parameters,
+        IModGetter sourceMod,
+        IMajorRecordGetter majorRecord,
+        ITopic topic)
     {
-        _dropbox.Dropoff(sourceMod, majorRecord, SplitLists(topic));
+        _reportDropbox.Dropoff(parameters, sourceMod, majorRecord, SplitLists(topic));
     }
 
-    public void Dropoff(ITopic topic)
+    public void Dropoff(
+        ReportContextParameters parameters,
+        ITopic topic)
     {
-        _dropbox.Dropoff(SplitLists(topic));
+        _reportDropbox.Dropoff(parameters, SplitLists(topic));
     }
 
     private FuncRecordTopic SplitLists(ITopic topic)

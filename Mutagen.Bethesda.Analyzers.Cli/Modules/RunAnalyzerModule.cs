@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
-using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.Reporting.Drops;
 using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 
 namespace Mutagen.Bethesda.Analyzers.Cli.Modules;
@@ -21,6 +21,7 @@ public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
         builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
         builder.RegisterDecorator<TopicListJoin, IReportDropbox>();
         builder.RegisterDecorator<TopicEnricher, IReportDropbox>();
+        builder.RegisterType<PassToHandlerReportDropbox>().AsImplementedInterfaces();
         builder.RegisterModule<MainModule>();
     }
 }
