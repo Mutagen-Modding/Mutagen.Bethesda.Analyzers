@@ -17,7 +17,7 @@ public class MultiBoundMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGet
     {
         var placedObject = param.Record;
 
-        if (placedObject.Base.FormKey == FormKeys.SkyrimSE.Skyrim.Static.RoomMarker.FormKey)
+        if (placedObject.Base.FormKey == FormKeys.SkyrimSE.Skyrim.Static.MultiBoundMarker.FormKey)
         {
             return new RecordAnalyzerResult(
                 RecordTopic.Create(
