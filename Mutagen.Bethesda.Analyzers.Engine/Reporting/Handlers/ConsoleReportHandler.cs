@@ -1,18 +1,24 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Analyzers.Reporting;
+namespace Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 
-public class ConsoleReporter : IReportDropbox
+public class ConsoleReportHandler : IReportHandler
 {
-    public void Dropoff(IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
+    public void Dropoff(
+        HandlerParameters parameters,
+        IModGetter sourceMod,
+        IMajorRecordGetter majorRecord,
+        ITopic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
         Console.WriteLine($"   {topic.FormattedMessage}");
     }
 
-    public void Dropoff(ITopic topic)
+    public void Dropoff(
+        HandlerParameters parameters,
+        ITopic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {topic.FormattedMessage}");

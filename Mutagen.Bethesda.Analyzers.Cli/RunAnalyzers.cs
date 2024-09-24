@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Analyzers.Cli.Overrides;
 using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
@@ -70,7 +71,7 @@ public static class RunAnalyzers
         builder.RegisterModule(new RunAnalyzerModule(command));
         builder.RegisterInstance(new GameReleaseInjection(command.GameRelease))
             .AsImplementedInterfaces();
-        builder.RegisterType<ConsoleReporter>().As<IReportDropbox>();
+        builder.RegisterType<ConsoleReportHandler>().AsImplementedInterfaces();
         builder.RegisterInstance(command).AsImplementedInterfaces();
 
         if (command.CustomDataFolder is not null)
