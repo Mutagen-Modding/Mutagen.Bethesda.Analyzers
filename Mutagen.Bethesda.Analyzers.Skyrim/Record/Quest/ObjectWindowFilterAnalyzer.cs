@@ -17,7 +17,7 @@ public class ObjectWindowFilterAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
     public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IQuestGetter> param)
     {
         var quest = param.Record;
-        if (!quest.Filter.IsNullOrWhitespace())
+        if (quest.Filter.IsNullOrWhitespace())
         {
             return new RecordAnalyzerResult(
                 RecordTopic.Create(
