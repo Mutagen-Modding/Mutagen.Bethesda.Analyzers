@@ -51,14 +51,14 @@ public class MissingAssetsAnalyzerTests
     [Theory, MutagenAutoData]
     public void TestExistingTextureSetTextures(
         ITextureSetGetter textureSet,
-        FilePath existingDiffuse,
-        FilePath existingNormal,
-        FilePath existingSubsurfaceTint,
-        FilePath existingGlow,
-        FilePath existingHeight,
-        FilePath existingEnvironment,
-        FilePath existingMultilayer,
-        FilePath existingSpecular,
+        AssetLink<SkyrimTextureAssetType> existingDiffuse,
+        AssetLink<SkyrimTextureAssetType> existingNormal,
+        AssetLink<SkyrimTextureAssetType> existingSubsurfaceTint,
+        AssetLink<SkyrimTextureAssetType> existingGlow,
+        AssetLink<SkyrimTextureAssetType> existingHeight,
+        AssetLink<SkyrimTextureAssetType> existingEnvironment,
+        AssetLink<SkyrimTextureAssetType> existingMultilayer,
+        AssetLink<SkyrimTextureAssetType> existingSpecular,
         MissingAssetsAnalyzer analyzer)
     {
         textureSet.Diffuse.Returns(existingDiffuse);
@@ -105,12 +105,12 @@ public class MissingAssetsAnalyzerTests
     [Theory, MutagenAutoData]
     public void TestExistingStaticsModel(
         IStaticGetter staticGetter,
-        FilePath existingModelFile,
+        AssetLink<SkyrimModelAssetType> existingModelFile,
         MissingAssetsAnalyzer analyzer)
     {
         staticGetter.Model.Returns(new Model
         {
-            File = existingModelFile.Path
+            File = existingModelFile
         });
 
         var result = analyzer.AnalyzeRecord(staticGetter.AsIsolatedParams());
@@ -126,12 +126,12 @@ public class MissingAssetsAnalyzerTests
     [Theory, MutagenAutoData]
     public void TestExistingHeadPartModel(
         IHeadPartGetter headPart,
-        FilePath existingModelFile,
+        AssetLink<SkyrimModelAssetType> existingModelFile,
         MissingAssetsAnalyzer analyzer)
     {
         headPart.Model.Returns(new Model
         {
-            File = existingModelFile.Path
+            File = existingModelFile
         });
 
         var result = analyzer.AnalyzeRecord(headPart.AsIsolatedParams());
