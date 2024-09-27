@@ -1,0 +1,57 @@
+site_name: Mutagen Analyzers Documentation
+site_url: https://mutagen-modding.github.io/Mutagen.Bethesda.Analyzers/
+
+repo_name: Mutagen Analyzers
+repo_url: https://github.com/Mutagen-Modding/Mutagen.Bethesda.Analyzers
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mutagen-Modding
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/GdKZ3SH
+
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences 
+  - pymdownx.tasklist
+  - def_list
+  - meta
+  - md_in_html
+  - attr_list
+  - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+extra_css:
+  - stylesheets/extra.css
+
+plugins:
+  - search
+
+theme:
+  name: material
+  font:
+    text: Inter
+  palette:
+    primary: custom 
+    accent: custom
+    scheme: slate
+  favicon: mutagen-icon.png
+  logo: mutagen-icon.png
+  features:
+    - content.tooltips
+    - content.code.copy
+    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes 
+    - navigation.path
+    
+nav:
+  - Overview: index.md
