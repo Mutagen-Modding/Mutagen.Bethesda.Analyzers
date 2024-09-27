@@ -2,6 +2,9 @@
 
 # Mutagen.Bethesda.Analyzers
 
+## Documentation
+Check out the [![Documentation](https://i.imgur.com/DGoSrNg.png)](https://mutagen-modding.github.io/Mutagen.Bethesda.Analyzers/) [Official Documentation](https://mutagen-modding.github.io/Mutagen.Bethesda.Analyzers/)
+
 ## What is it?
 Currently in the research stage, this is a place to [gather and compile](https://github.com/Noggog/Mutagen.Bethesda.Analyzers/issues) information about known errors within Bethesda games that cause crashes, oddities, or other issues.
 
