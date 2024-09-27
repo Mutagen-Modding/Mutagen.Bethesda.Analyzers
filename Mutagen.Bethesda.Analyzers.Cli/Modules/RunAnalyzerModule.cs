@@ -19,8 +19,8 @@ public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
 
         builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
         builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
-        builder.RegisterDecorator<TopicListJoin, IReportDropbox>();
-        builder.RegisterDecorator<TopicEnricher, IReportDropbox>();
+        builder.RegisterDecorator<EditorIdEnricher, IReportDropbox>();
+        // builder.RegisterDecorator<DisallowedParametersChecker, IReportDropbox>();
         builder.RegisterType<PassToHandlerReportDropbox>().AsImplementedInterfaces();
         builder.RegisterModule<MainModule>();
     }

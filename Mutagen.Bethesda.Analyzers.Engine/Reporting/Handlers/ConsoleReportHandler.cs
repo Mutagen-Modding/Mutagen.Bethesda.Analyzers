@@ -13,7 +13,7 @@ public class ConsoleReportHandler : IReportHandler
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {sourceMod.ModKey.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
-        Console.WriteLine($"   {topic.FormattedMessage}");
+        Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
     }
 
     public void Dropoff(
@@ -21,6 +21,6 @@ public class ConsoleReportHandler : IReportHandler
         ITopic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");
-        Console.WriteLine($"   {topic.FormattedMessage}");
+        Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
     }
 }

@@ -19,19 +19,20 @@ public class SeverityAdjuster : IReportDropbox
 
     public void Dropoff(ReportContextParameters parameters, IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
     {
-        AdjustSeverity(topic);
-        _dropbox.Dropoff(parameters, sourceMod, majorRecord, topic);
+        _dropbox.Dropoff(parameters, sourceMod, majorRecord,
+            AdjustSeverity(topic));
     }
 
     public void Dropoff(ReportContextParameters parameters, ITopic topic)
     {
-        AdjustSeverity(topic);
-        _dropbox.Dropoff(parameters, topic);
+        _dropbox.Dropoff(parameters,
+            AdjustSeverity(topic));
     }
 
-    private void AdjustSeverity(ITopic topic)
+    private ITopic AdjustSeverity(ITopic topic)
     {
         var sev = _severityLookup.LookupSeverity(topic.TopicDefinition);
-        topic.Severity = sev;
+        if (sev == topic.Severity) return topic;
+        return topic.WithSeverity(sev);
     }
 }

@@ -4,7 +4,9 @@ public interface IFormattedTopicDefinition
 {
     TopicDefinition TopicDefinition { get; }
     string FormattedMessage { get; }
-    IFormattedTopicDefinition Transform(Func<object?, object?> transformer);
+    IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer);
 }
 
 public record FormattedTopicDefinition : IFormattedTopicDefinition
@@ -15,7 +17,9 @@ public record FormattedTopicDefinition : IFormattedTopicDefinition
 
     public string FormattedMessage => TopicDefinition.MessageFormat;
 
-    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    public IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer)
     {
         return this;
     }
@@ -29,12 +33,14 @@ public record FormattedTopicDefinition<T1> : IFormattedTopicDefinition
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1);
 
-    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    public IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer)
     {
         return new FormattedTopicDefinition<object?>()
         {
             TopicDefinition = TopicDefinition,
-            Item1 = transformer(Item1)
+            Item1 = transformer(param, Item1)
         };
     }
 }
@@ -49,13 +55,15 @@ public class FormattedTopicDefinition<T1, T2> : IFormattedTopicDefinition
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2);
 
-    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    public IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer)
     {
         return new FormattedTopicDefinition<object?, object?>()
         {
             TopicDefinition = TopicDefinition,
-            Item1 = transformer(Item1),
-            Item2 = transformer(Item2)
+            Item1 = transformer(param, Item1),
+            Item2 = transformer(param, Item2)
         };
     }
 }
@@ -71,14 +79,16 @@ public record FormattedTopicDefinition<T1, T2, T3> : IFormattedTopicDefinition
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3);
 
-    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    public IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer)
     {
         return new FormattedTopicDefinition<object?, object?, object?>()
         {
             TopicDefinition = TopicDefinition,
-            Item1 = transformer(Item1),
-            Item2 = transformer(Item2),
-            Item3 = transformer(Item3)
+            Item1 = transformer(param, Item1),
+            Item2 = transformer(param, Item2),
+            Item3 = transformer(param, Item3)
         };
     }
 }
@@ -95,15 +105,17 @@ public record FormattedTopicDefinition<T1, T2, T3, T4> : IFormattedTopicDefiniti
 
     public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Item1, Item2, Item3, Item4);
 
-    public IFormattedTopicDefinition Transform(Func<object?, object?> transformer)
+    public IFormattedTopicDefinition Transform<TParams>(
+        TParams param,
+        Func<TParams, object?, object?> transformer)
     {
         return new FormattedTopicDefinition<object?, object?, object?, object?>()
         {
             TopicDefinition = TopicDefinition,
-            Item1 = transformer(Item1),
-            Item2 = transformer(Item2),
-            Item3 = transformer(Item3),
-            Item4 = transformer(Item4)
+            Item1 = transformer(param, Item1),
+            Item2 = transformer(param, Item2),
+            Item3 = transformer(param, Item3),
+            Item4 = transformer(param, Item4)
         };
     }
 }
