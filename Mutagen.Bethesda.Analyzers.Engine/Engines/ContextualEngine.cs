@@ -1,5 +1,5 @@
 ﻿using Mutagen.Bethesda.Analyzers.Drivers;
-using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.Reporting.Drops;
 using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Analyzers.Engines;

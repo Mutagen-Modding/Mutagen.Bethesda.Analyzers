@@ -2,17 +2,37 @@
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-public record RecordTopic(IFormattedTopicDefinition _formattedTopicDefinition, Expression MemberExpression) : ITopic
+public record RecordTopic : ITopic
 {
-    private readonly IFormattedTopicDefinition _formattedTopicDefinition = _formattedTopicDefinition;
-
-    public static RecordTopic Create<T>(T obj, IFormattedTopicDefinition formattedTopicDefinition, Expression<Func<T, object?>> memberExpression)
+    public static RecordTopic Create<T>(
+        T obj,
+        IFormattedTopicDefinition formattedTopicDefinition,
+        Expression<Func<T, object?>> memberExpression)
     {
-        return new RecordTopic(formattedTopicDefinition, memberExpression);
+        return new RecordTopic
+        {
+            MemberExpression = memberExpression,
+            FormattedTopic = formattedTopicDefinition,
+            Severity = formattedTopicDefinition.TopicDefinition.Severity
+        };
     }
 
-    public TopicDefinition TopicDefinition => _formattedTopicDefinition.TopicDefinition;
-    public string FormattedMessage => string.Format(TopicDefinition.MessageFormat, Items.ToArray());
-    public Severity Severity { get; set; } = _formattedTopicDefinition.TopicDefinition.Severity;
-    public IEnumerable<object?> Items => _formattedTopicDefinition.Items;
+    public TopicDefinition TopicDefinition => FormattedTopic.TopicDefinition;
+    public required IFormattedTopicDefinition FormattedTopic { get; init; }
+    public required Severity Severity { get; init; }
+    public required Expression MemberExpression { get; init; }
+    public ITopic WithFormattedTopic(IFormattedTopicDefinition formattedTopicDefinition)
+    {
+        return this with
+        {
+            FormattedTopic = formattedTopicDefinition
+        };
+    }
+    public ITopic WithSeverity(Severity severity)
+    {
+        return this with
+        {
+            Severity = severity
+        };
+    }
 }

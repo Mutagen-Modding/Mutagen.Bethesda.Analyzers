@@ -1,7 +1,8 @@
 ﻿using Autofac;
 using Mutagen.Bethesda.Analyzers.Autofac;
 using Mutagen.Bethesda.Analyzers.Cli.Args;
-using Mutagen.Bethesda.Analyzers.Reporting;
+using Mutagen.Bethesda.Analyzers.Reporting.Drops;
+using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 
 namespace Mutagen.Bethesda.Analyzers.Cli.Modules;
 
@@ -13,13 +14,15 @@ public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
     {
         if (command?.OutputFilePath is not null)
         {
-            builder.RegisterDecorator<IReportDropbox>((_, _, dropbox) => new CsvDropbox(dropbox, command.OutputFilePath));
+            builder.RegisterType<CsvReportHandler>().AsImplementedInterfaces();
+            builder.RegisterInstance(new CsvInputs(command.OutputFilePath)).AsSelf().AsImplementedInterfaces();
         }
 
         builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
         builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
-        builder.RegisterDecorator<TopicListJoin, IReportDropbox>();
-        builder.RegisterDecorator<TopicEnricher, IReportDropbox>();
+        builder.RegisterDecorator<EditorIdEnricher, IReportDropbox>();
+        // builder.RegisterDecorator<DisallowedParametersChecker, IReportDropbox>();
+        builder.RegisterType<PassToHandlerReportDropbox>().AsImplementedInterfaces();
         builder.RegisterModule<MainModule>();
     }
 }

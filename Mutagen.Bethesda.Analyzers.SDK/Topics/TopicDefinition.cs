@@ -38,9 +38,10 @@ public partial record TopicDefinition
 
     public IFormattedTopicDefinition Format()
     {
-        return new FormattedTopicDefinition(
-            this,
-            MessageFormat ?? Title);
+        return new FormattedTopicDefinition
+        {
+            TopicDefinition = this,
+        };
     }
 
     public override string ToString() => this.ToShortString();
@@ -60,7 +61,11 @@ public record TopicDefinition<T1> : TopicDefinition
 
     public IFormattedTopicDefinition Format(T1 item1)
     {
-        return new FormattedTopicDefinition<T1>(this, item1);
+        return new FormattedTopicDefinition<T1>
+        {
+            TopicDefinition = this,
+            Item1 = item1,
+        };
     }
 
     public override string ToString() => this.ToShortString();
@@ -80,7 +85,12 @@ public record TopicDefinition<T1, T2> : TopicDefinition
 
     public IFormattedTopicDefinition Format(T1 item1, T2 item2)
     {
-        return new FormattedTopicDefinition<T1, T2>(this, item1, item2);
+        return new FormattedTopicDefinition<T1, T2>
+        {
+            TopicDefinition = this,
+            Item1 = item1,
+            Item2 = item2,
+        };
     }
 
     public override string ToString() => this.ToShortString();
@@ -100,7 +110,13 @@ public record TopicDefinition<T1, T2, T3> : TopicDefinition
 
     public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3)
     {
-        return new FormattedTopicDefinition<T1, T2, T3>(this, item1, item2, item3);
+        return new FormattedTopicDefinition<T1, T2, T3>
+        {
+            TopicDefinition = this,
+            Item1 = item1,
+            Item2 = item2,
+            Item3 = item3,
+        };
     }
 
     public override string ToString() => this.ToShortString();
@@ -120,8 +136,14 @@ public record TopicDefinition<T1, T2, T3, T4> : TopicDefinition
 
     public IFormattedTopicDefinition Format(T1 item1, T2 item2, T3 item3, T4 item4)
     {
-        return new FormattedTopicDefinition<T1, T2, T3, T4>(
-            this, item1, item2, item3, item4);
+        return new FormattedTopicDefinition<T1, T2, T3, T4>
+        {
+            TopicDefinition = this,
+            Item1 = item1,
+            Item2 = item2,
+            Item3 = item3,
+            Item4 = item4,
+        };
     }
 
     public override string ToString() => this.ToShortString();

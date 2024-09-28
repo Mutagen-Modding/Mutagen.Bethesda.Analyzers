@@ -10,21 +10,23 @@ namespace Mutagen.Bethesda.Analyzers.Tests;
 
 public static class Utility
 {
-    public static readonly TopicDefinition Suggestion = new TopicDefinition(
+    public static readonly TopicDefinition Suggestion = new(
         "A123",
         "TestTitle",
         Severity.Suggestion);
-    public static readonly FormattedTopicDefinition FormattedSuggestion = new FormattedTopicDefinition(
-        Suggestion,
-        "Test");
+    public static readonly FormattedTopicDefinition FormattedSuggestion = new()
+    {
+        TopicDefinition = Suggestion,
+    };
     public static readonly IContextualAnalyzer SuggestionAnalyzer;
-    public static readonly TopicDefinition Warning = new TopicDefinition(
+    public static readonly TopicDefinition Warning = new(
         "A123",
         "TestTitle",
         Severity.Warning);
-    public static readonly FormattedTopicDefinition FormattedWarning = new FormattedTopicDefinition(
-        Warning,
-        "Test");
+    public static readonly FormattedTopicDefinition FormattedWarning = new()
+    {
+        TopicDefinition = Warning,
+    };
     public static readonly IContextualAnalyzer WarningAnalyzer;
 
     static Utility()
@@ -35,7 +37,7 @@ public static class Utility
 
     private static IContextualAnalyzer CreateAnalyzer(FormattedTopicDefinition def)
     {
-        var analyzerResult = new ContextualAnalyzerResult(new ContextualTopic(def));
+        var analyzerResult = new ContextualAnalyzerResult(ContextualTopic.Create(123, def));
         var testAnalyzer = Substitute.For<IContextualAnalyzer>();
         testAnalyzer.Analyze(default(ContextualAnalyzerParams)).ReturnsForAnyArgs(analyzerResult);
         return testAnalyzer;
