@@ -15,6 +15,7 @@ public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
         if (command?.OutputFilePath is not null)
         {
             builder.RegisterType<CsvReportHandler>().AsImplementedInterfaces();
+            builder.RegisterInstance(new CsvInputs(command.OutputFilePath)).AsSelf().AsImplementedInterfaces();
         }
 
         builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();

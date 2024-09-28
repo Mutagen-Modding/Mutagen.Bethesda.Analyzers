@@ -41,12 +41,12 @@ public sealed class EditorIdEnricher : IReportDropbox
         ReportContextParameters parameters,
         IFormLinkGetter link)
     {
-        if (parameters.LinkCache.TryResolve(link.FormKey, link.Type, out var record)
-            && record.EditorID is {} edid)
+        if (parameters.LinkCache.TryResolveIdentifier(link.FormKey, link.Type, out var edid)
+            && edid != null)
         {
             return new MajorRecordIdentifier()
             {
-                FormKey = record.FormKey,
+                FormKey = link.FormKey,
                 EditorID = edid
             };
         }

@@ -43,14 +43,17 @@ public class DisallowedParametersChecker : IReportDropbox
         ReportContextParameters parameters,
         object? item)
     {
-        if (item is IEnumerable)
+        switch (item)
         {
-            throw new ArgumentException("Enumerables are not allowed in formatted topic parameters");
+            case null:
+            case string:
+                return item;
+            case IEnumerable:
+                throw new ArgumentException("Enumerables are not allowed in formatted topic parameters");
+            case FormKey:
+                throw new ArgumentException("FormKeys are not allowed in formatted topic parameters.  Pass in typed FormLinks instead");
+            default:
+                return item;
         }
-        if (item is FormKey)
-        {
-            throw new ArgumentException("FormKeys are not allowed in formatted topic parameters.  Pass in typed FormLinks instead");
-        }
-        return item;
     }
 }
