@@ -1,5 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.Reporting;
-using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers;
 

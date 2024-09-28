@@ -1,5 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.Config;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Drops;
@@ -19,12 +21,12 @@ public class MinimumSeverityFilter : IReportDropbox
 
     public void Dropoff(
         ReportContextParameters parameters,
-        IModGetter sourceMod,
-        IMajorRecordGetter majorRecord,
+        ModKey mod,
+        IMajorRecordIdentifier record,
         ITopic topic)
     {
         if (topic.Severity < _minimum.MinimumSeverity) return;
-        _reportDropbox.Dropoff(parameters, sourceMod, majorRecord, topic);
+        _reportDropbox.Dropoff(parameters, mod, record, topic);
     }
 
     public void Dropoff(

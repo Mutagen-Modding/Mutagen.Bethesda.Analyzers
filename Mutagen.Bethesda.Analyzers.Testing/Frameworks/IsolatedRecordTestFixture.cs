@@ -27,10 +27,15 @@ public class IsolatedRecordTestFixture<TAnalyzer, TMajor, TMajorGetter>
     {
         var rec = _fixture.Create<TMajor>();
         prepForError(rec);
-        var param = new IsolatedRecordAnalyzerParams<TMajorGetter>(rec);
 
-        var errorResults = Sut.AnalyzeRecord(param)?.Topics ?? [];
-        errorResults.Select(x => x.TopicDefinition.Id)
+        var dropOff = new TestDropoff();
+        var param = new IsolatedRecordAnalyzerParams<TMajorGetter>(
+            record: rec,
+            parameters: default,
+            reportDropbox: dropOff);
+
+        Sut.AnalyzeRecord(param);
+        dropOff.Reports.Select(x => x.TopicDefinition.Id)
             .Should().Equal(expectedTopics.Select(x => x.Id));
 
         prepForFix(rec);
@@ -38,8 +43,9 @@ public class IsolatedRecordTestFixture<TAnalyzer, TMajor, TMajorGetter>
         // ToDo
         // Eventually test that fixrec triggers a rerun in the engine properly
 
-        var fixResults = Sut.AnalyzeRecord(param)?.Topics ?? [];
-        fixResults.Should().BeEmpty();
+        dropOff = new();
+        Sut.AnalyzeRecord(param);
+        dropOff.Reports.Should().BeEmpty();
     }
 
     public void RunShouldBeNoError(

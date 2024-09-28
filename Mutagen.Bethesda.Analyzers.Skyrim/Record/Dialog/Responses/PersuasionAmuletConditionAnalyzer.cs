@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class PersuasionAmuletConditionAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
@@ -13,7 +13,7 @@ public class PersuasionAmuletConditionAnalyzer : IIsolatedRecordAnalyzer<IDialog
 
     public IEnumerable<TopicDefinition> Topics { get; } = [MissingCreatedObject];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
 
@@ -36,15 +36,9 @@ public class PersuasionAmuletConditionAnalyzer : IIsolatedRecordAnalyzer<IDialog
 
         if (isPersuade && !hasAmuletOfArticulation)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    dialogResponses,
-                    MissingCreatedObject.Format(),
-                    x => x.Conditions
-                )
-            );
+            param.AddTopic(
+                MissingCreatedObject.Format(),
+                x => x.Conditions);
         }
-
-        return null;
     }
 }

@@ -12,9 +12,9 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             Severity.Suggestion)
         .WithFormatting<List<ILeveledNpcGetter>>("Leveled Npc contains itself in path {0}");
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledNpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledNpcGetter> param)
     {
-        return FindCircularList(param.Record, l =>
+        FindCircularList(param.Record, l =>
         {
             if (l.Entries is not null)
             {

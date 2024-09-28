@@ -28,19 +28,19 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         FormKeys.SkyrimSE.Skyrim.Race.WoodElfRace, FormKeys.SkyrimSE.Skyrim.Race.WoodElfRaceVampire
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
     {
         var armor = param.Record;
 
         // Armor with template armor inherit all relevant data from the template armor and should not be checked themselves
-        if (!armor.TemplateArmor.IsNull) return null;
+        if (!armor.TemplateArmor.IsNull) return;
 
         // Non-playable cannot be equipped by the player and is usually required to be universally compatible
-        if (armor.MajorFlags.HasFlag(Bethesda.Skyrim.Armor.MajorFlag.NonPlayable)) return null;
+        if (armor.MajorFlags.HasFlag(Bethesda.Skyrim.Armor.MajorFlag.NonPlayable)) return;
 
         // Exclude non player race armor
         if (armor.Race.FormKey != FormKeys.SkyrimSE.Skyrim.Race.DefaultRace.FormKey
-            && !DefaultPlayerRaces.Contains(armor.Race)) return null;
+            && !DefaultPlayerRaces.Contains(armor.Race)) return;
 
         // Build list of all races in armor addons
         var missingRaces = new List<IFormLinkGetter<IRaceGetter>>(DefaultPlayerRaces);
@@ -56,16 +56,11 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             missingRaces.Remove(addon.Race.FormKey);
         }
 
-        var result = new RecordAnalyzerResult();
-
         foreach (var race in missingRaces)
         {
-            result.AddTopic(RecordTopic.Create(
-                armor,
+            param.AddTopic(
                 ArmorMissingRaceAddons.Format(race),
-                x => x.Armature));
+                x => x.Armature);
         }
-
-        return result;
     }
 }

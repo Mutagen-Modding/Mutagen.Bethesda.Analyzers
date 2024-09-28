@@ -22,10 +22,8 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSet
     private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
     private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
     {
-        var result = new RecordAnalyzerResult();
-
         CheckForMissingAsset(param.Record.Diffuse, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse), x => x.Diffuse!));
         CheckForMissingAsset(param.Record.NormalOrGloss, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss), x => x.NormalOrGloss!));
         CheckForMissingAsset(param.Record.EnvironmentMaskOrSubsurfaceTint, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint), x => x.EnvironmentMaskOrSubsurfaceTint!));
@@ -34,7 +32,5 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSet
         CheckForMissingAsset(param.Record.Environment, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment), x => x.Environment!));
         CheckForMissingAsset(param.Record.Multilayer, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer), x => x.Multilayer!));
         CheckForMissingAsset(param.Record.BacklightMaskOrSpecular, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular), x => x.BacklightMaskOrSpecular!));
-
-        return result;
     }
 }

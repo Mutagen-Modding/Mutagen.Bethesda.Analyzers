@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Constructible;
 
 public class MissingCreatedObjectAnalyzer : IIsolatedRecordAnalyzer<IConstructibleObjectGetter>
@@ -13,19 +13,13 @@ public class MissingCreatedObjectAnalyzer : IIsolatedRecordAnalyzer<IConstructib
 
     public IEnumerable<TopicDefinition> Topics { get; } = [MissingCreatedObject];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IConstructibleObjectGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IConstructibleObjectGetter> param)
     {
         if (param.Record.CreatedObject.IsNull)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    obj: param.Record,
-                    formattedTopicDefinition: MissingCreatedObject.Format(),
-                    memberExpression: x => x.CreatedObject
-                )
-            );
+            param.AddTopic(
+                formattedTopicDefinition: MissingCreatedObject.Format(),
+                memberExpression: x => x.CreatedObject);
         }
-
-        return null;
     }
 }

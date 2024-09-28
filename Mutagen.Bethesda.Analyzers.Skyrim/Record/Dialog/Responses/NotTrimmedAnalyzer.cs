@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
@@ -19,19 +19,16 @@ public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
 
     public IEnumerable<TopicDefinition> Topics { get; } = [PromptNotTrimmed, ResponseNotTrimmed];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
-        var result = new RecordAnalyzerResult();
 
         // Check prompt
         if (dialogResponses.Prompt?.String is not null && NotTrimmed(dialogResponses.Prompt.String))
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogResponses,
-                    PromptNotTrimmed.Format(dialogResponses.Prompt.String),
-                    x => x));
+            param.AddTopic(
+                PromptNotTrimmed.Format(dialogResponses.Prompt.String),
+                x => x);
         }
 
         // Check responses
@@ -41,14 +38,10 @@ public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
                      .Where(NotTrimmed)
                 )
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogResponses,
-                    ResponseNotTrimmed.Format(response),
-                    x => x));
+            param.AddTopic(
+                ResponseNotTrimmed.Format(response),
+                x => x);
         }
-
-        return result;
 
         static bool NotTrimmed(string text) => text.StartsWith(' ') || text.EndsWith(' ');
     }

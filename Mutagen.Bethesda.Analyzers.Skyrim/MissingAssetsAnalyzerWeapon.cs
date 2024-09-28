@@ -13,10 +13,8 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGett
             Severity.Error)
         .WithFormatting<string>(MissingModelFileMessageFormat);
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IWeaponGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IWeaponGetter> param)
     {
-        var res = new RecordAnalyzerResult();
         CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
-        return res;
     }
 }

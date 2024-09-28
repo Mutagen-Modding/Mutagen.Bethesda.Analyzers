@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Faction;
 
 public class VendorHourAnalyzer : IIsolatedRecordAnalyzer<IFactionGetter>
@@ -13,25 +13,21 @@ public class VendorHourAnalyzer : IIsolatedRecordAnalyzer<IFactionGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [WrongVendorHourOrder];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IFactionGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IFactionGetter> param)
     {
         var faction = param.Record;
 
-        if (!faction.IsVendor()) return null;
-        if (faction.VendorValues is null) return null;
+        if (!faction.IsVendor()) return;
+        if (faction.VendorValues is null) return;
 
 
         if (faction.VendorValues.StartHour < faction.VendorValues.EndHour)
         {
-            return null;
+            return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                faction,
-                WrongVendorHourOrder.Format(faction.VendorValues.StartHour, faction.VendorValues.EndHour),
-                x => x.VendorValues
-            )
-        );
+        param.AddTopic(
+            WrongVendorHourOrder.Format(faction.VendorValues.StartHour, faction.VendorValues.EndHour),
+            x => x.VendorValues);
     }
 }

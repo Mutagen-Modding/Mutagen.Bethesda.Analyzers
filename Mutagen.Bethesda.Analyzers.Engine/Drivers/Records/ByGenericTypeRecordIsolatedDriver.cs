@@ -1,5 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.Reporting;
-using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;
@@ -25,19 +25,14 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
 
         foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
         {
-            var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(rec);
+            var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(
+                driverParams.TargetMod.ModKey,
+                rec,
+                reportContext,
+                driverParams.ReportDropbox);
             foreach (var analyzer in _isolatedRecordAnalyzers)
             {
-                var record = analyzer.AnalyzeRecord(isolatedParam);
-                if (record is null) continue;
-                foreach (var topic in record.Topics)
-                {
-                    driverParams.ReportDropbox.Dropoff(
-                        reportContext,
-                        driverParams.TargetMod,
-                        rec,
-                        topic);
-                }
+                analyzer.AnalyzeRecord(isolatedParam);
             }
         }
     }

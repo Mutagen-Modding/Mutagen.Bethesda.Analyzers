@@ -13,10 +13,8 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGett
             Severity.Error)
         .WithFormatting<string>(MissingModelFileMessageFormat);
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IStaticGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IStaticGetter> param)
     {
-        var res = new RecordAnalyzerResult();
         CheckForMissingModelAsset(param.Record, res, MissingStaticModel);
-        return res;
     }
 }

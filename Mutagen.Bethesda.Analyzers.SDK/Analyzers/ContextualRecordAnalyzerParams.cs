@@ -1,4 +1,8 @@
-﻿using Mutagen.Bethesda.Plugins.Cache;
+﻿using System.Linq.Expressions;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -10,11 +14,39 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     public readonly ILinkCache LinkCache;
     public readonly ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder;
     public readonly TMajor Record;
+    private readonly IReportDropbox _reportDropbox;
+    private readonly ReportContextParameters _parameters;
 
-    public ContextualRecordAnalyzerParams(ILinkCache linkCache, ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder, TMajor @record)
+    public ContextualRecordAnalyzerParams(
+        ILinkCache linkCache,
+        ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
+        TMajor record,
+        IReportDropbox reportDropbox)
     {
         LinkCache = linkCache;
         LoadOrder = loadOrder;
         Record = record;
+        _reportDropbox = reportDropbox;
+        _parameters = new ReportContextParameters(linkCache);
+    }
+
+    public void AddTopic(
+        IFormattedTopicDefinition formattedTopicDefinition,
+        Expression<Func<TMajor, object?>> memberExpression)
+    {
+        _reportDropbox.Dropoff(
+            _parameters,
+            RecordTopic.Create(Record, formattedTopicDefinition, memberExpression));
+    }
+
+    public void AddTopic(
+        ModKey mod,
+        TMajor record,
+        IFormattedTopicDefinition formattedTopicDefinition,
+        Expression<Func<TMajor, object?>> memberExpression)
+    {
+        _reportDropbox.Dropoff(
+            _parameters,
+            RecordTopic.Create(Record, formattedTopicDefinition, memberExpression));
     }
 }

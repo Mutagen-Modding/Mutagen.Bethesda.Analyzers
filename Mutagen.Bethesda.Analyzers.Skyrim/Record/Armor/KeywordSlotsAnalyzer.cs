@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
@@ -38,18 +38,18 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         (BipedObjectFlag.Ring, FormKeys.SkyrimSE.Skyrim.Keyword.ClothingRing),
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
     {
         var armor = param.Record;
 
         // Armor with template armor inherit all relevant data from the template armor and should not be checked themselves
-        if (!armor.TemplateArmor.IsNull) return null;
+        if (!armor.TemplateArmor.IsNull) return;
 
         // Armor with no slots are not relevant
-        if (armor.BodyTemplate is null) return null;
+        if (armor.BodyTemplate is null) return;
 
         // Ignore armor with no keywords, these are usually skin armor
-        if (armor.Keywords is null) return null;
+        if (armor.Keywords is null) return;
 
         // Armor type dependent conditions for main armor slots
 
@@ -69,16 +69,14 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
             {
                 if (armor.Keywords.Contains(keyword))
                 {
-                    return null;
+                    return;
                 }
 
-                return new RecordAnalyzerResult(RecordTopic.Create(
-                    armor,
+                param.AddTopic(
                     ArmorMatchingKeywordSlots.Format(slots.ToString(), keyword),
-                    x => x.Keywords));
+                    x => x.Keywords);
+                return;
             }
         }
-
-        return null;
     }
 }

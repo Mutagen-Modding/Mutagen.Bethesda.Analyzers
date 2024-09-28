@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILeveledItemGetter>
@@ -12,9 +12,9 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             Severity.Suggestion)
         .WithFormatting<List<ILeveledItemGetter>>("Leveled Item contains itself in path {0}");
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledItemGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledItemGetter> param)
     {
-        return FindCircularList(param.Record, l =>
+        FindCircularList(param.Record, l =>
         {
             if (l.Entries is not null)
             {

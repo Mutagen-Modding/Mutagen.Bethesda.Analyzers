@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.IdleMarker;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIdleMarkerGetter>
@@ -13,23 +13,15 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIdleMarkerGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoIdles];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IIdleMarkerGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IIdleMarkerGetter> param)
     {
         var idleMarker = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (idleMarker.Animations is not null && idleMarker.Animations.Count == 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    idleMarker,
-                    NoIdles.Format(),
-                    x => x.Animations
-                )
-            );
+            param.AddTopic(
+                NoIdles.Format(),
+                x => x.Animations);
         }
-
-        return result;
     }
 }

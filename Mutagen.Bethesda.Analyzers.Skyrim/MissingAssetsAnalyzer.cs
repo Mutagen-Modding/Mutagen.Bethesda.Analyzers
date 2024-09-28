@@ -25,7 +25,6 @@ public partial class MissingAssetsAnalyzer
 
     private void CheckForMissingModelAsset<TMajorRecordGetter>(
         TMajorRecordGetter modeledGetter,
-        RecordAnalyzerResult result,
         TopicDefinition<string> topicDefinition)
         where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
     {

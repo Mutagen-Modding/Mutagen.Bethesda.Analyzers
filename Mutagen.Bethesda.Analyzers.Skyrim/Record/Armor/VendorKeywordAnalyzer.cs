@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
@@ -44,23 +44,23 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         FormKeys.SkyrimSE.Skyrim.Keyword.JewelryExpensive,
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
     {
         var armor = param.Record;
 
         // Armor with template armor inherit all relevant data from the template armor and should not be checked themselves
-        if (!armor.TemplateArmor.IsNull) return null;
+        if (!armor.TemplateArmor.IsNull) return;
 
         // Non-playable armor should not have vendor keywords
-        if (armor.MajorFlags.HasFlag(Bethesda.Skyrim.Armor.MajorFlag.NonPlayable)) return null;
+        if (armor.MajorFlags.HasFlag(Bethesda.Skyrim.Armor.MajorFlag.NonPlayable)) return;
 
         // Ignore armor with no keywords, these are usually skin armor
-        if (armor.Keywords is null) return null;
+        if (armor.Keywords is null) return;
 
         // No sale or Daedric artifact or the default armor vendor keywords are always allowed
         if (armor.Keywords.Intersect(AlwaysValidVendorKeywords).Any())
         {
-            return null;
+            return;
         }
 
         // Determine the expected vendor keyword based on the armor type
@@ -74,28 +74,21 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
                 => FormKeys.SkyrimSE.Skyrim.Keyword.VendorItemArmor,
         };
 
-        if (armor.Keywords.Contains(expectedVendorKeyword)) return null;
+        if (armor.Keywords.Contains(expectedVendorKeyword)) return;
 
         // Collect all vendor keywords - at this point we know that these are all not the vendor keywords we are looking for
         var vendorKeywords = armor.Keywords.Intersect(AllArmorVendorKeywords).ToList();
 
         if (vendorKeywords.Count == 0)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    armor,
-                    ArmorMissingVendorKeyword.Format(expectedVendorKeyword),
-                    x => x.Keywords
-                )
-            );
+            param.AddTopic(
+                ArmorMissingVendorKeyword.Format(expectedVendorKeyword),
+                x => x.Keywords);
+            return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                armor,
-                UnsuitableVendorKeyword.Format(expectedVendorKeyword, vendorKeywords),
-                x => x.Keywords
-            )
-        );
+        param.AddTopic(
+            UnsuitableVendorKeyword.Format(expectedVendorKeyword, vendorKeywords),
+            x => x.Keywords);
     }
 }

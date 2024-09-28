@@ -1,5 +1,5 @@
 ﻿using Mutagen.Bethesda.Analyzers.Drivers;
-using Mutagen.Bethesda.Analyzers.Reporting.Drops;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records.DI;
 

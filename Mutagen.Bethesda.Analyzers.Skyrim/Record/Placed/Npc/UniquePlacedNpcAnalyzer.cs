@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Placed.Npc;
 
 public class UniquePlacedNpcAnalyzer : IContextualRecordAnalyzer<IPlacedNpcGetter>
@@ -18,18 +18,17 @@ public class UniquePlacedNpcAnalyzer : IContextualRecordAnalyzer<IPlacedNpcGette
 
     public IEnumerable<TopicDefinition> Topics { get; } = [];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedNpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedNpcGetter> param)
     {
         var placedNpc = param.Record;
-        var result = new RecordAnalyzerResult();
 
-        if (placedNpc.MajorFlags.HasFlag(PlacedNpc.MajorFlag.InitiallyDisabled)) return result;
-        if (placedNpc.MajorFlags.HasFlag(PlacedNpc.MajorFlag.StartsDead)) return result;
+        if (placedNpc.MajorFlags.HasFlag(PlacedNpc.MajorFlag.InitiallyDisabled)) return;
+        if (placedNpc.MajorFlags.HasFlag(PlacedNpc.MajorFlag.StartsDead)) return;
 
-        if (!placedNpc.Base.TryResolveSimpleContext(param.LinkCache, out var context)) return result;
+        if (!placedNpc.Base.TryResolveSimpleContext(param.LinkCache, out var context)) return;
 
         var npc = context.Record;
-        if (!npc.IsUnique()) return result;
+        if (!npc.IsUnique()) return;
 
         if (context.Parent?.Record is ICellGetter cell)
         {
@@ -39,27 +38,17 @@ public class UniquePlacedNpcAnalyzer : IContextualRecordAnalyzer<IPlacedNpcGette
                     .Select(location => location.FormKey)
                     .Contains(persistLocation.FormKey))
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        placedNpc,
-                        UniqueNpcNotInPersistenceLocation.Format(),
-                        x => x.PersistentLocation
-                    )
-                );
+                param.AddTopic(
+                    UniqueNpcNotInPersistenceLocation.Format(),
+                    x => x.PersistentLocation);
             }
         }
 
         if (placedNpc.PersistentLocation.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    placedNpc,
-                    UniqueNpcWithoutPersistenceLocation.Format(),
-                    x => x.PersistentLocation
-                )
-            );
+            param.AddTopic(
+                UniqueNpcWithoutPersistenceLocation.Format(),
+                x => x.PersistentLocation);
         }
-
-        return result;
     }
 }

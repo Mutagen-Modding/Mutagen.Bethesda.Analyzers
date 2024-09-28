@@ -1,5 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.Config;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Drops;
@@ -17,9 +19,13 @@ public class SeverityAdjuster : IReportDropbox
         _severityLookup = severityLookup;
     }
 
-    public void Dropoff(ReportContextParameters parameters, IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
+    public void Dropoff(
+        ReportContextParameters parameters,
+        ModKey mod,
+        IMajorRecordIdentifier record,
+        ITopic topic)
     {
-        _dropbox.Dropoff(parameters, sourceMod, majorRecord,
+        _dropbox.Dropoff(parameters, mod, record,
             AdjustSeverity(topic));
     }
 

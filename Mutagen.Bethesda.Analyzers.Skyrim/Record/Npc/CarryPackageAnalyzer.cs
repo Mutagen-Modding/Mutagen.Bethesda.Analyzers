@@ -24,54 +24,49 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [CarryPackageWithoutScript, NoStopCarryingEventProperty];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
-        if (!HasCarryPackage(param)) return null;
+        if (!HasCarryPackage(param)) return;
 
         var npc = param.Record;
         var scriptEntry = npc.GetScript("CarryActorScript");
         if (scriptEntry is null)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    CarryPackageWithoutScript.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                CarryPackageWithoutScript.Format(),
+                x => x.VirtualMachineAdapter);
+            return;
         }
 
         var stopCarryingEventProperty = scriptEntry.GetProperty<IScriptObjectPropertyGetter>("StopCarryingEvent");
         if (stopCarryingEventProperty is null)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    NoStopCarryingEventProperty.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                NoStopCarryingEventProperty.Format(),
+                x => x.VirtualMachineAdapter);
+            return;
         }
 
         if (stopCarryingEventProperty.Object.FormKey != FormKeys.SkyrimSE.Skyrim.IdleAnimation.OffsetStop.FormKey)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    StopCarryingEventPropertyNotIdleAnimation.Format(stopCarryingEventProperty.Object),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                StopCarryingEventPropertyNotIdleAnimation.Format(stopCarryingEventProperty.Object),
+                x => x.VirtualMachineAdapter);
+            return;
         }
 
         var carryItemMiscProperty = scriptEntry.GetProperty<IScriptObjectPropertyGetter>("CarryItemMisc");
-        if (carryItemMiscProperty is not null) return null;
+        if (carryItemMiscProperty is not null) return;
 
         var carryItemPotionProperty = scriptEntry.GetProperty<IScriptObjectPropertyGetter>("CarryItemPotion");
-        if (carryItemPotionProperty is not null) return null;
+        if (carryItemPotionProperty is not null) return;
 
         var carryItemIngredientProperty = scriptEntry.GetProperty<IScriptObjectPropertyGetter>("CarryItemIngredient");
-        if (carryItemIngredientProperty is not null) return null;
+        if (carryItemIngredientProperty is not null) return;
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                npc,
-                CarryPackageWithoutScript.Format(),
-                x => x.VirtualMachineAdapter));
+        param.AddTopic(
+            CarryPackageWithoutScript.Format(),
+            x => x.VirtualMachineAdapter);
     }
 
     private static readonly HashSet<IFormLinkGetter<IPackageGetter>> CarryPackageTemplates =

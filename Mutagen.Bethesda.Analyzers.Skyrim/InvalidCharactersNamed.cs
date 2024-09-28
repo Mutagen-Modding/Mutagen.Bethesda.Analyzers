@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Skyrim;
@@ -13,19 +12,15 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrim
             Severity.Warning)
         .WithFormatting<IEnumerable<string>>("The name contains invalid characters: {0}");
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ISkyrimMajorRecordGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ISkyrimMajorRecordGetter> param)
     {
-        if (param.Record is not INamedGetter { Name: not null } named) return null;
+        if (param.Record is not INamedGetter { Name: not null } named) return;
 
         var invalidStrings = InvalidStrings.Where(invalidString => named.Name.Contains(invalidString.Key)).ToList();
-        if (invalidStrings.Count == 0) return null;
+        if (invalidStrings.Count == 0) return;
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                named,
-                InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
-                x => x.Name
-            )
-        );
+        param.AddTopic(
+            InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
+            x => x.Name);
     }
 }

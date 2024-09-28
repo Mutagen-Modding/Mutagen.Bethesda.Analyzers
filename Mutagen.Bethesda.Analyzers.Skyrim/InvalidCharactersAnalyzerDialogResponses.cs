@@ -12,29 +12,21 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialog
             Severity.Warning)
         .WithFormatting<string, IEnumerable<string>>("Dialog response '{0}' contain invalid characters: {1}");
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
-
-        var result = new RecordAnalyzerResult();
 
         foreach (var response in dialogResponses.Responses)
         {
             if (response.Text.String is null) continue;
 
-
             var invalidStrings = InvalidStrings.Where(invalidString => response.Text.String.Contains(invalidString.Key)).ToList();
-            if (invalidStrings.Count == 0) return null;
+            if (invalidStrings.Count == 0) continue;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogResponses,
-                    InvalidCharactersDialogResponses.Format(response.Text.String, invalidStrings.Select(x => x.Key)),
-                    x => x.Responses
-                )
+            param.AddTopic(
+                InvalidCharactersDialogResponses.Format(response.Text.String, invalidStrings.Select(x => x.Key)),
+                x => x.Responses
             );
         }
-
-        return result;
     }
 }
