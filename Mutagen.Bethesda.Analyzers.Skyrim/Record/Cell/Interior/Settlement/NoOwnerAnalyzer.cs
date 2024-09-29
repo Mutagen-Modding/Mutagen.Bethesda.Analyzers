@@ -13,28 +13,21 @@ public class NoOwnerAnalyzer : IContextualRecordAnalyzer<ICellGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoOwner];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<ICellGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ICellGetter> param)
     {
         var cell = param.Record;
-        var result = new RecordAnalyzerResult();
 
-        if (!cell.IsSettlementCell(param.LinkCache)) return result;
+        if (!cell.IsSettlementCell(param.LinkCache)) return;
 
         var location = cell.Location.TryResolve(param.LinkCache);
-        if (location is null) return result;
-        if (location.HasKeyword(FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse)) return result;
+        if (location is null) return;
+        if (location.HasKeyword(FormKeys.SkyrimSE.Skyrim.Keyword.LocTypePlayerHouse)) return;
 
         if (cell.Owner.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    cell,
-                    NoOwner.Format(),
-                    x => x.Owner
-                )
-            );
+            param.AddTopic(
+                NoOwner.Format(),
+                x => x.Owner);
         }
-
-        return result;
     }
 }

@@ -13,23 +13,19 @@ public class NoItemsAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoItems];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        if (!npc.IsEligibleForTest()) return null;
+        if (!npc.IsEligibleForTest()) return;
 
         // Skip NPCs using templates for inventory
-        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Inventory)) return null;
+        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Inventory)) return;
 
         if (npc.Items is null || npc.Items.Count == 0)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    NoItems.Format(),
-                    x => x.Configuration));
+            param.AddTopic(
+                NoItems.Format(),
+                x => x.Configuration);
         }
-
-        return null;
     }
 }

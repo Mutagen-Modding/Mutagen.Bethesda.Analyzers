@@ -13,25 +13,18 @@ public class NoLockListAnalyzer : IContextualRecordAnalyzer<ICellGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoLockList];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<ICellGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ICellGetter> param)
     {
         var cell = param.Record;
-        var result = new RecordAnalyzerResult();
 
         // Public cells should not have a lock list
-        if (cell.IsPublic()) return result;
+        if (cell.IsPublic()) return;
 
         if (cell.LockList.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    cell,
-                    NoLockList.Format(),
-                    x => x.Owner
-                )
-            );
+            param.AddTopic(
+                NoLockList.Format(),
+                x => x.Owner);
         }
-
-        return result;
     }
 }

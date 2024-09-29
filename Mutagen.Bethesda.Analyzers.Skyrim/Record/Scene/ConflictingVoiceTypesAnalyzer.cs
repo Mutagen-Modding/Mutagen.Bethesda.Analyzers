@@ -15,12 +15,11 @@ public class ConflictingVoiceTypesAnalyzer : IContextualRecordAnalyzer<ISceneGet
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NpcsWithSameVoiceType];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<ISceneGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ISceneGetter> param)
     {
         var scene = param.Record;
-        var result = new RecordAnalyzerResult();
 
-        if (!param.LinkCache.TryResolve<IQuestGetter>(scene.Quest.FormKey, out var quest)) return result;
+        if (!param.LinkCache.TryResolve<IQuestGetter>(scene.Quest.FormKey, out var quest)) return;
 
         var npcVoiceTypes = scene.Actors
             .Select(a => quest.Aliases.FirstOrDefault(x => x.ID == a.ID))
@@ -34,15 +33,9 @@ public class ConflictingVoiceTypesAnalyzer : IContextualRecordAnalyzer<ISceneGet
             var npcWithSameVoiceType = npcVoiceType.ToList();
             if (npcWithSameVoiceType.Count <= 1) continue;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    scene,
-                    NpcsWithSameVoiceType.Format(scene, npcWithSameVoiceType.Count, npcWithSameVoiceType, npcVoiceType.Key),
-                    x => x.Actors
-                )
-            );
+            param.AddTopic(
+                NpcsWithSameVoiceType.Format(scene, npcWithSameVoiceType.Count, npcWithSameVoiceType, npcVoiceType.Key),
+                x => x.Actors);
         }
-
-        return result;
     }
 }

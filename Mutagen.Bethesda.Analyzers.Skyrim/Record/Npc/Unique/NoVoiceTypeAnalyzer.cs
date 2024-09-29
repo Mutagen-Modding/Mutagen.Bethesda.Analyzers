@@ -13,23 +13,19 @@ public class NoVoiceTypeAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoVoiceType];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        if (!npc.IsEligibleForTest()) return null;
+        if (!npc.IsEligibleForTest()) return;
 
         // Skip NPCs using templates for voice types
-        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Traits)) return null;
+        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Traits)) return;
 
         if (npc.Voice.IsNull)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    NoVoiceType.Format(),
-                    x => x.Configuration));
+            param.AddTopic(
+                NoVoiceType.Format(),
+                x => x.Configuration);
         }
-
-        return null;
     }
 }

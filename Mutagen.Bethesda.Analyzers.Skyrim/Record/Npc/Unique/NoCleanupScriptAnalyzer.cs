@@ -25,44 +25,37 @@ public class NoCleanupScriptAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoCleanupScript, DeathContainerPropertyNotFilled, WIPropertyNotFilled];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        if (!npc.IsEligibleForTest()) return null;
+        if (!npc.IsEligibleForTest()) return;
 
         // Skip NPCs using templates for scripts
-        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Script)) return null;
+        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Script)) return;
 
         var script = npc.GetScript(CleanupScriptName);
         if (script is null)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    NoCleanupScript.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                NoCleanupScript.Format(),
+                x => x.VirtualMachineAdapter);
+            return;
         }
 
         var deathContainer = script.GetProperty<IScriptObjectPropertyGetter>("DeathContainer");
         if (deathContainer is null)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    DeathContainerPropertyNotFilled.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                DeathContainerPropertyNotFilled.Format(),
+                x => x.VirtualMachineAdapter);
         }
 
         var wiQuest = script.GetProperty<IScriptObjectPropertyGetter>("WI");
         if (wiQuest is null)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    WIPropertyNotFilled.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                WIPropertyNotFilled.Format(),
+                x => x.VirtualMachineAdapter);
         }
-
-        return null;
     }
 }

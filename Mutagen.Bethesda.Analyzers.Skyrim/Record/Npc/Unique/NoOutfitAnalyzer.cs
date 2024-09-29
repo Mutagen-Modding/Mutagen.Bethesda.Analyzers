@@ -13,23 +13,19 @@ public class NoOutfitAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoOutfit];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        if (!npc.IsEligibleForTest()) return null;
+        if (!npc.IsEligibleForTest()) return;
 
         // Skip NPCs using templates for inventory
-        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Inventory)) return null;
+        if (npc.Configuration.TemplateFlags.HasFlag(NpcConfiguration.TemplateFlag.Inventory)) return;
 
         if (npc.DefaultOutfit.IsNull)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    NoOutfit.Format(),
-                    x => x.Configuration));
+            param.AddTopic(
+                NoOutfit.Format(),
+                x => x.Configuration);
         }
-
-        return null;
     }
 }
