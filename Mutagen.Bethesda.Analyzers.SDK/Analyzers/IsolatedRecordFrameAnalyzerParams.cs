@@ -8,7 +8,7 @@ public readonly struct IsolatedRecordFrameAnalyzerParams<TMajor>
 {
     public readonly MajorRecordFrame Frame;
 
-    public IsolatedRecordFrameAnalyzerParams(MajorRecordFrame frame)
+    internal IsolatedRecordFrameAnalyzerParams(MajorRecordFrame frame)
     {
         Frame = frame;
     }
@@ -18,7 +18,7 @@ public readonly struct IsolatedRecordFrameAnalyzerParams
 {
     public readonly MajorRecordFrame Frame;
 
-    public IsolatedRecordFrameAnalyzerParams(MajorRecordFrame frame)
+    internal IsolatedRecordFrameAnalyzerParams(MajorRecordFrame frame)
     {
         Frame = frame;
     }

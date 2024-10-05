@@ -14,7 +14,7 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
     private readonly ReportContextParameters _parameters;
     private readonly IReportDropbox _reportDropbox;
 
-    public IsolatedRecordAnalyzerParams(
+    internal IsolatedRecordAnalyzerParams(
         ModKey mod,
         TMajor record,
         ReportContextParameters parameters,

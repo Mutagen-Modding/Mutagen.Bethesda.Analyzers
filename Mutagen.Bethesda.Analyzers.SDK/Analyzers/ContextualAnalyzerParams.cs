@@ -9,7 +9,7 @@ public readonly struct ContextualAnalyzerParams
     public readonly ILinkCache LinkCache;
     public readonly ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder;
 
-    public ContextualAnalyzerParams(ILinkCache linkCache, ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder)
+    internal ContextualAnalyzerParams(ILinkCache linkCache, ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder)
     {
         LinkCache = linkCache;
         LoadOrder = loadOrder;
