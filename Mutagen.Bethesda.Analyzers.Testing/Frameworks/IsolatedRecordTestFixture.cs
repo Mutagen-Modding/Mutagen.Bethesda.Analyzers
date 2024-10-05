@@ -2,6 +2,7 @@ using AutoFixture;
 using FluentAssertions;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Testing.Frameworks;
@@ -30,6 +31,7 @@ public class IsolatedRecordTestFixture<TAnalyzer, TMajor, TMajorGetter>
 
         var dropOff = new TestDropoff();
         var param = new IsolatedRecordAnalyzerParams<TMajorGetter>(
+            mod: ModKey.Null,
             record: rec,
             parameters: default,
             reportDropbox: dropOff);
@@ -53,8 +55,13 @@ public class IsolatedRecordTestFixture<TAnalyzer, TMajor, TMajorGetter>
     {
         var rec = _fixture.Create<TMajor>();
         prep(rec);
-        var param = new IsolatedRecordAnalyzerParams<TMajorGetter>(rec);
-        var results = Sut.AnalyzeRecord(param)?.Topics ?? [];
-        results.Should().BeEmpty();
+        var dropOff = new TestDropoff();
+        var param = new IsolatedRecordAnalyzerParams<TMajorGetter>(
+            mod: null!,
+            record: rec,
+            parameters: default,
+            reportDropbox: dropOff);
+        Sut.AnalyzeRecord(param);
+        dropOff.Reports.Should().BeEmpty();
     }
 }

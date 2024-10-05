@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
@@ -21,11 +21,9 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
 
     private static readonly char[] InvalidCharacters = ['[', ']'];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
-
-        var result = new RecordAnalyzerResult();
 
         // Check prompt
         if (dialogResponses.Prompt?.String is not null)
@@ -42,18 +40,16 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
 
         }
 
-        return result;
+        return;
 
         void CheckInconsistentCharacters(string text, TopicDefinition<string, char[]> topic)
         {
             var foundCharacters = InvalidCharacters.Where(text.Contains).ToArray();
             if (foundCharacters.Length == 0) return;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    text,
-                    topic.Format(text, foundCharacters),
-                    x => x));
+            param.AddTopic(
+                topic.Format(text, foundCharacters),
+                x => x);
         }
     }
 }

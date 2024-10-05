@@ -1,6 +1,6 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
@@ -10,26 +10,22 @@ public partial class CircularLeveledListAnalyzer
     public IEnumerable<TopicDefinition> Topics => [CircularLeveledItem, CircularLeveledNpc, CircularLeveledSpell];
 
     private static void FindCircularList<T>(
-        T leveled,
+        ContextualRecordAnalyzerParams<T> param,
         Func<T, IEnumerable<FormKey>> nestedEntriesSelector,
-        ILinkCache linkCache,
         TopicDefinition<List<T>> topic)
         where T : class, IMajorRecordGetter
     {
         var stack = new Stack<T>();
 
-        FindCircularListInternal(leveled);
+        FindCircularListInternal(param.Record);
 
         void FindCircularListInternal(T t)
         {
             if (stack.Any(x => x.FormKey == t.FormKey))
             {
-                report.AddTopic(
-                    RecordTopic.Create(
-                        t,
-                        topic.Format(stack.ToList()),
-                        x => x
-                    )
+                param.AddTopic(
+                    topic.Format(stack.ToList()),
+                    x => x
                 );
                 return;
             }
@@ -38,7 +34,7 @@ public partial class CircularLeveledListAnalyzer
 
             foreach (var formKey in nestedEntriesSelector(t))
             {
-                if (!linkCache.TryResolve<T>(formKey, out var leveledList)) continue;
+                if (!param.LinkCache.TryResolve<T>(formKey, out var leveledList)) continue;
 
                 FindCircularListInternal(leveledList);
             }

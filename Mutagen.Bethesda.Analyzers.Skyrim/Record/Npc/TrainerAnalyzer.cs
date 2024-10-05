@@ -1,8 +1,8 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -24,11 +24,10 @@ public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [TrainerFactionMissingScript, TrainerScriptMissingFaction, TrainerWithoutSpecialization];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        var result = new RecordAnalyzerResult();
-        if (!npc.Template.IsNull) return null;
+        if (!npc.Template.IsNull) return;
 
         var faction = npc.Factions
             .Select(x => x.Faction.TryResolve(param.LinkCache))
@@ -40,20 +39,16 @@ public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
         if (hasTrainerGoldScript && trainerFaction is null)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    npc,
-                    TrainerScriptMissingFaction.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                TrainerScriptMissingFaction.Format(),
+                x => x.VirtualMachineAdapter);
         }
 
         if (trainerFaction is not null && !hasTrainerGoldScript)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    npc,
-                    TrainerFactionMissingScript.Format(),
-                    x => x.Factions));
+            param.AddTopic(
+                TrainerFactionMissingScript.Format(),
+                x => x.Factions);
         }
 
         if (hasTrainerGoldScript || trainerFaction is not null)
@@ -65,14 +60,10 @@ public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
             if (!hasTrainerSpecialization)
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        npc,
-                        TrainerWithoutSpecialization.Format(),
-                        x => x.Factions));
+                param.AddTopic(
+                    TrainerWithoutSpecialization.Format(),
+                    x => x.Factions);
             }
         }
-
-        return result;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
@@ -15,6 +14,6 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGett
 
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IStaticGetter> param)
     {
-        CheckForMissingModelAsset(param.Record, res, MissingStaticModel);
+        CheckForMissingModelAsset(param, MissingStaticModel);
     }
 }

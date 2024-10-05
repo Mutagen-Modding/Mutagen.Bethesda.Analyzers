@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Placed.Object;
 
 public class MultiBoundMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGetter>
@@ -13,19 +13,15 @@ public class MultiBoundMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGet
 
     public IEnumerable<TopicDefinition> Topics { get; } = [MultiBoundMarker];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IPlacedObjectGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IPlacedObjectGetter> param)
     {
         var placedObject = param.Record;
 
         if (placedObject.Base.FormKey == FormKeys.SkyrimSE.Skyrim.Static.MultiBoundMarker.FormKey)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    placedObject,
-                    MultiBoundMarker.Format(),
-                    x => x.Base));
+            param.AddTopic(
+                MultiBoundMarker.Format(),
+                x => x.Base);
         }
-
-        return null;
     }
 }

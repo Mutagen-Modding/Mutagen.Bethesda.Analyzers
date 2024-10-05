@@ -21,6 +21,6 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrim
 
         param.AddTopic(
             InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
-            x => x.Name);
+            x => x);
     }
 }

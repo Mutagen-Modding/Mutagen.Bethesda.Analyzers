@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Quest;
 
 public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
@@ -64,33 +64,26 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
         AliasWithoutAllowReuseInQuestFlag
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IQuestGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IQuestGetter> param)
     {
         var quest = param.Record;
-        if (!quest.Event.HasValue || quest.Event.Value != "ADIA") return null;
-
-        var result = new RecordAnalyzerResult();
+        if (!quest.Event.HasValue || quest.Event.Value != "ADIA") return;
 
         if (quest.Aliases.Count == 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    quest,
-                    NoAliases.Format(),
-                    x => x.Aliases));
-
-            return result;
+            param.AddTopic(
+                NoAliases.Format(),
+                x => x.Aliases);
+            return;
         }
 
         if (quest.Aliases.Count % 2 != 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    quest,
-                    OddNumberOfAliases.Format(),
-                    x => x.Aliases));
+            param.AddTopic(
+                OddNumberOfAliases.Format(),
+                x => x.Aliases);
 
-            return result;
+            return;
         }
 
         var firstAliasHalf = quest.Aliases.Take(quest.Aliases.Count / 2).ToList();
@@ -105,60 +98,48 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
             {
                 if (eventAlias.FindMatchingRefFromEvent is null)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutFindMatchingRefFromEvent.Format(eventAlias.Name),
-                            x => x.FindMatchingRefFromEvent));
+                    param.AddTopic(
+                        AliasWithoutFindMatchingRefFromEvent.Format(eventAlias.Name),
+                        x => x.Aliases);
                 }
 
                 if (eventAlias.Conditions.Count != eventAliases.Count)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
-                            x => x.Conditions));
+                    param.AddTopic(
+                        AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
+                        x => x.Aliases);
                 }
 
                 var conditions = eventAlias.Conditions.Where(condition => condition.Data is not IGetIsIDConditionDataGetter).ToList();
                 if (conditions.Count > 0)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutGetIsIDCondition.Format(eventAlias.Name, conditions.Select(x => x.Data.Function).Distinct()),
-                            x => x.Conditions));
+                    param.AddTopic(
+                        AliasWithoutGetIsIDCondition.Format(eventAlias.Name, conditions.Select(x => x.Data.Function).Distinct()),
+                        x => x.Aliases);
                 }
             }
             else
             {
                 if (eventAlias.Conditions.Count != eventAliases.Count + 1)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count + 1),
-                            x => x.Conditions));
+                    param.AddTopic(
+                        AliasWithoutSameNumberOfConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count + 1),
+                        x => x.Aliases);
                 }
 
                 if (eventAlias.Conditions.Count(condition => condition.Data is IGetIsIDConditionDataGetter) != eventAliases.Count)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
-                            x => x.Conditions));
+                    param.AddTopic(
+                        AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs.Format(eventAlias.Name, eventAlias.Conditions.Count, eventAliases.Count),
+                        x => x.Aliases);
                 }
 
                 var count = eventAlias.Conditions.Count(condition => condition.Data is IGetDistanceConditionDataGetter);
                 if (count != 1)
                 {
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            eventAlias,
-                            AliasWithoutGetDistanceCondition.Format(eventAlias.Name, count),
-                            x => x.Conditions));
+                    param.AddTopic(
+                        AliasWithoutGetDistanceCondition.Format(eventAlias.Name, count),
+                        x => x.Aliases);
                 }
             }
         }
@@ -168,11 +149,9 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
         {
             if (npcAlias.UniqueActor.IsNull)
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        npcAlias,
-                        AliasWithoutUniqueActor.Format(npcAlias.Name),
-                        x => x.UniqueActor));
+                param.AddTopic(
+                    AliasWithoutUniqueActor.Format(npcAlias.Name),
+                    x => x.Aliases);
             }
         }
 
@@ -180,14 +159,10 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
         {
             if (alias.Flags is null || !alias.Flags.Value.HasFlag(QuestAlias.Flag.AllowReuseInQuest))
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        alias,
-                        AliasWithoutAllowReuseInQuestFlag.Format(alias.Name),
-                        x => x.Flags));
+                param.AddTopic(
+                    AliasWithoutAllowReuseInQuestFlag.Format(alias.Name),
+                    x => x.Aliases);
             }
         }
-
-        return result;
     }
 }

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Quest;
 
 public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
@@ -14,10 +15,10 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [StoryManagerQuestNotAssigned];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IQuestGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IQuestGetter> param)
     {
         var quest = param.Record;
-        if (!quest.Event.HasValue) return null;
+        if (!quest.Event.HasValue) return;
 
         // TODO: potentially replace with reference cache
 
@@ -29,16 +30,13 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
                 {
                     if (questFormKey == quest.FormKey)
                     {
-                        return new RecordAnalyzerResult(
-                            RecordTopic.Create(
-                                quest,
-                                StoryManagerQuestNotAssigned.Format(),
-                                x => x.Event));
+                        param.AddTopic(
+                            StoryManagerQuestNotAssigned.Format(),
+                            x => x.Event);
+                        return;
                     }
                 }
             }
         }
-
-        return null;
     }
 }

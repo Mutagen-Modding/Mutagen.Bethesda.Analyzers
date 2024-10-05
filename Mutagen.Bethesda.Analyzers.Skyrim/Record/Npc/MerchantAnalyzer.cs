@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class MerchantAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -13,12 +13,12 @@ public class MerchantAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [MerchantWithoutSpecialization];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
         var isMerchant = npc.HasFaction(param.LinkCache, editorId =>
             editorId is not null && editorId.Contains("JobMerchant", StringComparison.OrdinalIgnoreCase));
-        if (!isMerchant) return null;
+        if (!isMerchant) return;
 
         var hasSpecialization = npc.HasFaction(param.LinkCache, editorId =>
             editorId is not null
@@ -26,12 +26,10 @@ public class MerchantAnalyzer : IContextualRecordAnalyzer<INpcGetter>
             && !editorId.Contains("JobTrainer", StringComparison.OrdinalIgnoreCase)
             && editorId.Contains("Job", StringComparison.OrdinalIgnoreCase));
 
-        if (hasSpecialization) return null;
+        if (hasSpecialization) return;
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                npc,
-                MerchantWithoutSpecialization.Format(),
-                x => x.Factions));
+        param.AddTopic(
+            MerchantWithoutSpecialization.Format(),
+            x => x.Factions);
     }
 }

@@ -19,7 +19,7 @@ public class MissingEnchantedPerkAnalyzer : IIsolatedRecordAnalyzer<IConstructib
 
         // Only applicable to temper crafting stations for weapons and armor
         if (constructibleObject.WorkbenchKeyword.FormKey != FormKeys.SkyrimSE.Skyrim.Keyword.CraftingSmithingSharpeningWheel.FormKey
-            && constructibleObject.WorkbenchKeyword.FormKey != FormKeys.SkyrimSE.Skyrim.Keyword.CraftingSmithingArmorTable.FormKey) return null;
+            && constructibleObject.WorkbenchKeyword.FormKey != FormKeys.SkyrimSE.Skyrim.Keyword.CraftingSmithingArmorTable.FormKey) return;
 
         var perkCondition = false;
         var isEnchanted = false;

@@ -1,9 +1,9 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
@@ -30,16 +30,15 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingFootstepArmorType, ArmorMissingFootstep, ArmorDuplicateFootstep];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
     {
-        var result = new RecordAnalyzerResult();
         var armor = param.Record;
 
         // Armor with template armor inherit all relevant data from the template armor and should not be checked themselves
-        if (!armor.TemplateArmor.IsNull) return null;
+        if (!armor.TemplateArmor.IsNull) return;
 
         // Only armor with feet slots are relevant for footsteps
-        if (armor.BodyTemplate is null || !armor.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.Feet)) return null;
+        if (armor.BodyTemplate is null || !armor.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.Feet)) return;
 
         var armorAddons = armor.Armature
             .Select(armorAddonLink => armorAddonLink.TryResolve(param.LinkCache))
@@ -57,11 +56,9 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         foreach (var (race, addons) in armorAddonRaces) {
             if (addons.Count == 0) continue;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    armor,
-                    ArmorDuplicateFootstep.Format(addons, race),
-                    x => x.Armature));
+            param.AddTopic(
+                ArmorDuplicateFootstep.Format(addons, race),
+                x => x.Armature);
         }
 
         // Check if the footstep sound is correct
@@ -78,36 +75,28 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
                 correctFootstepSound = FormKeys.SkyrimSE.Skyrim.FootstepSet.DefaultFootstepSet;
                 break;
             default:
-                result.AddTopic(
-                    RecordTopic.Create(
-                        armor,
-                        UnknownArmorType.Format(armor.BodyTemplate.ArmorType),
-                        x => x.BodyTemplate));
+                param.AddTopic(
+                    UnknownArmorType.Format(armor.BodyTemplate.ArmorType),
+                    x => x.BodyTemplate);
 
-                return result;
+                return;
         }
 
         foreach (var armorAddon in armorAddons)
         {
             if (armorAddon.FootstepSound.FormKey == correctFootstepSound.FormKey) continue;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    armorAddon,
-                    ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound),
-                    x => x.FootstepSound));
+            param.AddTopic(
+                ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound),
+                x => x.BodyTemplate);
         }
 
         // Check if there are any footstep sounds
         if (armorAddons.Count == 0 || armorAddons.TrueForAll(x => x.FootstepSound.IsNull))
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    armor,
-                    ArmorMissingFootstep.Format(),
-                    x => x.Armature));
+            param.AddTopic(
+                ArmorMissingFootstep.Format(),
+                x => x.Armature);
         }
-
-        return result;
     }
 }

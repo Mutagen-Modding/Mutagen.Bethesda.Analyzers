@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Topic;
 
 public class UnnecessaryPriorityAnalyzer : IContextualRecordAnalyzer<IDialogTopicGetter>
@@ -15,28 +15,24 @@ public class UnnecessaryPriorityAnalyzer : IContextualRecordAnalyzer<IDialogTopi
 
     public IEnumerable<TopicDefinition> Topics { get; } = [UnnecessaryPriority];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogTopicGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogTopicGetter> param)
     {
         var dialogTopic = param.Record;
 
         // Only check custom topics
-        if (dialogTopic.Subtype != DialogTopic.SubtypeEnum.Custom) return null;
+        if (dialogTopic.Subtype != DialogTopic.SubtypeEnum.Custom) return;
 
         // Skip if this topic is a starting topic
         var branch = dialogTopic.Branch.TryResolve(param.LinkCache);
-        if (branch is not null && branch.StartingTopic.FormKey == dialogTopic.FormKey) return null;
+        if (branch is not null && branch.StartingTopic.FormKey == dialogTopic.FormKey) return;
 
         if (Math.Abs(dialogTopic.Priority - DefaultDialogTopicPriority) < float.Epsilon)
         {
-            return null;
+            return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                dialogTopic,
-                UnnecessaryPriority.Format(dialogTopic.Priority),
-                x => x.Priority
-            )
-        );
+        param.AddTopic(
+            UnnecessaryPriority.Format(dialogTopic.Priority),
+            x => x.Priority);
     }
 }

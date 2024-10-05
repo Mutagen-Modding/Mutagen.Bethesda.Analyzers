@@ -14,7 +14,7 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
 
     public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledItemGetter> param)
     {
-        FindCircularList(param.Record, l =>
+        FindCircularList(param, l =>
         {
             if (l.Entries is not null)
             {
@@ -25,6 +25,6 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             }
 
             return [];
-        }, param.LinkCache, CircularLeveledItem);
+        }, CircularLeveledItem);
     }
 }

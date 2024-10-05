@@ -21,29 +21,35 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddon
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorAddonGetter> param)
     {
         var femaleWorldModel = param.Record.WorldModel?.Female?.File;
-        CheckForMissingAsset(femaleWorldModel, res, () => RecordTopic.Create(
-            param.Record,
-            MissingArmorAddonWorldModel.Format("female", femaleWorldModel),
-            x => x.WorldModel!.Female!.File));
+        if (!FileExistsIfNotNull(femaleWorldModel))
+        {
+            param.AddTopic(
+                MissingArmorAddonWorldModel.Format("female", femaleWorldModel),
+                x => x.WorldModel!.Female!.File);
+        }
 
         var maleWorldModel = param.Record.WorldModel?.Male?.File;
-        CheckForMissingAsset(maleWorldModel, res, () => RecordTopic.Create(
-            param.Record,
-            MissingArmorAddonWorldModel.Format("male", maleWorldModel),
-            x => x.WorldModel!.Male!.File));
+        if (!FileExistsIfNotNull(maleWorldModel))
+        {
+            param.AddTopic(
+                MissingArmorAddonWorldModel.Format("male", maleWorldModel),
+                x => x.WorldModel!.Male!.File);
+        }
 
         var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
-        CheckForMissingAsset(femaleFirstPersonModel, res, () => RecordTopic.Create(
-            param.Record,
-            MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel),
-            x => x.FirstPersonModel!.Female!.File));
+        if (!FileExistsIfNotNull(femaleFirstPersonModel))
+        {
+            param.AddTopic(
+                MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel),
+                x => x.FirstPersonModel!.Female!.File);
+        }
 
         var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
-        CheckForMissingAsset(maleFirstPersonModel, res, () => RecordTopic.Create(
-            param.Record,
-            MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel),
-            x => x.FirstPersonModel!.Male!.File));
-
-        return res;
+        if (!FileExistsIfNotNull(maleFirstPersonModel))
+        {
+            param.AddTopic(
+                MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel),
+                x => x.FirstPersonModel!.Male!.File);
+        }
     }
 }

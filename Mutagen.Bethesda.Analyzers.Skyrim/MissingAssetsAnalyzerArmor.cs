@@ -15,13 +15,18 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorGette
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
     {
         var femaleFile = param.Record.WorldModel?.Female?.Model?.File;
-        CheckForMissingAsset(femaleFile, result, () => RecordTopic.Create(param.Record,
-            MissingArmorModel.Format("female", femaleFile),
-            x => x.WorldModel!.Female!.Model!.File));
-
+        if (!FileExistsIfNotNull(femaleFile))
+        {
+            param.AddTopic(
+                MissingArmorModel.Format("female", femaleFile),
+                x => x.WorldModel!.Female!.Model!.File);
+        }
         var maleFile = param.Record.WorldModel?.Male?.Model?.File;
-        CheckForMissingAsset(maleFile, result, () => RecordTopic.Create(param.Record,
-            MissingArmorModel.Format("male", maleFile),
-            x => x.WorldModel!.Male!.Model!.File));
+        if (!FileExistsIfNotNull(maleFile))
+        {
+            param.AddTopic(
+                MissingArmorModel.Format("male", maleFile),
+                x => x.WorldModel!.Male!.Model!.File);
+        }
     }
 }

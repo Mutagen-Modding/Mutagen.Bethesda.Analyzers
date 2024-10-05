@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class CircularPreviousDialogueAnalyzer : IContextualRecordAnalyzer<IDialogResponsesGetter>
@@ -14,7 +14,7 @@ public class CircularPreviousDialogueAnalyzer : IContextualRecordAnalyzer<IDialo
 
     public IEnumerable<TopicDefinition> Topics { get; } = [CircularPreviousDialogue];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
         var dialogCache = new HashSet<FormKey>();
@@ -24,18 +24,13 @@ public class CircularPreviousDialogueAnalyzer : IContextualRecordAnalyzer<IDialo
         {
             if (!dialogCache.Add(previousDialog.FormKey))
             {
-                return new RecordAnalyzerResult(
-                    RecordTopic.Create(
-                        dialogResponses,
-                        CircularPreviousDialogue.Format(dialogResponses, previousDialog),
-                        x => x.PreviousDialog
-                    )
-                );
+                param.AddTopic(
+                    CircularPreviousDialogue.Format(dialogResponses, previousDialog),
+                    x => x.PreviousDialog);
+                return;
             }
 
             previousDialog = previousDialog.PreviousDialog.TryResolve(param.LinkCache);
         }
-
-        return null;
     }
 }

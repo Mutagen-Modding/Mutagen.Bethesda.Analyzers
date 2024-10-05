@@ -27,7 +27,7 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
     {
         var placed = param.Record;
 
-        if (!placed.SkyrimMajorRecordFlags.HasFlag((SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent)) return result;
+        if (!placed.SkyrimMajorRecordFlags.HasFlag((SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent)) return;
 
         // TODO: placed records that is referenced are likely meant to be be persistent
         // if (references.Any()) return result;

@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
 public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILeveledNpcGetter>
@@ -14,7 +14,7 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
 
     public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledNpcGetter> param)
     {
-        FindCircularList(param.Record, l =>
+        FindCircularList(param, l =>
         {
             if (l.Entries is not null)
             {
@@ -25,6 +25,6 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             }
 
             return [];
-        }, param.LinkCache, CircularLeveledNpc);
+        }, CircularLeveledNpc);
     }
 }
