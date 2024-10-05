@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.LoadScreen;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILoadScreenGetter>
@@ -19,28 +19,22 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILoadScreenGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoDescription, No3DModel];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<ILoadScreenGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ILoadScreenGetter> param)
     {
         var loadScreen = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (loadScreen.Description.String.IsNullOrWhitespace())
         {
-            result.AddTopic(RecordTopic.Create(
-                loadScreen,
+            param.AddTopic(
                 NoDescription.Format(),
-                x => x.Description));
+                x => x.Description);
         }
 
         if (loadScreen.LoadingScreenNif.IsNull)
         {
-            result.AddTopic(RecordTopic.Create(
-                loadScreen,
+            param.AddTopic(
                 No3DModel.Format(),
-                x => x.LoadingScreenNif));
+                x => x.LoadingScreenNif);
         }
-
-        return result;
     }
 }

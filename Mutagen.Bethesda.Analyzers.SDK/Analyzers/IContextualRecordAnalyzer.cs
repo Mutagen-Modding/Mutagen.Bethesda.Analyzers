@@ -6,5 +6,5 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 public interface IContextualRecordAnalyzer<TMajor> : IAnalyzer
     where TMajor : IMajorRecordGetter
 {
-    RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<TMajor> param);
+    void AnalyzeRecord(ContextualRecordAnalyzerParams<TMajor> param);
 }

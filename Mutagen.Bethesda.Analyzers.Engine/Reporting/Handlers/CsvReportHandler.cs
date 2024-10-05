@@ -1,4 +1,6 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Drops;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Handlers;
@@ -17,11 +19,11 @@ public class CsvReportHandler : IReportHandler
 
     public void Dropoff(
         ReportContextParameters parameters,
-        IModGetter sourceMod,
-        IMajorRecordGetter majorRecord,
+        ModKey mod,
+        IMajorRecordIdentifier record,
         ITopic topic)
     {
-        Append(BuildLine(topic, sourceMod, majorRecord));
+        Append(BuildLine(topic, mod, record));
     }
 
     public void Dropoff(
@@ -31,10 +33,10 @@ public class CsvReportHandler : IReportHandler
         Append(BuildLine(topic, null, null));
     }
 
-    private static string BuildLine(ITopic topic, IModGetter? sourceMod, IMajorRecordGetter? majorRecord)
+    private static string BuildLine(ITopic topic, ModKey? sourceMod, IMajorRecordIdentifier? majorRecord)
     {
         return $"""
-        "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ModKey.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
+        "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
         """;
     }
 

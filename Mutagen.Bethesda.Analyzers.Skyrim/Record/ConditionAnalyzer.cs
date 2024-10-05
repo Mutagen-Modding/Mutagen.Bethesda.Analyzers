@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record;
 
 public class ConditionAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGetter>
@@ -13,12 +13,11 @@ public class ConditionAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGette
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidConditionReference];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ISkyrimMajorRecordGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ISkyrimMajorRecordGetter> param)
     {
         var conditions = param.Record.GetConditions();
-        if (conditions is null) return null;
+        if (conditions is null) return;
 
-        var result = new RecordAnalyzerResult();
         foreach (var condition in conditions)
         {
             if (condition.Data.RunOnType != Condition.RunOnType.Reference) continue;
@@ -27,27 +26,17 @@ public class ConditionAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGette
             switch (condition.Data)
             {
                 case IGetEventDataConditionDataGetter getEventData:
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            param.Record,
-                            InvalidConditionReference.Format(getEventData.Function.ToString()),
-                            x => x
-                        )
-                    );
+                    param.AddTopic(
+                        InvalidConditionReference.Format(getEventData.Function.ToString()),
+                        x => x);
                     break;
                 case {} conditionData:
-                    result.AddTopic(
-                        RecordTopic.Create(
-                            param.Record,
-                            InvalidConditionReference.Format(conditionData.Function.ToString()),
-                            x => x
-                        )
-                    );
+                    param.AddTopic(
+                        InvalidConditionReference.Format(conditionData.Function.ToString()),
+                        x => x);
                     break;
             }
         }
-
-        return result;
     }
 }
 

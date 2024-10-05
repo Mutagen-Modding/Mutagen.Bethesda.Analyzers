@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Key;
 
 public class WeightValueAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
@@ -18,34 +18,22 @@ public class WeightValueAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [WeightNotZero, ValueNotZero];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IKeyGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IKeyGetter> param)
     {
         var key = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (key is not { Weight: 0 })
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    key,
-                    WeightNotZero.Format(key.Weight),
-                    x => x.Weight
-                )
-            );
+            param.AddTopic(
+                WeightNotZero.Format(key.Weight),
+                x => x.Weight);
         }
 
         if (key.Value != 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    key,
-                    ValueNotZero.Format(key.Value),
-                    x => x.Value
-                )
-            );
+            param.AddTopic(
+                ValueNotZero.Format(key.Value),
+                x => x.Value);
         }
-
-        return result;
     }
 }

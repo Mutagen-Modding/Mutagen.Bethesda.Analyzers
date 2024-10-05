@@ -20,7 +20,7 @@ public class AnalyzerConfigApplicationTests
             testAnalyzer.Analyze(default).ReturnsForAnyArgs(default(ContextualAnalyzerResult?));
             builder.RegisterInstance(testAnalyzer).AsSelf();
         });
-        dropoff.TotalReports.Should().Be(0);
+        dropoff.Reports.Should().HaveCount(0);
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class AnalyzerConfigApplicationTests
         {
             builder.RegisterInstance(Utility.WarningAnalyzer).AsImplementedInterfaces();
         });
-        dropoff.TotalReports.Should().Be(1);
+        dropoff.Reports.Should().HaveCount(1);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class AnalyzerConfigApplicationTests
             minSev.MinimumSeverity.Returns(Severity.Warning);
             builder.RegisterInstance(minSev).As<IMinimumSeverityConfiguration>();
         });
-        dropoff.TotalReports.Should().Be(0);
+        dropoff.Reports.Should().HaveCount(0);
     }
 
     [Fact]
@@ -59,6 +59,6 @@ public class AnalyzerConfigApplicationTests
             sevLookup.LookupSeverity(Utility.Warning).Returns(Severity.Suggestion);
             builder.RegisterInstance(sevLookup).As<ISeverityLookup>();
         });
-        dropoff.TotalReports.Should().Be(0);
+        dropoff.Reports.Should().HaveCount(0);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Ingredient;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngredientGetter>
@@ -23,45 +23,29 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngredientGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoPickupSound, NoPutDownSound, NotFourEffects];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IIngredientGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IIngredientGetter> param)
     {
         var ingredient = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (ingredient.PickUpSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    ingredient,
-                    NoPickupSound.Format(),
-                    x => x.PickUpSound
-                )
-            );
+            param.AddTopic(
+                NoPickupSound.Format(),
+                x => x.PickUpSound);
         }
 
         if (ingredient.PutDownSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    ingredient,
-                    NoPutDownSound.Format(),
-                    x => x.PutDownSound
-                )
-            );
+            param.AddTopic(
+                NoPutDownSound.Format(),
+                x => x.PutDownSound);
         }
 
         if (ingredient.Effects.Count != 4)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    ingredient,
-                    NotFourEffects.Format(ingredient.Effects.Count),
-                    x => x.Effects
-                )
-            );
+            param.AddTopic(
+                NotFourEffects.Format(ingredient.Effects.Count),
+                x => x.Effects);
         }
-
-        return result;
     }
 }

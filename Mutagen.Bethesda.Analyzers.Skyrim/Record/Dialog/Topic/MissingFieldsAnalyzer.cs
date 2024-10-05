@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Topic;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
@@ -18,36 +18,24 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoBranch, NoQuest];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
     {
         var dialogTopic = param.Record;
-
-        var result = new RecordAnalyzerResult();
 
         if (dialogTopic.Subtype is DialogTopic.SubtypeEnum.Rumors or DialogTopic.SubtypeEnum.ForceGreet or DialogTopic.SubtypeEnum.Custom
             && dialogTopic.Branch.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogTopic,
-                    NoBranch.Format(),
-                    x => x.Branch
-                )
-            );
+            param.AddTopic(
+                NoBranch.Format(),
+                x => x.Branch);
         }
 
 
         if (dialogTopic.Quest.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogTopic,
-                    NoQuest.Format(),
-                    x => x.Quest
-                )
-            );
+            param.AddTopic(
+                NoQuest.Format(),
+                x => x.Quest);
         }
-
-        return result;
     }
 }

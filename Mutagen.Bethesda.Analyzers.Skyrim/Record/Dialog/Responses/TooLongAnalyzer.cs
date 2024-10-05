@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
@@ -22,21 +22,16 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [PromptTooLong, ResponseTooLong];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
-
-
-        var result = new RecordAnalyzerResult();
 
         // Check prompt
         if (dialogResponses.Prompt?.String is { Length: > DialogPromptLengthLimit })
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogResponses,
-                    PromptTooLong.Format(dialogResponses.Prompt.String, dialogResponses.Prompt.String.Length - DialogPromptLengthLimit),
-                    x => x));
+            param.AddTopic(
+                PromptTooLong.Format(dialogResponses.Prompt.String, dialogResponses.Prompt.String.Length - DialogPromptLengthLimit),
+                x => x);
         }
 
         // Check responses
@@ -45,13 +40,9 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
                      .NotNull()
                      .Where(text => text is { Length: > DialogResponseLengthLimit }))
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    dialogResponses,
-                    ResponseTooLong.Format(response, response.Length - DialogResponseLengthLimit),
-                    x => x));
+            param.AddTopic(
+                ResponseTooLong.Format(response, response.Length - DialogResponseLengthLimit),
+                x => x);
         }
-
-        return result;
     }
 }

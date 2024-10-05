@@ -41,6 +41,7 @@ resharper_csharp_blank_lines_around_field = 0
 resharper_csharp_blank_lines_around_invocable = 0
 resharper_csharp_blank_lines_around_region = 0
 resharper_csharp_blank_lines_inside_region = 0
+resharper_csharp_blank_lines_after_using_list = 1
 resharper_csharp_empty_block_style = multiline
 resharper_csharp_insert_final_newline = false
 resharper_csharp_max_line_length = 307

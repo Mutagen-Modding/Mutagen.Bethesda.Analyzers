@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Quest;
 
 public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
@@ -14,7 +15,7 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidDialogueAlias];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IQuestGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IQuestGetter> param)
     {
         var quest = param.Record;
         var relevantAliases = quest.Aliases
@@ -29,7 +30,7 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
                             && alias.FindMatchingRefNearAlias is null)
             .ToList();
 
-        if (relevantAliases.Count == 0) return null;
+        if (relevantAliases.Count == 0) return;
 
         var referencedDialogue = new Dictionary<IQuestAliasGetter, List<IDialogResponsesGetter>>();
 
@@ -55,18 +56,13 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
             }
         }
 
-        var result = new RecordAnalyzerResult();
-
-        foreach (var (alias, dialogue) in referencedDialogue) {
+        foreach (var (alias, dialogue) in referencedDialogue)
+        {
             if (dialogue.Count == 0) continue;
 
-            result.AddTopic(
-                RecordTopic.Create(
-                    alias,
-                    InvalidDialogueAlias.Format(alias.Name, dialogue),
-                    x => x.Conditions));
+            param.AddTopic(
+                InvalidDialogueAlias.Format(alias.Name, dialogue),
+                x => x.FormKey);
         }
-
-        return result;
     }
 }

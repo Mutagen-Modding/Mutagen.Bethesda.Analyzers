@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class DuplicateShortNameAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -13,19 +13,15 @@ public class DuplicateShortNameAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [DuplicateShortName];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
 
         if (npc.Name is not null && npc.ShortName is not null && npc.Name.String == npc.ShortName.String)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    DuplicateShortName.Format(npc.Name.String),
-                    x => x.Name));
+            param.AddTopic(
+                DuplicateShortName.Format(npc.Name.String),
+                x => x.Name);
         }
-
-        return null;
     }
 }

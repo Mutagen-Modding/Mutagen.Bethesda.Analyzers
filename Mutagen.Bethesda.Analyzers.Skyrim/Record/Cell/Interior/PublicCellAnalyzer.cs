@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior;
 
 public class PublicCellAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
@@ -13,17 +13,14 @@ public class PublicCellAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [HasLockList];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<ICellGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ICellGetter> param)
     {
         var cell = param.Record;
-        if (cell.IsExteriorCell() || !cell.IsPublic() || cell.LockList.IsNull) return null;
+        if (cell.IsExteriorCell() || !cell.IsPublic() || cell.LockList.IsNull) return;
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                cell,
-                HasLockList.Format(),
-                x => x.Music
-            )
+        param.AddTopic(
+            HasLockList.Format(),
+            x => x.Music
         );
     }
 }

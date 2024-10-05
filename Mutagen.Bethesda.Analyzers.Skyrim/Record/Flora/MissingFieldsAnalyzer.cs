@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Flora;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IFloraGetter>
@@ -18,34 +18,22 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IFloraGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoHarvestSound, NoIngredient];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IFloraGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IFloraGetter> param)
     {
         var flora = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (flora.HarvestSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    flora,
-                    NoHarvestSound.Format(),
-                    x => x.HarvestSound
-                )
-            );
+            param.AddTopic(
+                NoHarvestSound.Format(),
+                x => x.HarvestSound);
         }
 
         if (flora.Ingredient.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    flora,
-                    NoIngredient.Format(),
-                    x => x.Ingredient
-                )
-            );
+            param.AddTopic(
+                NoIngredient.Format(),
+                x => x.Ingredient);
         }
-
-        return result;
     }
 }

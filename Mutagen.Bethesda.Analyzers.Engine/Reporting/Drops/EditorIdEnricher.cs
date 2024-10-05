@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Topics;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Drops;
+using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -16,11 +17,11 @@ public sealed class EditorIdEnricher : IReportDropbox
 
     public void Dropoff(
         ReportContextParameters parameters,
-        IModGetter sourceMod,
-        IMajorRecordGetter majorRecord,
+        ModKey mod,
+        IMajorRecordIdentifier record,
         ITopic topic)
     {
-        _reportDropbox.Dropoff(parameters, sourceMod, majorRecord, Enrich(parameters, topic));
+        _reportDropbox.Dropoff(parameters, mod, record, Enrich(parameters, topic));
     }
 
     public void Dropoff(

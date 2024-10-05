@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Location;
 
 public class RefTypeSettlementHouseAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
@@ -25,23 +25,21 @@ public class RefTypeSettlementHouseAnalyzer : IContextualRecordAnalyzer<ILocatio
         FormKeys.SkyrimSE.Skyrim.LocationReferenceType.TGRSLStrongbox
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<ILocationGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILocationGetter> param)
     {
         var location = param.Record;
 
-        if (!location.IsSettlementLocation()) return null;
-        if (!location.IsSettlementHouseLocationNotPlayerHome()) return null;
-        if (!location.IsLocationAppliedToInterior(param.LinkCache)) return null;
+        if (!location.IsSettlementLocation()) return;
+        if (!location.IsSettlementHouseLocationNotPlayerHome()) return;
+        if (!location.IsLocationAppliedToInterior(param.LinkCache)) return;
 
         if (location.GetReferenceTypes().Any(staticRef => HouseContainerRefTypes.Contains(staticRef.LocationRefType)))
         {
-            return null;
+            return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                location,
-                NoHouseContainerRefType.Format(),
-                x => x.LocationCellStaticReferences));
+        param.AddTopic(
+            NoHouseContainerRefType.Format(),
+            x => x.LocationCellStaticReferences);
     }
 }

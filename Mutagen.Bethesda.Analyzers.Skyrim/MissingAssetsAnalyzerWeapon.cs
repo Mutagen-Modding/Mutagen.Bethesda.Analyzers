@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
@@ -13,10 +12,8 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGett
             Severity.Error)
         .WithFormatting<string>(MissingModelFileMessageFormat);
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IWeaponGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IWeaponGetter> param)
     {
-        var res = new RecordAnalyzerResult();
-        CheckForMissingModelAsset(param.Record, res, MissingWeaponModel);
-        return res;
+        CheckForMissingModelAsset(param, MissingWeaponModel);
     }
 }

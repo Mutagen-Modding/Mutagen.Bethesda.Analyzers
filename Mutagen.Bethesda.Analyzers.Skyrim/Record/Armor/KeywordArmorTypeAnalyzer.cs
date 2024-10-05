@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
@@ -14,21 +14,21 @@ public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingKeywordArmorType];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorGetter> param)
     {
         var armor = param.Record;
 
         // Armor with template armor inherit all relevant data from the template armor and should not be checked themselves
-        if (!armor.TemplateArmor.IsNull) return null;
+        if (!armor.TemplateArmor.IsNull) return;
 
         // Armor with no slots are not relevant
-        if (armor.BodyTemplate is null) return null;
+        if (armor.BodyTemplate is null) return;
 
         // Ignore armor with no keywords, these are usually skin armor
-        if (armor.Keywords is null) return null;
+        if (armor.Keywords is null) return;
 
         // Shields are always have the same keyword ArmorShield
-        if (armor.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.Shield)) return null;
+        if (armor.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.Shield)) return;
 
         List<FormLink<IKeywordGetter>> matchingKeywords = armor.BodyTemplate.ArmorType switch
         {
@@ -40,13 +40,11 @@ public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 
         foreach (var keyword in matchingKeywords)
         {
-            if (armor.Keywords.Contains(keyword)) return null;
+            if (armor.Keywords.Contains(keyword)) return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                armor,
-                ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType, matchingKeywords),
-                x => x.Keywords));
+        param.AddTopic(
+            ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType, matchingKeywords),
+            x => x.Keywords);
     }
 }

@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class GhostKeywordAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -18,7 +18,7 @@ public class GhostKeywordAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [GhostScriptMissingKeyword, GhostFlagMissingKeyword];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
 
@@ -26,26 +26,18 @@ public class GhostKeywordAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         var hasFlag = npc.Configuration.Flags.HasFlag(NpcConfiguration.Flag.IsGhost);
         var hasScript = npc.HasScript("defaultGhostScript");
 
-        var results = new RecordAnalyzerResult();
-
         if (hasScript && !hasKeyword)
         {
-            results.AddTopic(
-                RecordTopic.Create(
-                    npc,
-                    GhostScriptMissingKeyword.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                GhostScriptMissingKeyword.Format(),
+                x => x.VirtualMachineAdapter);
         }
 
         if (hasFlag && !hasKeyword)
         {
-            results.AddTopic(
-                RecordTopic.Create(
-                    npc,
-                    GhostFlagMissingKeyword.Format(),
-                    x => x.VirtualMachineAdapter));
+            param.AddTopic(
+                GhostFlagMissingKeyword.Format(),
+                x => x.VirtualMachineAdapter);
         }
-
-        return results;
     }
 }

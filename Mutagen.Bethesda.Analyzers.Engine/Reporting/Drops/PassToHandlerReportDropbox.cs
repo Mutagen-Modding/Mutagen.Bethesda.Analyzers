@@ -1,5 +1,7 @@
 using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Drops;
@@ -14,11 +16,15 @@ public class PassToHandlerReportDropbox : IReportDropbox
 
     }
 
-    public void Dropoff(ReportContextParameters parameters, IModGetter sourceMod, IMajorRecordGetter majorRecord, ITopic topic)
+    public void Dropoff(
+        ReportContextParameters parameters,
+        ModKey mod,
+        IMajorRecordIdentifier record,
+        ITopic topic)
     {
         foreach (var handler in _handlers)
         {
-            handler.Dropoff(parameters, sourceMod, majorRecord, topic);
+            handler.Dropoff(parameters, mod, record, topic);
         }
     }
 

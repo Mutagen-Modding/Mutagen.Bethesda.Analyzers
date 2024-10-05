@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Spell;
 
 public class NoMenuDisplayObjectAnalyzer : IContextualRecordAnalyzer<ISpellGetter>
@@ -13,11 +13,11 @@ public class NoMenuDisplayObjectAnalyzer : IContextualRecordAnalyzer<ISpellGette
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoMenuDisplayObject];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<ISpellGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ISpellGetter> param)
     {
         var spell = param.Record;
 
-        if (!spell.MenuDisplayObject.IsNull) return null;
+        if (!spell.MenuDisplayObject.IsNull) return;
 
         foreach (var effect in spell.Effects)
         {
@@ -26,14 +26,12 @@ public class NoMenuDisplayObjectAnalyzer : IContextualRecordAnalyzer<ISpellGette
 
             if (!magicEffect.MenuDisplayObject.IsNull)
             {
-                return null;
+                return;
             }
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                spell,
-                NoMenuDisplayObject.Format(),
-                x => x));
+        param.AddTopic(
+            NoMenuDisplayObject.Format(),
+            x => x);
     }
 }

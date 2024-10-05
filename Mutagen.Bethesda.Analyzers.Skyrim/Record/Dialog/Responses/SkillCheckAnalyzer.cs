@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
@@ -18,11 +18,9 @@ public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NonPlayerSkillCheck, NonGlobalSkillCheck];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
-
-        var result = new RecordAnalyzerResult();
 
         foreach (var condition in dialogResponses.Conditions)
         {
@@ -32,26 +30,18 @@ public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
             // Non-Player Skill Check
             if (getActorValue.RunOnType != Condition.RunOnType.Target && !getActorValue.RunsOnPlayer())
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        dialogResponses,
-                        NonGlobalSkillCheck.Format(condition.Data.RunOnType),
-                        x => x.Conditions
-                    ));
+                param.AddTopic(
+                    NonGlobalSkillCheck.Format(condition.Data.RunOnType),
+                    x => x.Conditions);
             }
 
             // Non-Global Skill Check
             if (condition is IConditionFloatGetter conditionFloatGetter && condition.Data.RunsOnPlayer())
             {
-                result.AddTopic(
-                    RecordTopic.Create(
-                        dialogResponses,
-                        NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue),
-                        x => x.Conditions
-                    ));
+                param.AddTopic(
+                    NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue),
+                    x => x.Conditions);
             }
         }
-
-        return result;
     }
 }

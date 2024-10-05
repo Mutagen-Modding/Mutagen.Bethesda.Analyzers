@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Key;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
@@ -23,34 +23,24 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoPickupSound, NoPutDownSound];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IKeyGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IKeyGetter> param)
     {
         var key = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (key.PickUpSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    key,
-                    NoPickupSound.Format(),
-                    x => x.PickUpSound
-                )
+            param.AddTopic(
+                NoPickupSound.Format(),
+                x => x.PickUpSound
             );
         }
 
         if (key.PutDownSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    key,
-                    NoPutDownSound.Format(),
-                    x => x.PutDownSound
-                )
+            param.AddTopic(
+                NoPutDownSound.Format(),
+                x => x.PutDownSound
             );
         }
-
-        return result;
     }
 }

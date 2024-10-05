@@ -6,9 +6,11 @@ namespace Mutagen.Bethesda.Analyzers.Cli.Overrides;
 
 public class DataDirectoryEnabledPluginListingsProvider(IDataDirectoryProvider dataDirectoryProvider) : IEnabledPluginListingsProvider
 {
+    private readonly string[] _formats = [".esp", ".esm", ".esl"];
+
     public IEnumerable<ILoadOrderListingGetter> Get()
     {
-        foreach (var filePath in Directory.EnumerateFiles(dataDirectoryProvider.Path, "*.esp, *.esm, *.esl"))
+        foreach (var filePath in Directory.EnumerateFiles(dataDirectoryProvider.Path).Where(x => _formats.Contains(Path.GetExtension(x))))
         {
             var fileName = Path.GetFileName(filePath);
 

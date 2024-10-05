@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Package;
 
 public partial class InconsistentTimeframeAnalyzer : IContextualRecordAnalyzer<IPackageGetter>
@@ -23,33 +23,25 @@ public partial class InconsistentTimeframeAnalyzer : IContextualRecordAnalyzer<I
     [GeneratedRegex(@"[^\d\s]*(\d+)x(\d+)")]
     private static partial Regex TimeframeRegex();
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<IPackageGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IPackageGetter> param)
     {
         var package = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
-        if (!TryGetEditorIDTimeframe(package, out var hour, out var duration)) return result;
-        if (package is { ScheduleHour: -1, ScheduleDurationInMinutes: 0 } && hour == 0 && duration % 24 == 0) return result;
+        if (!TryGetEditorIDTimeframe(package, out var hour, out var duration)) return;
+        if (package is { ScheduleHour: -1, ScheduleDurationInMinutes: 0 } && hour == 0 && duration % 24 == 0) return;
 
         if (package.ScheduleHour != hour)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    package,
-                    InconsistentHourTopic.Format(package.ScheduleHour, hour),
-                    x => x.ScheduleHour));
+            param.AddTopic(
+                InconsistentHourTopic.Format(package.ScheduleHour, hour),
+                x => x.ScheduleHour);
         }
         if (package.ScheduleDurationInMinutes / 60 != duration)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    package,
-                    InconsistentDurationTopic.Format(package.ScheduleDurationInMinutes / 60, duration),
-                    x => x.ScheduleDurationInMinutes));
+            param.AddTopic(
+                InconsistentDurationTopic.Format(package.ScheduleDurationInMinutes / 60, duration),
+                x => x.ScheduleDurationInMinutes);
         }
-
-        return result;
     }
 
     private static bool TryGetEditorIDTimeframe(IPackageGetter package, out int hour, out int duration)

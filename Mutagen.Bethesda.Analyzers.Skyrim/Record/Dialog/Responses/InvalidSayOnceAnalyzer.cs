@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class InvalidSayOnceAnalyzer : IContextualRecordAnalyzer<IDialogResponsesGetter>
@@ -13,27 +13,23 @@ public class InvalidSayOnceAnalyzer : IContextualRecordAnalyzer<IDialogResponses
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidSayOnce];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogResponsesGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IDialogResponsesGetter> param)
     {
         var dialogResponses = param.Record;
 
-        if (dialogResponses.Flags is null || !dialogResponses.Flags.Flags.HasFlag(DialogResponses.Flag.SayOnce)) return null;
+        if (dialogResponses.Flags is null || !dialogResponses.Flags.Flags.HasFlag(DialogResponses.Flag.SayOnce)) return;
 
         var context = param.LinkCache.ResolveSimpleContext<IDialogResponsesGetter>(dialogResponses.FormKey);
-        if (context.Parent?.Record is not IDialogTopicGetter topic) return null;
+        if (context.Parent?.Record is not IDialogTopicGetter topic) return;
 
         var quest = topic.Quest.TryResolve(param.LinkCache);
         if (quest is null || quest.Flags.HasFlag(Bethesda.Skyrim.Quest.Flag.StartGameEnabled))
         {
-            return null;
+            return;
         }
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                dialogResponses,
-                InvalidSayOnce.Format(quest),
-                x => x.Flags
-            )
-        );
+        param.AddTopic(
+            InvalidSayOnce.Format(quest),
+            x => x.Flags);
     }
 }

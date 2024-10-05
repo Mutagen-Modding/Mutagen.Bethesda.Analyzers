@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Placed;
 
 public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
@@ -23,13 +23,11 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
         FormKeys.SkyrimSE.Skyrim.Static.MultiBoundMarker.FormKey,
     ];
 
-    public RecordAnalyzerResult AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IPlacedGetter> param)
     {
         var placed = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
-        if (!placed.SkyrimMajorRecordFlags.HasFlag((SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent)) return result;
+        if (!placed.SkyrimMajorRecordFlags.HasFlag((SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent)) return;
 
         // TODO: placed records that is referenced are likely meant to be be persistent
         // if (references.Any()) return result;
@@ -37,16 +35,16 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
         switch (placed)
         {
             case IPlacedObjectGetter placedObjectGetter:
-                if (AllowedPersistentObjects.Contains(placedObjectGetter.Base.FormKey)) return result;
+                if (AllowedPersistentObjects.Contains(placedObjectGetter.Base.FormKey)) return;
 
-                if (placedObjectGetter.MapMarker is not null) return result;
-                if (placedObjectGetter.VirtualMachineAdapter is not null) return result;
-                if (placedObjectGetter.LinkedReferences.Any()) return result;
-                if (placedObjectGetter.LocationRefTypes is not null) return result;
+                if (placedObjectGetter.MapMarker is not null) return;
+                if (placedObjectGetter.VirtualMachineAdapter is not null) return;
+                if (placedObjectGetter.LinkedReferences.Any()) return;
+                if (placedObjectGetter.LocationRefTypes is not null) return;
 
                 // Base types that are allowed to be persistent
-                if (param.LinkCache.TryResolve<IDoorGetter>(placedObjectGetter.Base.FormKey, out _)) return result;
-                if (param.LinkCache.TryResolve<ITextureSetGetter>(placedObjectGetter.Base.FormKey, out _)) return result;
+                if (param.LinkCache.TryResolve<IDoorGetter>(placedObjectGetter.Base.FormKey, out _)) return;
+                if (param.LinkCache.TryResolve<ITextureSetGetter>(placedObjectGetter.Base.FormKey, out _)) return;
 
                 break;
             // case IPlacedNpcGetter placedNpcGetter:
@@ -66,7 +64,5 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
             //
             //     break;
         }
-
-        return result;
     }
 }

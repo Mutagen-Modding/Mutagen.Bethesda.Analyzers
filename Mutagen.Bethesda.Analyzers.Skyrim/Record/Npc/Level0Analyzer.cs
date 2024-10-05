@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -25,7 +25,7 @@ public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [Level0];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
 
@@ -34,34 +34,29 @@ public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
             case INpcLevelGetter npcLevel:
                 if (npcLevel.Level == 0)
                 {
-                    return new RecordAnalyzerResult(
-                        RecordTopic.Create(
-                            npc,
-                            Level0.Format(),
-                            x => x.Configuration));
+                    param.AddTopic(
+                        Level0.Format(),
+                        x => x.Configuration);
+                    return;
                 }
                 break;
             case IPcLevelMultGetter pcLevelMult:
                 if (Math.Abs(pcLevelMult.LevelMult) < 0.001)
                 {
-                    return new RecordAnalyzerResult(
-                        RecordTopic.Create(
-                            npc,
-                            LevelMultTooSmall.Format(pcLevelMult.LevelMult),
-                            x => x.Configuration));
+                    param.AddTopic(
+                        LevelMultTooSmall.Format(pcLevelMult.LevelMult),
+                        x => x.Configuration);
+                    return;
                 }
 
                 if (npc.Configuration.CalcMinLevel == 0)
                 {
-                    return new RecordAnalyzerResult(
-                        RecordTopic.Create(
-                            npc,
-                            MinLevel0.Format(),
-                            x => x.Configuration));
+                    param.AddTopic(
+                        MinLevel0.Format(),
+                        x => x.Configuration);
+                    return;
                 }
                 break;
         }
-
-        return null;
     }
 }

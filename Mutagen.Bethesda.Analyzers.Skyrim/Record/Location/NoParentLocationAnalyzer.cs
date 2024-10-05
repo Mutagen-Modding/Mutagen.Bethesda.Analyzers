@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Location;
 
 public class NoParentLocationAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
@@ -24,14 +24,14 @@ public class NoParentLocationAnalyzer : IContextualRecordAnalyzer<ILocationGette
         FormKeys.SkyrimSE.Dragonborn.Location.DLC2SolstheimLocation,
     ];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<ILocationGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILocationGetter> param)
     {
         var location = param.Record;
 
         // Ignore some well known top level locations
         if (ValidTopLevelLocations.Contains(location))
         {
-            return null;
+            return;
         }
 
         // Ignore locations that are assigned on a worldspace level
@@ -39,18 +39,14 @@ public class NoParentLocationAnalyzer : IContextualRecordAnalyzer<ILocationGette
             .Select(x => x.Location)
             .Any(x => x.FormKey == location.FormKey))
         {
-            return null;
+            return;
         }
 
         if (location.ParentLocation.IsNull)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    location,
-                    NoParentLocation.Format(),
-                    x => x.ParentLocation));
+            param.AddTopic(
+                NoParentLocation.Format(),
+                x => x.ParentLocation);
         }
-
-        return null;
     }
 }

@@ -81,6 +81,8 @@ public static class RunAnalyzers
         if (command.UseDataFolderForLoadOrder)
         {
             builder.RegisterType<DataDirectoryEnabledPluginListingsProvider>().As<IEnabledPluginListingsProvider>();
+            builder.RegisterType<NullPluginListingsPathProvider>().As<IPluginListingsPathProvider>();
+            builder.RegisterType<NullCreationClubListingsPathProvider>().As<ICreationClubListingsPathProvider>();
         }
 
         // Add Skyrim Analyzers

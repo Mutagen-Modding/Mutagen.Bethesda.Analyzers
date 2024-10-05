@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Quest;
 
 public class ObjectWindowFilterAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
@@ -14,18 +14,14 @@ public class ObjectWindowFilterAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoObjectWindowFilter];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IQuestGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IQuestGetter> param)
     {
         var quest = param.Record;
-        if (!quest.Filter.IsNullOrWhitespace())
+        if (quest.Filter.IsNullOrWhitespace())
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    quest,
-                    NoObjectWindowFilter.Format(),
-                    x => x.Filter));
+            param.AddTopic(
+                NoObjectWindowFilter.Format(),
+                x => x.Filter);
         }
-
-        return null;
     }
 }

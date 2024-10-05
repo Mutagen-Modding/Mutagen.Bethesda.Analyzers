@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -13,21 +13,17 @@ public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [ChildLowConfidence];
 
-    public RecordAnalyzerResult? AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
-        if (!npc.Race.TryResolve(param.LinkCache, out var race)) return null;
-        if (!race.IsChildRace()) return null;
+        if (!npc.Race.TryResolve(param.LinkCache, out var race)) return;
+        if (!race.IsChildRace()) return;
 
         if (npc.AIData.Confidence is Confidence.Brave or Confidence.Foolhardy)
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    npc,
-                    ChildLowConfidence.Format(),
-                    x => x.AIData));
+            param.AddTopic(
+                ChildLowConfidence.Format(),
+                x => x.AIData);
         }
-
-        return null;
     }
 }

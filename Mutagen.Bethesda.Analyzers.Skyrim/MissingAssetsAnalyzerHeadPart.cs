@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
@@ -19,22 +18,20 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGe
             Severity.CTD)
         .WithFormatting<int, string?>("Missing file for Head Part Part {0} at {1}");
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IHeadPartGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IHeadPartGetter> param)
     {
-        var res = new RecordAnalyzerResult();
-
-        CheckForMissingModelAsset(param.Record, res, MissingHeadPartModel);
+        CheckForMissingModelAsset(param, MissingHeadPartModel);
 
         var i = 0;
         foreach (var part in param.Record.Parts)
         {
-            CheckForMissingAsset(part.FileName, res, () => RecordTopic.Create(
-                param.Record,
-                MissingHeadPartFile.Format(i, part.FileName),
-                x => x.Parts[0].FileName!));
+            if (!_fileSystem.File.Exists(part.FileName))
+            {
+                param.AddTopic(
+                    MissingHeadPartFile.Format(i, part.FileName),
+                    x => x.Parts[0].FileName);
+            }
             i++;
         }
-
-        return res;
     }
 }

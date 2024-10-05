@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Placed.Object;
 
 public class MapMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGetter>
@@ -28,54 +28,42 @@ public class MapMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoMenuDisplayObject, NoLocRefType, NoEditorID, NoLinkedReference];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IPlacedObjectGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IPlacedObjectGetter> param)
     {
         var placedObject = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
-        if (placedObject.Base.FormKey != FormKeys.SkyrimSE.Skyrim.Static.MapMarker.FormKey) return result;
+        if (placedObject.Base.FormKey != FormKeys.SkyrimSE.Skyrim.Static.MapMarker.FormKey) return;
 
         // Not Persistent
         if ((placedObject.SkyrimMajorRecordFlags & (SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent) == 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    placedObject,
-                    NoMenuDisplayObject.Format(),
-                    x => x.MajorRecordFlagsRaw));
+            param.AddTopic(
+                NoMenuDisplayObject.Format(),
+                x => x.MajorRecordFlagsRaw);
         }
 
         // No Loc Ref Type
         if (placedObject.LocationRefTypes is null || placedObject.LocationRefTypes.All(link => link.FormKey != FormKeys.SkyrimSE.Skyrim.LocationReferenceType.MapMarkerRefType.FormKey))
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    placedObject,
-                    NoLocRefType.Format(),
-                    x => x.LocationRefTypes));
+            param.AddTopic(
+                NoLocRefType.Format(),
+                x => x.LocationRefTypes);
         }
 
         // No EditorID
         if (placedObject.EditorID is null)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    placedObject,
-                    NoEditorID.Format(),
-                    x => x.EditorID));
+            param.AddTopic(
+                NoEditorID.Format(),
+                x => x.EditorID);
         }
 
         // No Linked Reference
         if (placedObject.LinkedReferences.All(link => link.Reference.FormKey != FormKeys.SkyrimSE.Skyrim.Static.XMarkerHeading.FormKey))
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    placedObject,
-                    NoLinkedReference.Format(),
-                    x => x.LinkedReferences));
+            param.AddTopic(
+                NoLinkedReference.Format(),
+                x => x.LinkedReferences);
         }
-
-        return result;
     }
 }

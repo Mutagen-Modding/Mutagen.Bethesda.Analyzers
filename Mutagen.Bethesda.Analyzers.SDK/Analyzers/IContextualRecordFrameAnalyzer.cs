@@ -6,12 +6,12 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 public interface IContextualRecordFrameAnalyzer<TMajor> : IAnalyzer
     where TMajor : IMajorRecordGetter
 {
-    RecordAnalyzerResult? AnalyzeRecord(ContextualRecordFrameAnalyzerParams<TMajor> param);
+    void AnalyzeRecord(ContextualRecordFrameAnalyzerParams<TMajor> param);
 }
 
 public interface IContextualRecordFrameAnalyzer : IAnalyzer
 {
     bool AcceptsType<TMajor>() where TMajor : IMajorRecordGetter;
 
-    RecordAnalyzerResult? AnalyzeRecord(ContextualRecordFrameAnalyzerParams param);
+    void AnalyzeRecord(ContextualRecordFrameAnalyzerParams param);
 }

@@ -13,17 +13,15 @@ public class UnusedButtonsAnalyzer : IIsolatedRecordAnalyzer<IMessageGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [UnusedButtons];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IMessageGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IMessageGetter> param)
     {
         var message = param.Record;
 
-        if (message.Flags.HasFlag(Bethesda.Skyrim.Message.Flag.MessageBox)) return null;
-        if (message.MenuButtons.Count == 0) return null;
+        if (message.Flags.HasFlag(Bethesda.Skyrim.Message.Flag.MessageBox)) return;
+        if (message.MenuButtons.Count == 0) return;
 
-        return new RecordAnalyzerResult(
-            RecordTopic.Create(
-                message,
-                UnusedButtons.Format(message.MenuButtons.Count),
-                x => x.MenuButtons));
+        param.AddTopic(
+            UnusedButtons.Format(message.MenuButtons.Count),
+            x => x.MenuButtons);
     }
 }

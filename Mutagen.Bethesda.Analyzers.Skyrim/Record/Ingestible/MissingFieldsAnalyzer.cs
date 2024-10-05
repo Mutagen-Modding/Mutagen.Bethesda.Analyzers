@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Ingestible;
 
 public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
@@ -18,34 +18,22 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [EmptyEffectList, NoConsumeSound];
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<IIngestibleGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IIngestibleGetter> param)
     {
         var ingestible = param.Record;
 
-        var result = new RecordAnalyzerResult();
-
         if (ingestible.Effects.Count == 0)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    ingestible,
-                    EmptyEffectList.Format(),
-                    x => x.Effects
-                )
-            );
+            param.AddTopic(
+                EmptyEffectList.Format(),
+                x => x.Effects);
         }
 
         if (ingestible.ConsumeSound.IsNull)
         {
-            result.AddTopic(
-                RecordTopic.Create(
-                    ingestible,
-                    NoConsumeSound.Format(),
-                    x => x.ConsumeSound
-                )
-            );
+            param.AddTopic(
+                NoConsumeSound.Format(),
+                x => x.ConsumeSound);
         }
-
-        return result;
     }
 }

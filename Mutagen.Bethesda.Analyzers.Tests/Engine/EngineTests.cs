@@ -1,7 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
-using Mutagen.Bethesda.Analyzers.Reporting.Drops;
+using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins;

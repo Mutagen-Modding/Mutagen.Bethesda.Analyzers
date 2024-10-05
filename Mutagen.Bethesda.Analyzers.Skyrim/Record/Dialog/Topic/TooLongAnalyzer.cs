@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Topic;
 
 public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
@@ -14,21 +14,15 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [TopicPromptTooLong];
 
-    public RecordAnalyzerResult? AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IDialogTopicGetter> param)
     {
         var dialogTopic = param.Record;
 
         if (dialogTopic.Name?.String is { Length: > DialogPromptLengthLimit })
         {
-            return new RecordAnalyzerResult(
-                RecordTopic.Create(
-                    dialogTopic,
-                    TopicPromptTooLong.Format(dialogTopic.Name.String, dialogTopic.Name.String.Length - DialogPromptLengthLimit),
-                    x => x.Name
-                )
-            );
+            param.AddTopic(
+                TopicPromptTooLong.Format(dialogTopic.Name.String, dialogTopic.Name.String.Length - DialogPromptLengthLimit),
+                x => x.Name);
         }
-
-        return null;
     }
 }

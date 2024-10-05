@@ -22,19 +22,62 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSet
     private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
     private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
-    public RecordAnalyzerResult AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
     {
-        var result = new RecordAnalyzerResult();
+        if (!FileExistsIfNotNull(param.Record.Diffuse))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse),
+                x => x.Diffuse!);
+        }
 
-        CheckForMissingAsset(param.Record.Diffuse, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse), x => x.Diffuse!));
-        CheckForMissingAsset(param.Record.NormalOrGloss, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss), x => x.NormalOrGloss!));
-        CheckForMissingAsset(param.Record.EnvironmentMaskOrSubsurfaceTint, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint), x => x.EnvironmentMaskOrSubsurfaceTint!));
-        CheckForMissingAsset(param.Record.GlowOrDetailMap, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap), x => x.GlowOrDetailMap!));
-        CheckForMissingAsset(param.Record.Height, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetHeightName, param.Record.Height), x => x.Height!));
-        CheckForMissingAsset(param.Record.Environment, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment), x => x.Environment!));
-        CheckForMissingAsset(param.Record.Multilayer, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer), x => x.Multilayer!));
-        CheckForMissingAsset(param.Record.BacklightMaskOrSpecular, result, () => RecordTopic.Create(param.Record, MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular), x => x.BacklightMaskOrSpecular!));
+        if (!FileExistsIfNotNull(param.Record.NormalOrGloss))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss),
+                x => x.NormalOrGloss!);
+        }
 
-        return result;
+        if (!FileExistsIfNotNull(param.Record.EnvironmentMaskOrSubsurfaceTint))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint),
+                x => x.EnvironmentMaskOrSubsurfaceTint!);
+        }
+
+        if (!FileExistsIfNotNull(param.Record.GlowOrDetailMap))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap),
+                x => x.GlowOrDetailMap!);
+        }
+
+        if (!FileExistsIfNotNull(param.Record.Height))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetHeightName, param.Record.Height),
+                x => x.Height!);
+        }
+
+        if (!FileExistsIfNotNull(param.Record.Environment))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment),
+                x => x.Environment!);
+        }
+
+        if (!FileExistsIfNotNull(param.Record.Multilayer))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer),
+                x => x.Multilayer!);
+        }
+
+        if (!FileExistsIfNotNull(param.Record.BacklightMaskOrSpecular))
+        {
+            param.AddTopic(
+                MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular),
+                x => x.BacklightMaskOrSpecular!);
+        }
     }
 }

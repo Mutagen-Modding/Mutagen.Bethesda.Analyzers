@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Microsoft.Extensions.Logging;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -14,41 +13,27 @@ public partial class MissingAssetsAnalyzer
 
     private const string MissingModelFileMessageFormat = "Missing Model file {0}";
 
-    private readonly ILogger<MissingAssetsAnalyzer> _logger;
     private readonly IFileSystem _fileSystem;
 
-    public MissingAssetsAnalyzer(ILogger<MissingAssetsAnalyzer> logger, IFileSystem fileSystem)
+    public MissingAssetsAnalyzer(IFileSystem fileSystem)
     {
-        _logger = logger;
         _fileSystem = fileSystem;
     }
 
     private void CheckForMissingModelAsset<TMajorRecordGetter>(
-        TMajorRecordGetter modeledGetter,
-        RecordAnalyzerResult result,
+        IsolatedRecordAnalyzerParams<TMajorRecordGetter> param,
         TopicDefinition<string> topicDefinition)
         where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
     {
-        var path = modeledGetter.Model?.File;
+        var path = param.Record.Model?.File;
         if (path is null) return;
         if (FileExists(path)) return;
 
-        var error = RecordTopic.Create(
-            modeledGetter,
+        param.AddTopic(
             topicDefinition.Format(path),
             x => x.Model!.File);
-
-        result.AddTopic(error);
-    }
-
-    private void CheckForMissingAsset(string? path, RecordAnalyzerResult result, Func<RecordTopic> func)
-    {
-        if (path is null) return;
-        if (FileExists(path)) return;
-
-        var error = func();
-        result.AddTopic(error);
     }
 
     private bool FileExists(string path) => _fileSystem.File.Exists(path);
+    private bool FileExistsIfNotNull(string? path) => path == null || _fileSystem.File.Exists(path);
 }
