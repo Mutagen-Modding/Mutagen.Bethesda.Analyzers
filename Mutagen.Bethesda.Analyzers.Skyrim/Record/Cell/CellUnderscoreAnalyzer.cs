@@ -20,8 +20,7 @@ public class CellUnderscoreAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
             return;
         }
 
-        param.AddTopic(
-            formattedTopicDefinition: CellUnderscoreWrong.Format(param.Record.EditorID));
+        param.AddTopic(CellUnderscoreWrong.Format(param.Record.EditorID));
     }
 
     public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()

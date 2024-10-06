@@ -35,6 +35,5 @@ public class MerchantAnalyzer : IContextualRecordAnalyzer<INpcGetter>
     public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
     {
         yield return x => x.Factions;
-        yield return x => x.Factions;
     }
 }

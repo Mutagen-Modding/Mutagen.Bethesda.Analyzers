@@ -69,6 +69,5 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         yield return x => x.MajorFlags;
         yield return x => x.Race;
         yield return x => x.Armature;
-        yield return x => x.Race;
     }
 }

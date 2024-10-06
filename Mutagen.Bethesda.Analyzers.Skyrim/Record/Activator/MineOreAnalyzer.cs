@@ -86,7 +86,5 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
     {
         yield return x => x.EditorID;
         yield return x => x.VirtualMachineAdapter!.Scripts;
-        yield return x => x.EditorID;
-        yield return x => x.EditorID;
     }
 }

@@ -17,8 +17,7 @@ public class MissingCreatedObjectAnalyzer : IIsolatedRecordAnalyzer<IConstructib
     {
         if (param.Record.CreatedObject.IsNull)
         {
-            param.AddTopic(
-                formattedTopicDefinition: MissingCreatedObject.Format());
+            param.AddTopic(MissingCreatedObject.Format());
         }
     }
     public IEnumerable<Func<IConstructibleObjectGetter, object?>> FieldsOfInterest()
