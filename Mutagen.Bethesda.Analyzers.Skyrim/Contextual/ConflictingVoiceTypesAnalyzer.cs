@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
@@ -14,10 +14,8 @@ public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NpcsWithSameVoiceType];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             if (cell.IsExteriorCell()) continue;
@@ -38,15 +36,9 @@ public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
                 var count = npcs.Count;
                 if (count <= 1) continue;
 
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        cell,
-                        NpcsWithSameVoiceType.Format(cell, count, npcs, grouping.Key)
-                    )
-                );
+                param.AddTopic(
+                    NpcsWithSameVoiceType.Format(cell, count, npcs, grouping.Key));
             }
         }
-
-        return result;
     }
 }

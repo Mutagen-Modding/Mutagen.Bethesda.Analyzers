@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class UnownedWorkMarkerAnalyzer : IContextualAnalyzer
@@ -21,10 +21,8 @@ public class UnownedWorkMarkerAnalyzer : IContextualAnalyzer
         FormKeys.SkyrimSE.Skyrim.Furniture.CounterBarLeanMarker.FormKey
     ];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             if (cell.IsExteriorCell()) continue;
@@ -34,16 +32,9 @@ public class UnownedWorkMarkerAnalyzer : IContextualAnalyzer
             {
                 if (WorkMarkers.Contains(placedObject.Base.FormKey))
                 {
-                    result.AddTopic(
-                        ContextualTopic.Create(
-                            placedObject,
-                            UnownedBed.Format(placedObject, cell)
-                        )
-                    );
+                    param.AddTopic(UnownedBed.Format(placedObject, cell));
                 }
             }
         }
-
-        return result;
     }
 }

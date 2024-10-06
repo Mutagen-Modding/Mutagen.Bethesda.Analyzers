@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Analyzers.SDK.Drops;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
@@ -36,7 +36,6 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
     /// <summary>
     /// Reports a topic to the engine
     /// </summary>
-    /// <param name="formattedTopicDefinition"></param>
     public void AddTopic(
         IFormattedTopicDefinition formattedTopicDefinition)
     {

@@ -17,17 +17,14 @@ public class ContextualDriver : IContextualDriver
     public void Drive(ContextualDriverParams driverParams)
     {
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
-        var analyzerParams = new ContextualAnalyzerParams(driverParams.LinkCache, driverParams.LoadOrder);
+        var analyzerParams = new ContextualAnalyzerParams(
+            driverParams.LinkCache,
+            driverParams.LoadOrder,
+            driverParams.ReportDropbox,
+            reportContext);
         foreach (var contextualAnalyzer in _contextualAnalyzers)
         {
-            var result = contextualAnalyzer.Analyze(analyzerParams);
-            if (result is null) continue;
-            foreach (var topic in result.Topics)
-            {
-                driverParams.ReportDropbox.Dropoff(
-                    reportContext,
-                    topic);
-            }
+            contextualAnalyzer.Analyze(analyzerParams);
         }
     }
 }

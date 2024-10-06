@@ -24,10 +24,8 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [DuplicateReferences];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             // Group all placed objects by their placement and scale
@@ -64,15 +62,8 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
                     removedDuplicates = dispensableDuplicates;
                 }
 
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        cell,
-                        DuplicateReferences.Format(keptDuplicates, removedDuplicates)
-                    )
-                );
+                param.AddTopic(DuplicateReferences.Format(keptDuplicates, removedDuplicates));
             }
         }
-
-        return result;
     }
 }
