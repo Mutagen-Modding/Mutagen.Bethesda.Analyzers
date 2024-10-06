@@ -29,7 +29,11 @@ public class InvalidSayOnceAnalyzer : IContextualRecordAnalyzer<IDialogResponses
         }
 
         param.AddTopic(
-            InvalidSayOnce.Format(quest),
-            x => x.Flags);
+            InvalidSayOnce.Format(quest));
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
     }
 }

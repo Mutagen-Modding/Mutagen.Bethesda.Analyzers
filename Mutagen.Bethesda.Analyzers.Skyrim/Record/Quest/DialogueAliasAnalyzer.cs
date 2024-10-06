@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
@@ -61,8 +60,12 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
             if (dialogue.Count == 0) continue;
 
             param.AddTopic(
-                InvalidDialogueAlias.Format(alias.Name, dialogue),
-                x => x.FormKey);
+                InvalidDialogueAlias.Format(alias.Name, dialogue));
         }
+    }
+
+    public IEnumerable<Func<IQuestGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Aliases;
     }
 }

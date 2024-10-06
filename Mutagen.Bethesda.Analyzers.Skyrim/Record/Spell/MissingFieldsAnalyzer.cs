@@ -19,10 +19,12 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ISpellGetter>
 
         if (spell.Effects.Count == 0)
         {
-            param.AddTopic(
-                EmptyEffectList.Format(),
-                x => x.Effects
-            );
+            param.AddTopic(EmptyEffectList.Format());
         }
+    }
+
+    public IEnumerable<Func<ISpellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Effects;
     }
 }

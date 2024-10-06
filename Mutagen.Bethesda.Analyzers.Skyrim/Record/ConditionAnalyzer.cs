@@ -27,16 +27,19 @@ public class ConditionAnalyzer : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGette
             {
                 case IGetEventDataConditionDataGetter getEventData:
                     param.AddTopic(
-                        InvalidConditionReference.Format(getEventData.Function.ToString()),
-                        x => x);
+                        InvalidConditionReference.Format(getEventData.Function.ToString()));
                     break;
                 case {} conditionData:
                     param.AddTopic(
-                        InvalidConditionReference.Format(conditionData.Function.ToString()),
-                        x => x);
+                        InvalidConditionReference.Format(conditionData.Function.ToString()));
                     break;
             }
         }
+    }
+
+    public IEnumerable<Func<ISkyrimMajorRecordGetter, object?>> FieldsOfInterest()
+    {
+        yield break;
     }
 }
 

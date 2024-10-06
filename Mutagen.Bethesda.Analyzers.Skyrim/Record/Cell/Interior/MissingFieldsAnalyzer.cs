@@ -36,29 +36,33 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
         if (cell.Music.IsNull)
         {
             param.AddTopic(
-                NoMusic.Format(),
-                x => x.Music);
+                NoMusic.Format());
         }
 
         if (cell.LightingTemplate.IsNull)
         {
             param.AddTopic(
-                NoLightingTemplate.Format(),
-                x => x.LightingTemplate);
+                NoLightingTemplate.Format());
         }
 
         if (cell.AcousticSpace.IsNull)
         {
             param.AddTopic(
-                NoLightingTemplate.Format(),
-                x => x.LightingTemplate);
+                NoLightingTemplate.Format());
         }
 
         if (cell.Location.IsNull)
         {
             param.AddTopic(
-                NoLightingTemplate.Format(),
-                x => x.LightingTemplate);
+                NoLightingTemplate.Format());
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Music;
+        yield return x => x.LightingTemplate;
+        yield return x => x.AcousticSpace;
+        yield return x => x.Location;
     }
 }

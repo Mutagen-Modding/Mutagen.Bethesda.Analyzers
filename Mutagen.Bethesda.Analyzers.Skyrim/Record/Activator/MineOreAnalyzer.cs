@@ -34,8 +34,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (script is null)
         {
             param.AddTopic(
-                NoMineOreScript.Format(),
-                x => x.VirtualMachineAdapter);
+                NoMineOreScript.Format());
             return;
         }
 
@@ -44,8 +43,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (oreProperty is null)
         {
             param.AddTopic(
-                NoOreProperty.Format(),
-                x => x.VirtualMachineAdapter);
+                NoOreProperty.Format());
             return;
         }
 
@@ -53,8 +51,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (oreLinks.Count == 0)
         {
             param.AddTopic(
-                NoOreProperty.Format(),
-                x => x.VirtualMachineAdapter);
+                NoOreProperty.Format());
             return;
         }
 
@@ -62,8 +59,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (ore is null)
         {
             param.AddTopic(
-                NoOreProperty.Format(),
-                x => x.VirtualMachineAdapter);
+                NoOreProperty.Format());
             return;
         }
 
@@ -71,8 +67,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (oreSubStrings is null)
         {
             param.AddTopic(
-                NoOreProperty.Format(),
-                x => x.VirtualMachineAdapter);
+                NoOreProperty.Format());
             return;
         }
 
@@ -85,7 +80,11 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         }
 
         param.AddTopic(
-            IncorrectVeinOre.Format(ore),
-            x => x.VirtualMachineAdapter);
+            IncorrectVeinOre.Format(ore));
+    }
+    public IEnumerable<Func<IActivatorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.EditorID;
+        yield return x => x.VirtualMachineAdapter!.Scripts;
     }
 }

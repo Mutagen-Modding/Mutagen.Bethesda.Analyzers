@@ -73,10 +73,16 @@ public class KeywordSlotsAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
                 }
 
                 param.AddTopic(
-                    ArmorMatchingKeywordSlots.Format(slots.ToString(), keyword),
-                    x => x.Keywords);
+                    ArmorMatchingKeywordSlots.Format(slots.ToString(), keyword));
                 return;
             }
         }
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.TemplateArmor;
+        yield return x => x.BodyTemplate;
+        yield return x => x.Keywords;
     }
 }

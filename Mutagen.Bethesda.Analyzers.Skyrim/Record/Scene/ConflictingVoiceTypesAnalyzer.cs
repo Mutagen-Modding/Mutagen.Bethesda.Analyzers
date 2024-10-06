@@ -1,9 +1,9 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Scene;
 
 public class ConflictingVoiceTypesAnalyzer : IContextualRecordAnalyzer<ISceneGetter>
@@ -34,8 +34,13 @@ public class ConflictingVoiceTypesAnalyzer : IContextualRecordAnalyzer<ISceneGet
             if (npcWithSameVoiceType.Count <= 1) continue;
 
             param.AddTopic(
-                NpcsWithSameVoiceType.Format(scene, npcWithSameVoiceType.Count, npcWithSameVoiceType, npcVoiceType.Key),
-                x => x.Actors);
+                NpcsWithSameVoiceType.Format(scene, npcWithSameVoiceType.Count, npcWithSameVoiceType, npcVoiceType.Key));
         }
+    }
+
+    public IEnumerable<Func<ISceneGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Quest;
+        yield return x => x.Actors;
     }
 }

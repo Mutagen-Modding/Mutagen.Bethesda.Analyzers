@@ -44,8 +44,11 @@ public class MissingEnchantedPerkAnalyzer : IIsolatedRecordAnalyzer<IConstructib
             }
         }
 
-        param.AddTopic(
-            formattedTopicDefinition: MissingCreatedObject.Format(),
-            memberExpression: x => x.Conditions);
+        param.AddTopic(MissingCreatedObject.Format());
+    }
+
+    public IEnumerable<Func<IConstructibleObjectGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Conditions;
     }
 }

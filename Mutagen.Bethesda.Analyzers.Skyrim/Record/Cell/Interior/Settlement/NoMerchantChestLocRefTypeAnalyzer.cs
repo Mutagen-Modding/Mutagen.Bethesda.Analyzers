@@ -1,6 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior.Settlement;
 
 public class NoMerchantChestLocRefTypeAnalyzer : IContextualRecordAnalyzer<ICellGetter>
@@ -32,15 +33,19 @@ public class NoMerchantChestLocRefTypeAnalyzer : IContextualRecordAnalyzer<ICell
             if (isMerchantChest && !hasLocRefType)
             {
                 param.AddTopic(
-                    NoMerchantChestLocRefType.Format(placedObject),
-                    x => x);
+                    NoMerchantChestLocRefType.Format(placedObject));
             }
             else if (!isMerchantChest && hasLocRefType)
             {
                 param.AddTopic(
-                    InvalidMerchantChestLocRefType.Format(placedObject),
-                    x => x);
+                    InvalidMerchantChestLocRefType.Format(placedObject));
             }
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.Location;
     }
 }

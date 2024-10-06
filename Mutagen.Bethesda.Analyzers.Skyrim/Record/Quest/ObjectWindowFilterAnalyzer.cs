@@ -19,9 +19,12 @@ public class ObjectWindowFilterAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
         var quest = param.Record;
         if (quest.Filter.IsNullOrWhitespace())
         {
-            param.AddTopic(
-                NoObjectWindowFilter.Format(),
-                x => x.Filter);
+            param.AddTopic(NoObjectWindowFilter.Format());
         }
+    }
+
+    public IEnumerable<Func<IQuestGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Filter;
     }
 }

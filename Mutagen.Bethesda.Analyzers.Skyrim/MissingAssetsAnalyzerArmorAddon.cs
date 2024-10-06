@@ -24,32 +24,34 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddon
         if (!FileExistsIfNotNull(femaleWorldModel))
         {
             param.AddTopic(
-                MissingArmorAddonWorldModel.Format("female", femaleWorldModel),
-                x => x.WorldModel!.Female!.File);
+                MissingArmorAddonWorldModel.Format("female", femaleWorldModel));
         }
 
         var maleWorldModel = param.Record.WorldModel?.Male?.File;
         if (!FileExistsIfNotNull(maleWorldModel))
         {
             param.AddTopic(
-                MissingArmorAddonWorldModel.Format("male", maleWorldModel),
-                x => x.WorldModel!.Male!.File);
+                MissingArmorAddonWorldModel.Format("male", maleWorldModel));
         }
 
         var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
         if (!FileExistsIfNotNull(femaleFirstPersonModel))
         {
             param.AddTopic(
-                MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel),
-                x => x.FirstPersonModel!.Female!.File);
+                MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel));
         }
 
         var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
         if (!FileExistsIfNotNull(maleFirstPersonModel))
         {
             param.AddTopic(
-                MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel),
-                x => x.FirstPersonModel!.Male!.File);
+                MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel));
         }
+    }
+
+    IEnumerable<Func<IArmorAddonGetter, object?>> IIsolatedRecordAnalyzer<IArmorAddonGetter>.FieldsOfInterest()
+    {
+        yield return x => x.WorldModel;
+        yield return x => x.FirstPersonModel;
     }
 }

@@ -24,16 +24,18 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IFloraGetter>
 
         if (flora.HarvestSound.IsNull)
         {
-            param.AddTopic(
-                NoHarvestSound.Format(),
-                x => x.HarvestSound);
+            param.AddTopic(NoHarvestSound.Format());
         }
 
         if (flora.Ingredient.IsNull)
         {
-            param.AddTopic(
-                NoIngredient.Format(),
-                x => x.Ingredient);
+            param.AddTopic(NoIngredient.Format());
         }
+    }
+
+    public IEnumerable<Func<IFloraGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.HarvestSound;
+        yield return x => x.Ingredient;
     }
 }

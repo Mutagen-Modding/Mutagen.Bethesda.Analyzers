@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
@@ -13,10 +13,8 @@ public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NpcNotInCellFaction];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             if (cell.Owner.IsNull) continue;
@@ -44,15 +42,8 @@ public class NpcNotInCellFactionAnalyzer : IContextualAnalyzer
                 // Skip prisoners
                 if (npc.HasFaction(param.LinkCache, editorId => editorId is not null && editorId.Contains("Prisoner"))) continue;
 
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        placedNpc,
-                        NpcNotInCellFaction.Format(npc, cellOwnerFaction)
-                    )
-                );
+                param.AddTopic(NpcNotInCellFaction.Format(npc, cellOwnerFaction));
             }
         }
-
-        return result;
     }
 }

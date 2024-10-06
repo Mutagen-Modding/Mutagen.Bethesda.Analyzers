@@ -17,12 +17,16 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IOutfitGetter>
     {
         var outfit = param.Record;
 
-        if (outfit.Items is not null && outfit.Items.Count == 0)
+        if (outfit.Items is { Count: 0 })
         {
             param.AddTopic(
-                NoItems.Format(),
-                x => x.Items
+                NoItems.Format()
             );
         }
+    }
+
+    public IEnumerable<Func<IOutfitGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Items;
     }
 }

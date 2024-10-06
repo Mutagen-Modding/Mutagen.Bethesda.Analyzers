@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Mutagen.Bethesda.Analyzers.SDK.Drops;
+﻿using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -31,22 +30,20 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     }
 
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition,
-        Expression<Func<TMajor, object?>> memberExpression)
+        IFormattedTopicDefinition formattedTopicDefinition)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(Record, formattedTopicDefinition, memberExpression));
+            RecordTopic.Create(formattedTopicDefinition));
     }
 
     public void AddTopic(
         ModKey mod,
         TMajor record,
-        IFormattedTopicDefinition formattedTopicDefinition,
-        Expression<Func<TMajor, object?>> memberExpression)
+        IFormattedTopicDefinition formattedTopicDefinition)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(Record, formattedTopicDefinition, memberExpression));
+            RecordTopic.Create(formattedTopicDefinition));
     }
 }

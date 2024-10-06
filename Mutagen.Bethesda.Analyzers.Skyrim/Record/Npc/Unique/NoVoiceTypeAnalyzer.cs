@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc.Unique;
 
 public class NoVoiceTypeAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -24,8 +24,15 @@ public class NoVoiceTypeAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (npc.Voice.IsNull)
         {
             param.AddTopic(
-                NoVoiceType.Format(),
-                x => x.Configuration);
+                NoVoiceType.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.Flags;
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Keywords;
+        yield return x => x.Voice;
     }
 }

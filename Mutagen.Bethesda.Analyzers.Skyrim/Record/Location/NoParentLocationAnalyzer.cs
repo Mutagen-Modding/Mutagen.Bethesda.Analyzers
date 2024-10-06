@@ -44,9 +44,12 @@ public class NoParentLocationAnalyzer : IContextualRecordAnalyzer<ILocationGette
 
         if (location.ParentLocation.IsNull)
         {
-            param.AddTopic(
-                NoParentLocation.Format(),
-                x => x.ParentLocation);
+            param.AddTopic(NoParentLocation.Format());
         }
+    }
+
+    public IEnumerable<Func<ILocationGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.ParentLocation;
     }
 }

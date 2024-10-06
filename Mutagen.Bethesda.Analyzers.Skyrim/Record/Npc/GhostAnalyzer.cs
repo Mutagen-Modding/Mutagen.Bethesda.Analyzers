@@ -29,15 +29,20 @@ public class GhostKeywordAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (hasScript && !hasKeyword)
         {
             param.AddTopic(
-                GhostScriptMissingKeyword.Format(),
-                x => x.VirtualMachineAdapter);
+                GhostScriptMissingKeyword.Format());
         }
 
         if (hasFlag && !hasKeyword)
         {
             param.AddTopic(
-                GhostFlagMissingKeyword.Format(),
-                x => x.VirtualMachineAdapter);
+                GhostFlagMissingKeyword.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
+        yield return x => x.Configuration.Flags;
+        yield return x => x.VirtualMachineAdapter!.Scripts;
     }
 }

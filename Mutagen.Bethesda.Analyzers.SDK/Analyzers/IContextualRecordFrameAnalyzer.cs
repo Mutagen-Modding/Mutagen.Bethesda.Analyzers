@@ -1,5 +1,4 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Results;
-using Mutagen.Bethesda.Plugins.Records;
+﻿using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 

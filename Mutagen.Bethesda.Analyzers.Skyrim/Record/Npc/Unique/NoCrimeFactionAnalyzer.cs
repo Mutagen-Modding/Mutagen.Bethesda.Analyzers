@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc.Unique;
 
 public class NoCrimeFactionAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -27,8 +27,16 @@ public class NoCrimeFactionAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (npc.CrimeFaction.IsNull)
         {
             param.AddTopic(
-                NoCrimeFaction.Format(),
-                x => x.Configuration);
+                NoCrimeFaction.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Configuration.Flags;
+        yield return x => x.AIData.Responsibility;
+        yield return x => x.CrimeFaction;
+        yield return x => x.Keywords;
     }
 }

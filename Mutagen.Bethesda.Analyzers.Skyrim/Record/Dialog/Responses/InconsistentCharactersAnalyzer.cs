@@ -48,8 +48,13 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
             if (foundCharacters.Length == 0) return;
 
             param.AddTopic(
-                topic.Format(text, foundCharacters),
-                x => x);
+                topic.Format(text, foundCharacters));
         }
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Prompt;
+        yield return x => x.Responses;
     }
 }

@@ -29,7 +29,11 @@ public class MerchantAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (hasSpecialization) return;
 
         param.AddTopic(
-            MerchantWithoutSpecialization.Format(),
-            x => x.Factions);
+            MerchantWithoutSpecialization.Format());
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Factions;
     }
 }

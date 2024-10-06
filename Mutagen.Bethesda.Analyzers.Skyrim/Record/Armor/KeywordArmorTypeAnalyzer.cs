@@ -44,7 +44,11 @@ public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         }
 
         param.AddTopic(
-            ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType, matchingKeywords),
-            x => x.Keywords);
+            ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType, matchingKeywords));
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
     }
 }

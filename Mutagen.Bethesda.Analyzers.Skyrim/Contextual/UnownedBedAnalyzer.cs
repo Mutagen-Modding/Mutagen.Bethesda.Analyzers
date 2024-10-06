@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class UnownedBedAnalyzer : IContextualAnalyzer
@@ -13,10 +13,8 @@ public class UnownedBedAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [UnownedBed];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             if (cell.IsExteriorCell()) continue;
@@ -32,15 +30,10 @@ public class UnownedBedAnalyzer : IContextualAnalyzer
                 if (!param.LinkCache.TryResolve<IFurnitureGetter>(placedObject.Base.FormKey, out var furniture)) continue;
                 if (!furniture.IsBed()) continue;
 
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        placedObject,
-                        UnownedBed.Format(placedObject, cell)
-                    )
+                param.AddTopic(
+                    UnownedBed.Format(placedObject, cell)
                 );
             }
         }
-
-        return result;
     }
 }

@@ -26,8 +26,12 @@ public class VendorHourAnalyzer : IIsolatedRecordAnalyzer<IFactionGetter>
             return;
         }
 
-        param.AddTopic(
-            WrongVendorHourOrder.Format(faction.VendorValues.StartHour, faction.VendorValues.EndHour),
-            x => x.VendorValues);
+        param.AddTopic(WrongVendorHourOrder.Format(faction.VendorValues.StartHour, faction.VendorValues.EndHour));
+    }
+
+    public IEnumerable<Func<IFactionGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.VendorLocation;
     }
 }

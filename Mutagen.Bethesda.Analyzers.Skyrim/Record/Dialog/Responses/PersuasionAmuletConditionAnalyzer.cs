@@ -37,8 +37,12 @@ public class PersuasionAmuletConditionAnalyzer : IIsolatedRecordAnalyzer<IDialog
         if (isPersuade && !hasAmuletOfArticulation)
         {
             param.AddTopic(
-                MissingCreatedObject.Format(),
-                x => x.Conditions);
+                MissingCreatedObject.Format());
         }
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Conditions;
     }
 }

@@ -38,8 +38,13 @@ public class RefTypeSettlementHouseAnalyzer : IContextualRecordAnalyzer<ILocatio
             return;
         }
 
-        param.AddTopic(
-            NoHouseContainerRefType.Format(),
-            x => x.LocationCellStaticReferences);
+        param.AddTopic(NoHouseContainerRefType.Format());
+    }
+
+    public IEnumerable<Func<ILocationGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
+        yield return x => x.LocationCellUniques;
+        yield return x => x.ActorCellStaticReferences;
     }
 }

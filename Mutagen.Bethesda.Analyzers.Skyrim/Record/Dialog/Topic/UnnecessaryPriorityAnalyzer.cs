@@ -31,8 +31,13 @@ public class UnnecessaryPriorityAnalyzer : IContextualRecordAnalyzer<IDialogTopi
             return;
         }
 
-        param.AddTopic(
-            UnnecessaryPriority.Format(dialogTopic.Priority),
-            x => x.Priority);
+        param.AddTopic(UnnecessaryPriority.Format(dialogTopic.Priority));
+    }
+
+    public IEnumerable<Func<IDialogTopicGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Subtype;
+        yield return x => x.Branch;
+        yield return x => x.Priority;
     }
 }

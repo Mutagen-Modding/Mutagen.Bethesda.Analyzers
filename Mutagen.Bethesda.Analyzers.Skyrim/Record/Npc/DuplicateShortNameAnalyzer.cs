@@ -20,8 +20,13 @@ public class DuplicateShortNameAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (npc.Name is not null && npc.ShortName is not null && npc.Name.String == npc.ShortName.String)
         {
             param.AddTopic(
-                DuplicateShortName.Format(npc.Name.String),
-                x => x.Name);
+                DuplicateShortName.Format(npc.Name.String));
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Name;
+        yield return x => x.ShortName;
     }
 }

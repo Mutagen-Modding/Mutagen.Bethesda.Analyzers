@@ -39,8 +39,12 @@ public class ConflictingSlotsAnalyzer : IContextualRecordAnalyzer<IOutfitGetter>
             param.AddTopic(
                 ConflictingSlotsTopic.Format(
                     separateEntriesOccupyingSlots.ToDictionary(x => x.First().Entry.EditorID ?? x.First().Entry.FormKey.ToString(), x => x.Select(x => x.Armor).ToList()),
-                    slot),
-                x => x.Items);
+                    slot));
         }
+    }
+
+    public IEnumerable<Func<IOutfitGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Items;
     }
 }

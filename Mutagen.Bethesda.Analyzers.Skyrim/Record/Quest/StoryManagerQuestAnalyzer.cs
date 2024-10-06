@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
@@ -31,12 +30,16 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
                     if (questFormKey == quest.FormKey)
                     {
                         param.AddTopic(
-                            StoryManagerQuestNotAssigned.Format(),
-                            x => x.Event);
+                            StoryManagerQuestNotAssigned.Format());
                         return;
                     }
                 }
             }
         }
+    }
+
+    public IEnumerable<Func<IQuestGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Event;
     }
 }

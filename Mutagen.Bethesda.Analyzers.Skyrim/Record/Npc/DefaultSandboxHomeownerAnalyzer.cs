@@ -22,8 +22,13 @@ public class DefaultSandboxHomeownerAnalyzer : IContextualRecordAnalyzer<INpcGet
         if (npc.Packages[^1].FormKey == FormKeys.SkyrimSE.Skyrim.Package.DefaultSandboxHomeowner.FormKey)
         {
             param.AddTopic(
-                DefaultSandboxHomeownerListLast.Format(),
-                x => x.Packages);
+                DefaultSandboxHomeownerListLast.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Packages;
+        yield return x => x.DefaultPackageList;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior.Settlement;
 
 public class NoOwnerAnalyzer : IContextualRecordAnalyzer<ICellGetter>
@@ -26,8 +26,13 @@ public class NoOwnerAnalyzer : IContextualRecordAnalyzer<ICellGetter>
         if (cell.Owner.IsNull)
         {
             param.AddTopic(
-                NoOwner.Format(),
-                x => x.Owner);
+                NoOwner.Format());
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Location;
+        yield return x => x.Owner;
     }
 }

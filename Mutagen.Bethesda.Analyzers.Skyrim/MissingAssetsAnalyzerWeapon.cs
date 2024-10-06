@@ -16,4 +16,9 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IWeaponGett
     {
         CheckForMissingModelAsset(param, MissingWeaponModel);
     }
+
+    public IEnumerable<Func<IWeaponGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Model!.File;
+    }
 }

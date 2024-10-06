@@ -29,9 +29,7 @@ public partial class MissingAssetsAnalyzer
         if (path is null) return;
         if (FileExists(path)) return;
 
-        param.AddTopic(
-            topicDefinition.Format(path),
-            x => x.Model!.File);
+        param.AddTopic(topicDefinition.Format(path));
     }
 
     private bool FileExists(string path) => _fileSystem.File.Exists(path);

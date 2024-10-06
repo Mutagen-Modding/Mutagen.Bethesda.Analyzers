@@ -29,16 +29,20 @@ public class DefaultFaceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
         if (npc.FaceMorph is null)
         {
-            param.AddTopic(
-                DefaultFaceMorph.Format(),
-                x => x.FaceMorph);
+            param.AddTopic(DefaultFaceMorph.Format());
         }
 
         if (npc.FaceParts is null)
         {
-            param.AddTopic(
-                DefaultFaceParts.Format(),
-                x => x.FaceParts);
+            param.AddTopic(DefaultFaceParts.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
+        yield return x => x.Race;
+        yield return x => x.FaceMorph;
+        yield return x => x.FaceParts;
     }
 }

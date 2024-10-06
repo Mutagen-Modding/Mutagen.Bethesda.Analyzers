@@ -41,7 +41,14 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter>
         }
 
         param.AddTopic(
-            NoFurnitureLinked.Format(),
-            x => x.LinkedReferences);
+            NoFurnitureLinked.Format());
+    }
+
+    public IEnumerable<Func<IPlacedObjectGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.IsDeleted;
+        yield return x => x.EditorID;
+        yield return x => x.Base;
+        yield return x => x.LinkedReferences;
     }
 }

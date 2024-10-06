@@ -20,7 +20,11 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IBookGe
         if (invalidStrings.Count == 0) return;
 
         param.AddTopic(
-            InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
-            x => x.BookText);
+            InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)));
+    }
+
+    IEnumerable<Func<IBookGetter, object?>> IIsolatedRecordAnalyzer<IBookGetter>.FieldsOfInterest()
+    {
+        yield return x => x.BookText;
     }
 }

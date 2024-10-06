@@ -26,16 +26,20 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
             && dialogTopic.Branch.IsNull)
         {
             param.AddTopic(
-                NoBranch.Format(),
-                x => x.Branch);
+                NoBranch.Format());
         }
 
 
         if (dialogTopic.Quest.IsNull)
         {
             param.AddTopic(
-                NoQuest.Format(),
-                x => x.Quest);
+                NoQuest.Format());
         }
+    }
+    public IEnumerable<Func<IDialogTopicGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Subtype;
+        yield return x => x.Branch;
+        yield return x => x.Quest;
     }
 }

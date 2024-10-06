@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
@@ -27,57 +26,61 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSet
         if (!FileExistsIfNotNull(param.Record.Diffuse))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse),
-                x => x.Diffuse!);
+                MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse));
         }
 
         if (!FileExistsIfNotNull(param.Record.NormalOrGloss))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss),
-                x => x.NormalOrGloss!);
+                MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss));
         }
 
         if (!FileExistsIfNotNull(param.Record.EnvironmentMaskOrSubsurfaceTint))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint),
-                x => x.EnvironmentMaskOrSubsurfaceTint!);
+                MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint));
         }
 
         if (!FileExistsIfNotNull(param.Record.GlowOrDetailMap))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap),
-                x => x.GlowOrDetailMap!);
+                MissingTextureInTextureSet.Format(TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap));
         }
 
         if (!FileExistsIfNotNull(param.Record.Height))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetHeightName, param.Record.Height),
-                x => x.Height!);
+                MissingTextureInTextureSet.Format(TextureSetHeightName, param.Record.Height));
         }
 
         if (!FileExistsIfNotNull(param.Record.Environment))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment),
-                x => x.Environment!);
+                MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment));
         }
 
         if (!FileExistsIfNotNull(param.Record.Multilayer))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer),
-                x => x.Multilayer!);
+                MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer));
         }
 
         if (!FileExistsIfNotNull(param.Record.BacklightMaskOrSpecular))
         {
             param.AddTopic(
-                MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular),
-                x => x.BacklightMaskOrSpecular!);
+                MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular));
         }
+    }
+
+    IEnumerable<Func<ITextureSetGetter, object?>> IIsolatedRecordAnalyzer<ITextureSetGetter>.FieldsOfInterest()
+    {
+        yield return x => x.Diffuse;
+        yield return x => x.NormalOrGloss;
+        yield return x => x.EnvironmentMaskOrSubsurfaceTint;
+        yield return x => x.GlowOrDetailMap;
+        yield return x => x.Height;
+        yield return x => x.Environment;
+        yield return x => x.Multilayer;
+        yield return x => x.BacklightMaskOrSpecular;
     }
 }

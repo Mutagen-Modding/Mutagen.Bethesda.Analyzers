@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class NorthMarkerAnalyzer : IContextualAnalyzer
@@ -18,10 +18,8 @@ public class NorthMarkerAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoNorthMarker, MoreThanOneNorthMarker];
 
-    public ContextualAnalyzerResult? Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             if (cell.IsExteriorCell()) continue;
@@ -33,23 +31,13 @@ public class NorthMarkerAnalyzer : IContextualAnalyzer
 
             if (northMarkers.Length == 0)
             {
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        cell,
-                        NoNorthMarker.Format()
-                    ));
+                param.AddTopic(NoNorthMarker.Format());
             }
 
             if (northMarkers.Length > 1)
             {
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        cell,
-                        MoreThanOneNorthMarker.Format(northMarkers)
-                    ));
+                param.AddTopic(MoreThanOneNorthMarker.Format(northMarkers));
             }
         }
-
-        return null;
     }
 }

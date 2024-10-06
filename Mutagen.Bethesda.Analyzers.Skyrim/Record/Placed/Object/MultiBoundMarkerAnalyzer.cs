@@ -19,9 +19,12 @@ public class MultiBoundMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGet
 
         if (placedObject.Base.FormKey == FormKeys.SkyrimSE.Skyrim.Static.MultiBoundMarker.FormKey)
         {
-            param.AddTopic(
-                MultiBoundMarker.Format(),
-                x => x.Base);
+            param.AddTopic(MultiBoundMarker.Format());
         }
+    }
+
+    public IEnumerable<Func<IPlacedObjectGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Base;
     }
 }

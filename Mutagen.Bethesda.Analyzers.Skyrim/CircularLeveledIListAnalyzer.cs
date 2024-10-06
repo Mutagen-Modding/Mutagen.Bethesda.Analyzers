@@ -23,10 +23,7 @@ public partial class CircularLeveledListAnalyzer
         {
             if (stack.Any(x => x.FormKey == t.FormKey))
             {
-                param.AddTopic(
-                    topic.Format(stack.ToList()),
-                    x => x
-                );
+                param.AddTopic(topic.Format(stack.ToList()));
                 return;
             }
 

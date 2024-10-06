@@ -35,8 +35,15 @@ public class NoBossLocRefTypeAnalyzer : IContextualRecordAnalyzer<ICellGetter>
             if (npc.Race.TryResolve(param.LinkCache, out var race) && race.IsChildRace()) continue;
 
             param.AddTopic(
-                NoBossLocRefType.Format(placedNpc),
-                x => x.Owner);
+                NoBossLocRefType.Format(placedNpc));
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.Location;
+        yield return x => x.Temporary;
+        yield return x => x.Persistent;
     }
 }

@@ -22,8 +22,13 @@ public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (npc.AIData.Confidence is Confidence.Brave or Confidence.Foolhardy)
         {
             param.AddTopic(
-                ChildLowConfidence.Format(),
-                x => x.AIData);
+                ChildLowConfidence.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.MajorFlags;
+        yield return x => x.Race;
     }
 }

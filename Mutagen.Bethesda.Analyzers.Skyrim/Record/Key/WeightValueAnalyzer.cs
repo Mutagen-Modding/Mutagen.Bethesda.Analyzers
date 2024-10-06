@@ -25,15 +25,19 @@ public class WeightValueAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
         if (key is not { Weight: 0 })
         {
             param.AddTopic(
-                WeightNotZero.Format(key.Weight),
-                x => x.Weight);
+                WeightNotZero.Format(key.Weight));
         }
 
         if (key.Value != 0)
         {
             param.AddTopic(
-                ValueNotZero.Format(key.Value),
-                x => x.Value);
+                ValueNotZero.Format(key.Value));
         }
+    }
+
+    public IEnumerable<Func<IKeyGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Weight;
+        yield return x => x.Value;
     }
 }

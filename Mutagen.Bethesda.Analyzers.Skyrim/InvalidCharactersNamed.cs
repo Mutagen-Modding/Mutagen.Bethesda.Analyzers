@@ -20,7 +20,11 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<ISkyrim
         if (invalidStrings.Count == 0) return;
 
         param.AddTopic(
-            InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)),
-            x => x);
+            InvalidCharactersBookText.Format(invalidStrings.Select(x => x.Key)));
+    }
+
+    public IEnumerable<Func<ISkyrimMajorRecordGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x;
     }
 }

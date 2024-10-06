@@ -20,8 +20,12 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIdleMarkerGetter>
         if (idleMarker.Animations is not null && idleMarker.Animations.Count == 0)
         {
             param.AddTopic(
-                NoIdles.Format(),
-                x => x.Animations);
+                NoIdles.Format());
         }
+    }
+
+    public IEnumerable<Func<IIdleMarkerGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Animations;
     }
 }

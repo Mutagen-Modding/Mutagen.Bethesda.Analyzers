@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateReferencesAnalyzer : IContextualAnalyzer
@@ -24,10 +24,8 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
 
     public IEnumerable<TopicDefinition> Topics { get; } = [DuplicateReferences];
 
-    public ContextualAnalyzerResult Analyze(ContextualAnalyzerParams param)
+    public void Analyze(ContextualAnalyzerParams param)
     {
-        var result = new ContextualAnalyzerResult();
-
         foreach (var cell in param.LinkCache.PriorityOrder.WinningOverrides<ICellGetter>())
         {
             // Group all placed objects by their placement and scale
@@ -64,15 +62,8 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
                     removedDuplicates = dispensableDuplicates;
                 }
 
-                result.AddTopic(
-                    ContextualTopic.Create(
-                        cell,
-                        DuplicateReferences.Format(keptDuplicates, removedDuplicates)
-                    )
-                );
+                param.AddTopic(DuplicateReferences.Format(keptDuplicates, removedDuplicates));
             }
         }
-
-        return result;
     }
 }
