@@ -31,7 +31,12 @@ public class NoMenuDisplayObjectAnalyzer : IContextualRecordAnalyzer<ISpellGette
         }
 
         param.AddTopic(
-            NoMenuDisplayObject.Format(),
-            x => x);
+            NoMenuDisplayObject.Format());
+    }
+
+    public IEnumerable<Func<ISpellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.MenuDisplayObject;
+        yield return x => x.Effects;
     }
 }

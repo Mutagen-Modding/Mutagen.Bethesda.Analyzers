@@ -1,10 +1,9 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc.Unique;
 
-public class NoItemsAnalyzer : IContextualRecordAnalyzer<INpcGetter>
+public class NoItemsAnalyzer : IIsolatedRecordAnalyzer<INpcGetter>
 {
     public static readonly TopicDefinition NoItems = MutagenTopicBuilder.DevelopmentTopic(
             "Empty Inventory",
@@ -13,7 +12,7 @@ public class NoItemsAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoItems];
 
-    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
         if (!npc.IsEligibleForTest()) return;
@@ -23,9 +22,15 @@ public class NoItemsAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
         if (npc.Items is null || npc.Items.Count == 0)
         {
-            param.AddTopic(
-                NoItems.Format(),
-                x => x.Configuration);
+            param.AddTopic(NoItems.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Keywords;
+        yield return x => x.MajorFlags;
+        yield return x => x.Items;
     }
 }

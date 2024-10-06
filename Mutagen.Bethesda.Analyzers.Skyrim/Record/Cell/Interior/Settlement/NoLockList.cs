@@ -1,7 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior.Settlement;
 
 public class NoLockListAnalyzer : IContextualRecordAnalyzer<ICellGetter>
@@ -23,8 +23,13 @@ public class NoLockListAnalyzer : IContextualRecordAnalyzer<ICellGetter>
         if (cell.LockList.IsNull)
         {
             param.AddTopic(
-                NoLockList.Format(),
-                x => x.Owner);
+                NoLockList.Format());
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.LockList;
     }
 }

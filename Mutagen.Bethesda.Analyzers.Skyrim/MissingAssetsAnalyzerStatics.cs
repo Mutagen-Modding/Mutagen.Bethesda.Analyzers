@@ -16,4 +16,9 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IStaticGett
     {
         CheckForMissingModelAsset(param, MissingStaticModel);
     }
+
+    IEnumerable<Func<IStaticGetter, object?>> IIsolatedRecordAnalyzer<IStaticGetter>.FieldsOfInterest()
+    {
+        yield return x => x.Model!.File;
+    }
 }

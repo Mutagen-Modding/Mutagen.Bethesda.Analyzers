@@ -30,22 +30,26 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngredientGetter>
         if (ingredient.PickUpSound.IsNull)
         {
             param.AddTopic(
-                NoPickupSound.Format(),
-                x => x.PickUpSound);
+                NoPickupSound.Format());
         }
 
         if (ingredient.PutDownSound.IsNull)
         {
             param.AddTopic(
-                NoPutDownSound.Format(),
-                x => x.PutDownSound);
+                NoPutDownSound.Format());
         }
 
         if (ingredient.Effects.Count != 4)
         {
             param.AddTopic(
-                NotFourEffects.Format(ingredient.Effects.Count),
-                x => x.Effects);
+                NotFourEffects.Format(ingredient.Effects.Count));
         }
+    }
+
+    public IEnumerable<Func<IIngredientGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.PickUpSound;
+        yield return x => x.PutDownSound;
+        yield return x => x.Effects;
     }
 }

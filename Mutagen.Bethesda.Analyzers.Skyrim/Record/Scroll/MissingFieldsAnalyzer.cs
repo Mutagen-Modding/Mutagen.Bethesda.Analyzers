@@ -25,15 +25,19 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IScrollGetter>
         if (scroll.Keywords == null || !scroll.Keywords.Contains(FormKeys.SkyrimSE.Skyrim.Keyword.VendorItemScroll))
         {
             param.AddTopic(
-                MissingVendorKeyword.Format(),
-                x => x.Keywords);
+                MissingVendorKeyword.Format());
         }
 
         if (scroll.Effects.Count == 0)
         {
             param.AddTopic(
-                EmptyEffectList.Format(),
-                x => x.Effects);
+                EmptyEffectList.Format());
         }
+    }
+
+    public IEnumerable<Func<IScrollGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
+        yield return x => x.Effects;
     }
 }

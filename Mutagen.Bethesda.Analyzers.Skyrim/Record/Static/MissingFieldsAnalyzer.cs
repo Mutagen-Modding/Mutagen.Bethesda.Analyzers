@@ -20,8 +20,13 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IStaticGetter>
         if (@static.MajorFlags.HasFlag(Bethesda.Skyrim.Static.MajorFlag.HasDistantLOD) && @static.Lod is null)
         {
             param.AddTopic(
-                MissingLod.Format(),
-                x => x.Lod);
+                MissingLod.Format());
         }
+    }
+
+    public IEnumerable<Func<IStaticGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.MajorFlags;
+        yield return x => x.Lod;
     }
 }

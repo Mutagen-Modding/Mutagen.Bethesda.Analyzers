@@ -27,8 +27,7 @@ public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
         if (dialogResponses.Prompt?.String is not null && NotTrimmed(dialogResponses.Prompt.String))
         {
             param.AddTopic(
-                PromptNotTrimmed.Format(dialogResponses.Prompt.String),
-                x => x);
+                PromptNotTrimmed.Format(dialogResponses.Prompt.String));
         }
 
         // Check responses
@@ -39,10 +38,15 @@ public class NotTrimmedAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
                 )
         {
             param.AddTopic(
-                ResponseNotTrimmed.Format(response),
-                x => x);
+                ResponseNotTrimmed.Format(response));
         }
 
         static bool NotTrimmed(string text) => text.StartsWith(' ') || text.EndsWith(' ');
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Prompt;
+        yield return x => x.Responses;
     }
 }

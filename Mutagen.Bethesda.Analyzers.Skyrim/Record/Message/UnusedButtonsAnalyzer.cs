@@ -1,7 +1,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Message;
 
 public class UnusedButtonsAnalyzer : IIsolatedRecordAnalyzer<IMessageGetter>
@@ -21,7 +21,12 @@ public class UnusedButtonsAnalyzer : IIsolatedRecordAnalyzer<IMessageGetter>
         if (message.MenuButtons.Count == 0) return;
 
         param.AddTopic(
-            UnusedButtons.Format(message.MenuButtons.Count),
-            x => x.MenuButtons);
+            UnusedButtons.Format(message.MenuButtons.Count));
+    }
+
+    public IEnumerable<Func<IMessageGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.MenuButtons;
     }
 }

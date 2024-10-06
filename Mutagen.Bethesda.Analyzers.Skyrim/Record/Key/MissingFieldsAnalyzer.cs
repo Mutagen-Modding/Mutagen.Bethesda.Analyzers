@@ -29,18 +29,18 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
 
         if (key.PickUpSound.IsNull)
         {
-            param.AddTopic(
-                NoPickupSound.Format(),
-                x => x.PickUpSound
-            );
+            param.AddTopic(NoPickupSound.Format());
         }
 
         if (key.PutDownSound.IsNull)
         {
-            param.AddTopic(
-                NoPutDownSound.Format(),
-                x => x.PutDownSound
-            );
+            param.AddTopic(NoPutDownSound.Format());
         }
+    }
+
+    public IEnumerable<Func<IKeyGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.PickUpSound;
+        yield return x => x.PutDownSound;
     }
 }

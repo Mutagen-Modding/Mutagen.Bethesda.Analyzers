@@ -28,10 +28,14 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IHeadPartGe
             if (!_fileSystem.File.Exists(part.FileName))
             {
                 param.AddTopic(
-                    MissingHeadPartFile.Format(i, part.FileName),
-                    x => x.Parts[0].FileName);
+                    MissingHeadPartFile.Format(i, part.FileName));
             }
             i++;
         }
+    }
+
+    IEnumerable<Func<IHeadPartGetter, object?>> IIsolatedRecordAnalyzer<IHeadPartGetter>.FieldsOfInterest()
+    {
+        yield return x => x.Parts;
     }
 }

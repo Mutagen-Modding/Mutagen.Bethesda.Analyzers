@@ -21,8 +21,12 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogTopicGetter>
         if (dialogTopic.Name?.String is { Length: > DialogPromptLengthLimit })
         {
             param.AddTopic(
-                TopicPromptTooLong.Format(dialogTopic.Name.String, dialogTopic.Name.String.Length - DialogPromptLengthLimit),
-                x => x.Name);
+                TopicPromptTooLong.Format(dialogTopic.Name.String, dialogTopic.Name.String.Length - DialogPromptLengthLimit));
         }
+    }
+
+    public IEnumerable<Func<IDialogTopicGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Name;
     }
 }

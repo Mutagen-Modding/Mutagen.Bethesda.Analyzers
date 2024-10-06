@@ -1,6 +1,7 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Cell.Interior.Settlement;
 
 public class NoBedLocRefTypeAnalyzer : IContextualRecordAnalyzer<ICellGetter>
@@ -32,15 +33,20 @@ public class NoBedLocRefTypeAnalyzer : IContextualRecordAnalyzer<ICellGetter>
             if (isBed && !hasLocRefType)
             {
                 param.AddTopic(
-                    NoBedLocRefType.Format(placedObject),
-                    x => x);
+                    NoBedLocRefType.Format(placedObject));
             }
             else if (!isBed && hasLocRefType)
             {
                 param.AddTopic(
-                    InvalidBedLocRefType.Format(placedObject),
-                    x => x);
+                    InvalidBedLocRefType.Format(placedObject));
             }
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.Location;
+        yield return x => x.Temporary;
     }
 }

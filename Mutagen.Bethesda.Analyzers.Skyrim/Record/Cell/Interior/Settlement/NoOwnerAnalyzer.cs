@@ -26,8 +26,13 @@ public class NoOwnerAnalyzer : IContextualRecordAnalyzer<ICellGetter>
         if (cell.Owner.IsNull)
         {
             param.AddTopic(
-                NoOwner.Format(),
-                x => x.Owner);
+                NoOwner.Format());
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Location;
+        yield return x => x.Owner;
     }
 }

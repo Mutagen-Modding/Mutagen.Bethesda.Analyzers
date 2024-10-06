@@ -29,15 +29,20 @@ public class RefTypeDungeonAnalyzer : IContextualRecordAnalyzer<ILocationGetter>
         if (!referenceTypes.Exists(staticRef => staticRef.LocationRefType.FormKey == FormKeys.SkyrimSE.Skyrim.LocationReferenceType.Boss.FormKey))
         {
             param.AddTopic(
-                NoBossRefType.Format(),
-                x => x.LocationCellStaticReferences);
+                NoBossRefType.Format());
         }
 
         if (!referenceTypes.Exists(staticRef => staticRef.LocationRefType.FormKey == FormKeys.SkyrimSE.Skyrim.LocationReferenceType.BossContainer.FormKey))
         {
             param.AddTopic(
-                NoBossContainerRefType.Format(),
-                x => x.LocationCellStaticReferences);
+                NoBossContainerRefType.Format());
         }
+    }
+
+    public IEnumerable<Func<ILocationGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
+        yield return x => x.LocationCellStaticReferences;
+        yield return x => x.ActorCellStaticReferences;
     }
 }

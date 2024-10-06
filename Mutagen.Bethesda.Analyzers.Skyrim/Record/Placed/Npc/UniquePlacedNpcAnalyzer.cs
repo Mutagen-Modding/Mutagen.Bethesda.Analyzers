@@ -39,16 +39,21 @@ public class UniquePlacedNpcAnalyzer : IContextualRecordAnalyzer<IPlacedNpcGette
                     .Contains(persistLocation.FormKey))
             {
                 param.AddTopic(
-                    UniqueNpcNotInPersistenceLocation.Format(),
-                    x => x.PersistentLocation);
+                    UniqueNpcNotInPersistenceLocation.Format());
             }
         }
 
         if (placedNpc.PersistentLocation.IsNull)
         {
             param.AddTopic(
-                UniqueNpcWithoutPersistenceLocation.Format(),
-                x => x.PersistentLocation);
+                UniqueNpcWithoutPersistenceLocation.Format());
         }
+    }
+
+    public IEnumerable<Func<IPlacedNpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.MajorFlags;
+        yield return x => x.Base;
+        yield return x => x.PersistentLocation;
     }
 }

@@ -31,17 +31,20 @@ public class SkillCheckAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter
             if (getActorValue.RunOnType != Condition.RunOnType.Target && !getActorValue.RunsOnPlayer())
             {
                 param.AddTopic(
-                    NonGlobalSkillCheck.Format(condition.Data.RunOnType),
-                    x => x.Conditions);
+                    NonGlobalSkillCheck.Format(condition.Data.RunOnType));
             }
 
             // Non-Global Skill Check
             if (condition is IConditionFloatGetter conditionFloatGetter && condition.Data.RunsOnPlayer())
             {
                 param.AddTopic(
-                    NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue),
-                    x => x.Conditions);
+                    NonPlayerSkillCheck.Format(conditionFloatGetter.ComparisonValue));
             }
         }
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Conditions;
     }
 }

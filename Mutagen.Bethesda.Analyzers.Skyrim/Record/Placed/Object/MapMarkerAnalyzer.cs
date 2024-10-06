@@ -38,32 +38,36 @@ public class MapMarkerAnalyzer : IIsolatedRecordAnalyzer<IPlacedObjectGetter>
         if ((placedObject.SkyrimMajorRecordFlags & (SkyrimMajorRecord.SkyrimMajorRecordFlag)PlacedObject.DefaultMajorFlag.Persistent) == 0)
         {
             param.AddTopic(
-                NoMenuDisplayObject.Format(),
-                x => x.MajorRecordFlagsRaw);
+                NoMenuDisplayObject.Format());
         }
 
         // No Loc Ref Type
         if (placedObject.LocationRefTypes is null || placedObject.LocationRefTypes.All(link => link.FormKey != FormKeys.SkyrimSE.Skyrim.LocationReferenceType.MapMarkerRefType.FormKey))
         {
             param.AddTopic(
-                NoLocRefType.Format(),
-                x => x.LocationRefTypes);
+                NoLocRefType.Format());
         }
 
         // No EditorID
         if (placedObject.EditorID is null)
         {
             param.AddTopic(
-                NoEditorID.Format(),
-                x => x.EditorID);
+                NoEditorID.Format());
         }
 
         // No Linked Reference
         if (placedObject.LinkedReferences.All(link => link.Reference.FormKey != FormKeys.SkyrimSE.Skyrim.Static.XMarkerHeading.FormKey))
         {
             param.AddTopic(
-                NoLinkedReference.Format(),
-                x => x.LinkedReferences);
+                NoLinkedReference.Format());
         }
+    }
+
+    public IEnumerable<Func<IPlacedObjectGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.EditorID;
+        yield return x => x.LinkedReferences;
+        yield return x => x.LocationRefTypes;
+        yield return x => x.SkyrimMajorRecordFlags;
     }
 }

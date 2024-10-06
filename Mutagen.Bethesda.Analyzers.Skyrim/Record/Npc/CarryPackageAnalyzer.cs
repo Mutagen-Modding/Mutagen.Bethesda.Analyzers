@@ -1,8 +1,8 @@
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
 public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -33,8 +33,7 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (scriptEntry is null)
         {
             param.AddTopic(
-                CarryPackageWithoutScript.Format(),
-                x => x.VirtualMachineAdapter);
+                CarryPackageWithoutScript.Format());
             return;
         }
 
@@ -42,16 +41,14 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (stopCarryingEventProperty is null)
         {
             param.AddTopic(
-                NoStopCarryingEventProperty.Format(),
-                x => x.VirtualMachineAdapter);
+                NoStopCarryingEventProperty.Format());
             return;
         }
 
         if (stopCarryingEventProperty.Object.FormKey != FormKeys.SkyrimSE.Skyrim.IdleAnimation.OffsetStop.FormKey)
         {
             param.AddTopic(
-                StopCarryingEventPropertyNotIdleAnimation.Format(stopCarryingEventProperty.Object),
-                x => x.VirtualMachineAdapter);
+                StopCarryingEventPropertyNotIdleAnimation.Format(stopCarryingEventProperty.Object));
             return;
         }
 
@@ -65,8 +62,12 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (carryItemIngredientProperty is not null) return;
 
         param.AddTopic(
-            CarryPackageWithoutScript.Format(),
-            x => x.VirtualMachineAdapter);
+            CarryPackageWithoutScript.Format());
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.VirtualMachineAdapter?.Scripts;
     }
 
     private static readonly HashSet<IFormLinkGetter<IPackageGetter>> CarryPackageTemplates =

@@ -1,5 +1,4 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
@@ -24,9 +23,12 @@ public partial class InvalidCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialog
             if (invalidStrings.Count == 0) continue;
 
             param.AddTopic(
-                InvalidCharactersDialogResponses.Format(response.Text.String, invalidStrings.Select(x => x.Key)),
-                x => x.Responses
-            );
+                InvalidCharactersDialogResponses.Format(response.Text.String, invalidStrings.Select(x => x.Key)));
         }
+    }
+
+    IEnumerable<Func<IDialogResponsesGetter, object?>> IIsolatedRecordAnalyzer<IDialogResponsesGetter>.FieldsOfInterest()
+    {
+        yield return x => x.Responses;
     }
 }

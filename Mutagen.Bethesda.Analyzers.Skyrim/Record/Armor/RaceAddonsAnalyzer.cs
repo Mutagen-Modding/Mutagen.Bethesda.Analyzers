@@ -1,8 +1,8 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
-using Mutagen.Bethesda.Analyzers.SDK.Results;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
@@ -59,8 +59,16 @@ public class RaceAddonsAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         foreach (var race in missingRaces)
         {
             param.AddTopic(
-                ArmorMissingRaceAddons.Format(race),
-                x => x.Armature);
+                ArmorMissingRaceAddons.Format(race));
         }
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.TemplateArmor;
+        yield return x => x.MajorFlags;
+        yield return x => x.Race;
+        yield return x => x.Armature;
+        yield return x => x.Race;
     }
 }

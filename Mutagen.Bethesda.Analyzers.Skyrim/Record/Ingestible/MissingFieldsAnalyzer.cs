@@ -24,16 +24,18 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<IIngestibleGetter>
 
         if (ingestible.Effects.Count == 0)
         {
-            param.AddTopic(
-                EmptyEffectList.Format(),
-                x => x.Effects);
+            param.AddTopic(EmptyEffectList.Format());
         }
 
         if (ingestible.ConsumeSound.IsNull)
         {
-            param.AddTopic(
-                NoConsumeSound.Format(),
-                x => x.ConsumeSound);
+            param.AddTopic(NoConsumeSound.Format());
         }
+    }
+
+    public IEnumerable<Func<IIngestibleGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Effects;
+        yield return x => x.ConsumeSound;
     }
 }

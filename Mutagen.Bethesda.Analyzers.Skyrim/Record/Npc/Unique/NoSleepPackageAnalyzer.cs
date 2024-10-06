@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
+
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc.Unique;
 
 public class NoSleepPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
@@ -32,8 +33,7 @@ public class NoSleepPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (!hasSleepPackage)
         {
             param.AddTopic(
-                NoSleepPackage.Format(),
-                x => x.Packages);
+                NoSleepPackage.Format());
         }
 
         bool HasSleepProcedure(IPackageGetter package)
@@ -48,5 +48,14 @@ public class NoSleepPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
             return HasSleepProcedure(template);
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.Flags;
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Keywords;
+        yield return x => x.Factions;
+        yield return x => x.Packages;
     }
 }

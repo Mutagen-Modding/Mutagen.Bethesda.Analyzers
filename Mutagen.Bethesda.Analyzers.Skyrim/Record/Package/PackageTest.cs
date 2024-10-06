@@ -33,27 +33,33 @@ public partial class InconsistentTimeframeAnalyzer : IContextualRecordAnalyzer<I
         if (package.ScheduleHour != hour)
         {
             param.AddTopic(
-                InconsistentHourTopic.Format(package.ScheduleHour, hour),
-                x => x.ScheduleHour);
+                InconsistentHourTopic.Format(package.ScheduleHour, hour));
         }
+
         if (package.ScheduleDurationInMinutes / 60 != duration)
         {
             param.AddTopic(
-                InconsistentDurationTopic.Format(package.ScheduleDurationInMinutes / 60, duration),
-                x => x.ScheduleDurationInMinutes);
+                InconsistentDurationTopic.Format(package.ScheduleDurationInMinutes / 60, duration));
         }
+    }
+
+    public IEnumerable<Func<IPackageGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.EditorID;
+        yield return x => x.ScheduleHour;
+        yield return x => x.ScheduleDurationInMinutes;
     }
 
     private static bool TryGetEditorIDTimeframe(IPackageGetter package, out int hour, out int duration)
     {
-        if (package.EditorID is null)
+        if (package.EditorID is not {} edid)
         {
             hour = 0;
             duration = 0;
             return false;
         }
 
-        var match = TimeframeRegex().Match(package.EditorID);
+        var match = TimeframeRegex().Match(edid);
         if (!match.Success || match.Groups.Count < 3)
         {
             hour = 0;

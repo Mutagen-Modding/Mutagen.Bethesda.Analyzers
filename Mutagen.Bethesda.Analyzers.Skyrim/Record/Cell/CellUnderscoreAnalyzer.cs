@@ -15,14 +15,18 @@ public class CellUnderscoreAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
 
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ICellGetter> param)
     {
-        if ((!param.Record.EditorID?.Contains("_")) ?? true)
+        if ((!param.Record.EditorID?.Contains('_')) ?? true)
         {
             return;
         }
 
         param.AddTopic(
-            formattedTopicDefinition: CellUnderscoreWrong.Format(param.Record.EditorID),
-            memberExpression: x => x.EditorID);
+            formattedTopicDefinition: CellUnderscoreWrong.Format(param.Record.EditorID));
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.EditorID;
     }
 
     public IEnumerable<TopicDefinition> Topics => CellUnderscoreWrong.AsEnumerable();

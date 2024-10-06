@@ -25,12 +25,16 @@ public class CircularPreviousDialogueAnalyzer : IContextualRecordAnalyzer<IDialo
             if (!dialogCache.Add(previousDialog.FormKey))
             {
                 param.AddTopic(
-                    CircularPreviousDialogue.Format(dialogResponses, previousDialog),
-                    x => x.PreviousDialog);
+                    CircularPreviousDialogue.Format(dialogResponses, previousDialog));
                 return;
             }
 
             previousDialog = previousDialog.PreviousDialog.TryResolve(param.LinkCache);
         }
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.PreviousDialog;
     }
 }

@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
-public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
+public class Level0Analyzer : IIsolatedRecordAnalyzer<INpcGetter>
 {
     public static readonly TopicDefinition Level0 = MutagenTopicBuilder.DevelopmentTopic(
             "Level 0",
@@ -25,7 +25,7 @@ public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [Level0];
 
-    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(IsolatedRecordAnalyzerParams<INpcGetter> param)
     {
         var npc = param.Record;
 
@@ -35,8 +35,7 @@ public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
                 if (npcLevel.Level == 0)
                 {
                     param.AddTopic(
-                        Level0.Format(),
-                        x => x.Configuration);
+                        Level0.Format());
                     return;
                 }
                 break;
@@ -44,19 +43,22 @@ public class Level0Analyzer : IContextualRecordAnalyzer<INpcGetter>
                 if (Math.Abs(pcLevelMult.LevelMult) < 0.001)
                 {
                     param.AddTopic(
-                        LevelMultTooSmall.Format(pcLevelMult.LevelMult),
-                        x => x.Configuration);
+                        LevelMultTooSmall.Format(pcLevelMult.LevelMult));
                     return;
                 }
 
                 if (npc.Configuration.CalcMinLevel == 0)
                 {
                     param.AddTopic(
-                        MinLevel0.Format(),
-                        x => x.Configuration);
+                        MinLevel0.Format());
                     return;
                 }
                 break;
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.Level;
     }
 }

@@ -18,15 +18,18 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorGette
         if (!FileExistsIfNotNull(femaleFile))
         {
             param.AddTopic(
-                MissingArmorModel.Format("female", femaleFile),
-                x => x.WorldModel!.Female!.Model!.File);
+                MissingArmorModel.Format("female", femaleFile));
         }
         var maleFile = param.Record.WorldModel?.Male?.Model?.File;
         if (!FileExistsIfNotNull(maleFile))
         {
             param.AddTopic(
-                MissingArmorModel.Format("male", maleFile),
-                x => x.WorldModel!.Male!.Model!.File);
+                MissingArmorModel.Format("male", maleFile));
         }
+    }
+
+    IEnumerable<Func<IArmorGetter, object?>> IIsolatedRecordAnalyzer<IArmorGetter>.FieldsOfInterest()
+    {
+        yield return x => x.WorldModel;
     }
 }

@@ -94,7 +94,12 @@ public class ScaleAnalyzer : IContextualRecordAnalyzer<IPlacedObjectGetter>
         }
 
         param.AddTopic(
-            (scale < 1 ? ScaleTooSmall : ScaleTooLarge).Format(scale),
-            x => x.Scale);
+            (scale < 1 ? ScaleTooSmall : ScaleTooLarge).Format(scale));
+    }
+
+    public IEnumerable<Func<IPlacedObjectGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Scale;
+        yield return x => x.Base;
     }
 }

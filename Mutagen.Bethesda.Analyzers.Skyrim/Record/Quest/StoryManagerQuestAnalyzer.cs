@@ -31,12 +31,16 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
                     if (questFormKey == quest.FormKey)
                     {
                         param.AddTopic(
-                            StoryManagerQuestNotAssigned.Format(),
-                            x => x.Event);
+                            StoryManagerQuestNotAssigned.Format());
                         return;
                     }
                 }
             }
         }
+    }
+
+    public IEnumerable<Func<IQuestGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Event;
     }
 }

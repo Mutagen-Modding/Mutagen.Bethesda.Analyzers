@@ -25,16 +25,18 @@ public class MissingFieldsAnalyzer : IIsolatedRecordAnalyzer<ILoadScreenGetter>
 
         if (loadScreen.Description.String.IsNullOrWhitespace())
         {
-            param.AddTopic(
-                NoDescription.Format(),
-                x => x.Description);
+            param.AddTopic(NoDescription.Format());
         }
 
         if (loadScreen.LoadingScreenNif.IsNull)
         {
-            param.AddTopic(
-                No3DModel.Format(),
-                x => x.LoadingScreenNif);
+            param.AddTopic(No3DModel.Format());
         }
+    }
+
+    public IEnumerable<Func<ILoadScreenGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Description;
+        yield return x => x.LoadingScreenNif;
     }
 }

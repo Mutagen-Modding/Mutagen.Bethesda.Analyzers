@@ -19,10 +19,12 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IKeyGetter>
 
         if (key.Keywords is null || !key.Keywords.Contains(FormKeys.SkyrimSE.Skyrim.Keyword.VendorItemKey))
         {
-            param.AddTopic(
-                MissingVendorItemKeyword.Format(),
-                x => x.Keywords
-            );
+            param.AddTopic(MissingVendorItemKeyword.Format());
         }
+    }
+
+    public IEnumerable<Func<IKeyGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Keywords;
     }
 }

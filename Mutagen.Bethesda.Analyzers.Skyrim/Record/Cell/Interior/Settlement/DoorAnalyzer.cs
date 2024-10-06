@@ -44,29 +44,33 @@ public class DoorAnalyzer : IContextualRecordAnalyzer<ICellGetter>
             if (placedObject.Lock is null)
             {
                 param.AddTopic(
-                    NotLocked.Format(placedObject),
-                    x => x);
+                    NotLocked.Format(placedObject));
             }
             else if (placedObject.Lock.Key.IsNull)
             {
                 param.AddTopic(
-                    NoKey.Format(placedObject),
-                    x => x);
+                    NoKey.Format(placedObject));
             }
 
             if (placedObject.Owner.IsNull)
             {
                 param.AddTopic(
-                    NoOwner.Format(placedObject),
-                    x => x);
+                    NoOwner.Format(placedObject));
             }
 
             if (exteriorDoor.Lock is not null)
             {
                 param.AddTopic(
-                    ExteriorDoorLocked.Format(exteriorDoor),
-                    x => x);
+                    ExteriorDoorLocked.Format(exteriorDoor));
             }
         }
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.Location;
+        yield return x => x.Owner;
+        yield return x => x.Temporary;
     }
 }

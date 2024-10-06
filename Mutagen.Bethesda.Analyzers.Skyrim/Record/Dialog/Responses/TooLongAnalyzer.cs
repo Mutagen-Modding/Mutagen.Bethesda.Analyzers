@@ -30,8 +30,7 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
         if (dialogResponses.Prompt?.String is { Length: > DialogPromptLengthLimit })
         {
             param.AddTopic(
-                PromptTooLong.Format(dialogResponses.Prompt.String, dialogResponses.Prompt.String.Length - DialogPromptLengthLimit),
-                x => x);
+                PromptTooLong.Format(dialogResponses.Prompt.String, dialogResponses.Prompt.String.Length - DialogPromptLengthLimit));
         }
 
         // Check responses
@@ -41,8 +40,13 @@ public class TooLongAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
                      .Where(text => text is { Length: > DialogResponseLengthLimit }))
         {
             param.AddTopic(
-                ResponseTooLong.Format(response, response.Length - DialogResponseLengthLimit),
-                x => x);
+                ResponseTooLong.Format(response, response.Length - DialogResponseLengthLimit));
         }
+    }
+
+    public IEnumerable<Func<IDialogResponsesGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Prompt;
+        yield return x => x.Responses;
     }
 }

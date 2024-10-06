@@ -19,8 +19,14 @@ public class PublicCellAnalyzer : IIsolatedRecordAnalyzer<ICellGetter>
         if (cell.IsExteriorCell() || !cell.IsPublic() || cell.LockList.IsNull) return;
 
         param.AddTopic(
-            HasLockList.Format(),
-            x => x.Music
+            HasLockList.Format()
         );
+    }
+
+    public IEnumerable<Func<ICellGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Flags;
+        yield return x => x.LockList;
+        yield return x => x.Music;
     }
 }

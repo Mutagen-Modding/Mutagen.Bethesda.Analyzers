@@ -27,4 +27,9 @@ public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILe
             return [];
         }, CircularLeveledItem);
     }
+
+    IEnumerable<Func<ILeveledItemGetter, object?>> IContextualRecordAnalyzer<ILeveledItemGetter>.FieldsOfInterest()
+    {
+        yield return x => x.Entries;
+    }
 }

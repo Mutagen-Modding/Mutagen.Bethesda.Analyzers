@@ -65,4 +65,9 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
             //     break;
         }
     }
+
+    public IEnumerable<Func<IPlacedGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.SkyrimMajorRecordFlags;
+    }
 }

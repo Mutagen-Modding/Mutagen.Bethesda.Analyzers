@@ -40,15 +40,13 @@ public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (hasTrainerGoldScript && trainerFaction is null)
         {
             param.AddTopic(
-                TrainerScriptMissingFaction.Format(),
-                x => x.VirtualMachineAdapter);
+                TrainerScriptMissingFaction.Format());
         }
 
         if (trainerFaction is not null && !hasTrainerGoldScript)
         {
             param.AddTopic(
-                TrainerFactionMissingScript.Format(),
-                x => x.Factions);
+                TrainerFactionMissingScript.Format());
         }
 
         if (hasTrainerGoldScript || trainerFaction is not null)
@@ -61,9 +59,15 @@ public class TrainerAnalyzer : IContextualRecordAnalyzer<INpcGetter>
             if (!hasTrainerSpecialization)
             {
                 param.AddTopic(
-                    TrainerWithoutSpecialization.Format(),
-                    x => x.Factions);
+                    TrainerWithoutSpecialization.Format());
             }
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Template;
+        yield return x => x.Factions;
+        yield return x => x.VirtualMachineAdapter;
     }
 }

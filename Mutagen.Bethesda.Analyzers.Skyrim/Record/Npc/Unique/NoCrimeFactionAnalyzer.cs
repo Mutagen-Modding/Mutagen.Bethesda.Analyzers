@@ -27,8 +27,16 @@ public class NoCrimeFactionAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (npc.CrimeFaction.IsNull)
         {
             param.AddTopic(
-                NoCrimeFaction.Format(),
-                x => x.Configuration);
+                NoCrimeFaction.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Configuration.Flags;
+        yield return x => x.AIData.Responsibility;
+        yield return x => x.CrimeFaction;
+        yield return x => x.Keywords;
     }
 }

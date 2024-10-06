@@ -23,8 +23,14 @@ public class NoContentAnalyzer : IIsolatedRecordAnalyzer<IMessageGetter>
             && message.MenuButtons.Count == 0)
         {
             param.AddTopic(
-                NoContent.Format(),
-                x => x);
+                NoContent.Format());
         }
+    }
+
+    public IEnumerable<Func<IMessageGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Name;
+        yield return x => x.Description;
+        yield return x => x.MenuButtons;
     }
 }

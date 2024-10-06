@@ -82,13 +82,18 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         if (vendorKeywords.Count == 0)
         {
             param.AddTopic(
-                ArmorMissingVendorKeyword.Format(expectedVendorKeyword),
-                x => x.Keywords);
+                ArmorMissingVendorKeyword.Format(expectedVendorKeyword));
             return;
         }
 
         param.AddTopic(
-            UnsuitableVendorKeyword.Format(expectedVendorKeyword, vendorKeywords),
-            x => x.Keywords);
+            UnsuitableVendorKeyword.Format(expectedVendorKeyword, vendorKeywords));
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.TemplateArmor;
+        yield return x => x.Keywords;
+        yield return x => x.MajorFlags;
     }
 }

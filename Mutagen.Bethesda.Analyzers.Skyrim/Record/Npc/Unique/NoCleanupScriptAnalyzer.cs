@@ -37,8 +37,7 @@ public class NoCleanupScriptAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (script is null)
         {
             param.AddTopic(
-                NoCleanupScript.Format(),
-                x => x.VirtualMachineAdapter);
+                NoCleanupScript.Format());
             return;
         }
 
@@ -46,16 +45,22 @@ public class NoCleanupScriptAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (deathContainer is null)
         {
             param.AddTopic(
-                DeathContainerPropertyNotFilled.Format(),
-                x => x.VirtualMachineAdapter);
+                DeathContainerPropertyNotFilled.Format());
         }
 
         var wiQuest = script.GetProperty<IScriptObjectPropertyGetter>("WI");
         if (wiQuest is null)
         {
             param.AddTopic(
-                WIPropertyNotFilled.Format(),
-                x => x.VirtualMachineAdapter);
+                WIPropertyNotFilled.Format());
         }
+    }
+
+    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.Configuration.Flags;
+        yield return x => x.Configuration.TemplateFlags;
+        yield return x => x.Keywords;
+        yield return x => x.VirtualMachineAdapter!.Scripts;
     }
 }

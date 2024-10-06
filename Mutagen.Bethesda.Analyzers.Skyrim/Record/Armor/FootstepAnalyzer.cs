@@ -57,8 +57,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             if (addons.Count == 0) continue;
 
             param.AddTopic(
-                ArmorDuplicateFootstep.Format(addons, race),
-                x => x.Armature);
+                ArmorDuplicateFootstep.Format(addons, race));
         }
 
         // Check if the footstep sound is correct
@@ -76,8 +75,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
                 break;
             default:
                 param.AddTopic(
-                    UnknownArmorType.Format(armor.BodyTemplate.ArmorType),
-                    x => x.BodyTemplate);
+                    UnknownArmorType.Format(armor.BodyTemplate.ArmorType));
 
                 return;
         }
@@ -87,16 +85,21 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             if (armorAddon.FootstepSound.FormKey == correctFootstepSound.FormKey) continue;
 
             param.AddTopic(
-                ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound),
-                x => x.BodyTemplate);
+                ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound));
         }
 
         // Check if there are any footstep sounds
         if (armorAddons.Count == 0 || armorAddons.TrueForAll(x => x.FootstepSound.IsNull))
         {
             param.AddTopic(
-                ArmorMissingFootstep.Format(),
-                x => x.Armature);
+                ArmorMissingFootstep.Format());
         }
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    {
+        yield return x => x.TemplateArmor;
+        yield return x => x.BodyTemplate;
+        yield return x => x.Armature;
     }
 }
