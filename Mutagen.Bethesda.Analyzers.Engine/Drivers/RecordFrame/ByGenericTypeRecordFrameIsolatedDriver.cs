@@ -27,16 +27,14 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
     public void Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame)
     {
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
-        var param = new IsolatedRecordFrameAnalyzerParams<TMajor>(frame);
+        var param = new IsolatedRecordFrameAnalyzerParams<TMajor>(
+            driverParams.ReportDropbox,
+            reportContext,
+            frame);
 
         foreach (var analyzer in _isolatedRecordFrameAnalyzers)
         {
-            var result = analyzer.AnalyzeRecord(param);
-            if (result is null) continue;
-            foreach (var topic in result.Topics)
-            {
-                driverParams.ReportDropbox.Dropoff(reportContext, topic);
-            }
+            analyzer.AnalyzeRecord(param);
         }
     }
 }
