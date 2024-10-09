@@ -10,9 +10,9 @@ public interface IReportDropbox
         ReportContextParameters parameters,
         ModKey mod,
         IMajorRecordIdentifier record,
-        ITopic topic);
+        Topic topic);
 
     void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic);
+        Topic topic);
 }

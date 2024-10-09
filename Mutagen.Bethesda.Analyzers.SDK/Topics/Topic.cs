@@ -1,11 +1,11 @@
 ﻿namespace Mutagen.Bethesda.Analyzers.SDK.Topics;
 
-public record RecordTopic : ITopic
+public record Topic
 {
-    public static RecordTopic Create(
+    public static Topic Create(
         IFormattedTopicDefinition formattedTopicDefinition)
     {
-        return new RecordTopic
+        return new Topic
         {
             FormattedTopic = formattedTopicDefinition,
             Severity = formattedTopicDefinition.TopicDefinition.Severity
@@ -15,18 +15,4 @@ public record RecordTopic : ITopic
     public TopicDefinition TopicDefinition => FormattedTopic.TopicDefinition;
     public required IFormattedTopicDefinition FormattedTopic { get; init; }
     public required Severity Severity { get; init; }
-    public ITopic WithFormattedTopic(IFormattedTopicDefinition formattedTopicDefinition)
-    {
-        return this with
-        {
-            FormattedTopic = formattedTopicDefinition
-        };
-    }
-    public ITopic WithSeverity(Severity severity)
-    {
-        return this with
-        {
-            Severity = severity
-        };
-    }
 }

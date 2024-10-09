@@ -11,7 +11,7 @@ public class ConsoleReportHandler : IReportHandler
         ReportContextParameters parameters,
         ModKey sourceMod,
         IMajorRecordIdentifier majorRecord,
-        ITopic topic)
+        Topic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {sourceMod.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
@@ -20,7 +20,7 @@ public class ConsoleReportHandler : IReportHandler
 
     public void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");

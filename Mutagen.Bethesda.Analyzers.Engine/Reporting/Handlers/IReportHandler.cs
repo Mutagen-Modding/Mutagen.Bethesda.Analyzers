@@ -11,9 +11,9 @@ public interface IReportHandler
         ReportContextParameters parameters,
         ModKey sourceMod,
         IMajorRecordIdentifier majorRecord,
-        ITopic topic);
+        Topic topic);
 
     void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic);
+        Topic topic);
 }

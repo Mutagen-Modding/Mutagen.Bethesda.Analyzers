@@ -34,7 +34,7 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 
     public void AddTopic(
@@ -44,6 +44,6 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 }

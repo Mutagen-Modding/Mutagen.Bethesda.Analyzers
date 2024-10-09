@@ -43,6 +43,6 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
             _parameters,
             _mod,
             Record,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 }

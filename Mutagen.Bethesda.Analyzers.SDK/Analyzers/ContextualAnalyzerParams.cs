@@ -44,6 +44,6 @@ public readonly struct ContextualAnalyzerParams
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 }

@@ -34,7 +34,7 @@ public readonly struct IsolatedRecordFrameAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 }
 
@@ -66,6 +66,6 @@ public readonly struct IsolatedRecordFrameAnalyzerParams
     {
         _reportDropbox.Dropoff(
             _parameters,
-            RecordTopic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition));
     }
 }

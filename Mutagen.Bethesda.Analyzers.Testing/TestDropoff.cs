@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Analyzers.Testing;
 
 public class TestDropoff : IReportDropbox
 {
-    private readonly List<ITopic> _reports = new();
-    public IReadOnlyList<ITopic> Reports => _reports;
+    private readonly List<Topic> _reports = new();
+    public IReadOnlyList<Topic> Reports => _reports;
 
-    public void Dropoff(ReportContextParameters parameters, ModKey mod, IMajorRecordIdentifier record, ITopic topic)
+    public void Dropoff(ReportContextParameters parameters, ModKey mod, IMajorRecordIdentifier record, Topic topic)
     {
         _reports.Add(topic);
     }
 
-    public void Dropoff(ReportContextParameters parameters, ITopic topic)
+    public void Dropoff(ReportContextParameters parameters, Topic topic)
     {
         _reports.Add(topic);
     }

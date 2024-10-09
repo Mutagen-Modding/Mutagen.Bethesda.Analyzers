@@ -19,23 +19,26 @@ public sealed class EditorIdEnricher : IReportDropbox
         ReportContextParameters parameters,
         ModKey mod,
         IMajorRecordIdentifier record,
-        ITopic topic)
+        Topic topic)
     {
         _reportDropbox.Dropoff(parameters, mod, record, Enrich(parameters, topic));
     }
 
     public void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
         _reportDropbox.Dropoff(parameters, Enrich(parameters, topic));
     }
 
-    private ITopic Enrich(
+    private Topic Enrich(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
-        return topic.WithFormattedTopic(topic.FormattedTopic.Transform(parameters, Selector));
+        return topic with
+        {
+            FormattedTopic = topic.FormattedTopic.Transform(parameters, Selector)
+        };
     }
 
     private object LinkResolver(

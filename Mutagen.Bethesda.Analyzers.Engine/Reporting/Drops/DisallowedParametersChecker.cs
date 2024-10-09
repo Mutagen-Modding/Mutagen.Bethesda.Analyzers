@@ -20,24 +20,26 @@ public class DisallowedParametersChecker : IReportDropbox
         ReportContextParameters parameters,
         ModKey mod,
         IMajorRecordIdentifier record,
-        ITopic topic)
+        Topic topic)
     {
         _reportDropbox.Dropoff(parameters, mod, record, Check(parameters, topic));
     }
 
     public void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
         _reportDropbox.Dropoff(parameters, Check(parameters, topic));
     }
 
-    private ITopic Check(
+    private Topic Check(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
-        return topic.WithFormattedTopic(
-            topic.FormattedTopic.Transform(parameters, Checker));
+        return topic with
+        {
+            FormattedTopic = topic.FormattedTopic.Transform(parameters, Checker)
+        };
     }
 
     private object? Checker(

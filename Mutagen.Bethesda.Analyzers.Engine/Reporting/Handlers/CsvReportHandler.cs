@@ -21,19 +21,19 @@ public class CsvReportHandler : IReportHandler
         ReportContextParameters parameters,
         ModKey mod,
         IMajorRecordIdentifier record,
-        ITopic topic)
+        Topic topic)
     {
         Append(BuildLine(topic, mod, record));
     }
 
     public void Dropoff(
         ReportContextParameters parameters,
-        ITopic topic)
+        Topic topic)
     {
         Append(BuildLine(topic, null, null));
     }
 
-    private static string BuildLine(ITopic topic, ModKey? sourceMod, IMajorRecordIdentifier? majorRecord)
+    private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifier? majorRecord)
     {
         return $"""
         "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
