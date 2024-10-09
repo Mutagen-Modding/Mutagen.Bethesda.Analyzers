@@ -40,10 +40,11 @@ public readonly struct ContextualAnalyzerParams
     /// Reports a topic to the engine
     /// </summary>
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 }

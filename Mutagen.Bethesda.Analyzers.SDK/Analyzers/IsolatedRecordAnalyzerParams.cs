@@ -37,12 +37,13 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
     /// Reports a topic to the engine
     /// </summary>
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
             _mod,
             Record,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 }

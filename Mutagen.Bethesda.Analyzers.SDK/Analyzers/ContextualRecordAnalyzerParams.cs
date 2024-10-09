@@ -30,20 +30,22 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     }
 
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 
     public void AddTopic(
         ModKey mod,
         TMajor record,
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 }

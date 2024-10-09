@@ -30,11 +30,12 @@ public readonly struct IsolatedRecordFrameAnalyzerParams<TMajor>
     /// Reports a topic to the engine
     /// </summary>
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 }
 
@@ -62,10 +63,11 @@ public readonly struct IsolatedRecordFrameAnalyzerParams
     /// Reports a topic to the engine
     /// </summary>
     public void AddTopic(
-        IFormattedTopicDefinition formattedTopicDefinition)
+        IFormattedTopicDefinition formattedTopicDefinition,
+        params (string Name, object Value)[] metaData)
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition));
+            Topic.Create(formattedTopicDefinition, metaData));
     }
 }
