@@ -16,6 +16,8 @@ public class ConsoleReportHandler : IReportHandler
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {sourceMod.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
         Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
+
+        PrintMetadata(topic);
     }
 
     public void Dropoff(
@@ -24,5 +26,17 @@ public class ConsoleReportHandler : IReportHandler
     {
         Console.WriteLine($"{topic.TopicDefinition}");
         Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
+    }
+
+    private void PrintMetadata(Topic topic)
+    {
+        // ToDo
+        // Handle various types like dictionary better
+        // Also have a parameter to omit these, optionally
+
+        foreach (var meta in topic.MetaData)
+        {
+            Console.WriteLine($"{meta.Name}: {meta.Value}");
+        }
     }
 }

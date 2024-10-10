@@ -35,6 +35,10 @@ public class CsvReportHandler : IReportHandler
 
     private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifier? majorRecord)
     {
+        if (topic.MetaData.Length > 0)
+        {
+            throw new NotImplementedException();
+        }
         return $"""
         "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
         """;
