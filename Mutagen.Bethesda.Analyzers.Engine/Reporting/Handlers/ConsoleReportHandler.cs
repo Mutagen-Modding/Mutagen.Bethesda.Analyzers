@@ -28,15 +28,14 @@ public class ConsoleReportHandler : IReportHandler
         Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
     }
 
-    private void PrintMetadata(Topic topic)
+    private static void PrintMetadata(Topic topic)
     {
         // ToDo
-        // Handle various types like dictionary better
         // Also have a parameter to omit these, optionally
 
         foreach (var meta in topic.MetaData)
         {
-            Console.WriteLine($"{meta.Name}: {meta.Value}");
+            Console.WriteLine($"{ReportUtility.GetStringValue(meta.Name)}: {ReportUtility.GetStringValue(meta.Value)}");
         }
     }
 }

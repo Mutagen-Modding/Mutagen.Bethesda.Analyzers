@@ -19,11 +19,11 @@ public class CsvReportHandler : IReportHandler
 
     public void Dropoff(
         ReportContextParameters parameters,
-        ModKey mod,
-        IMajorRecordIdentifierGetter record,
+        ModKey sourceMod,
+        IMajorRecordIdentifierGetter majorRecord,
         Topic topic)
     {
-        Append(BuildLine(topic, mod, record));
+        Append(BuildLine(topic, sourceMod, majorRecord));
     }
 
     public void Dropoff(
@@ -35,13 +35,16 @@ public class CsvReportHandler : IReportHandler
 
     private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifierGetter? majorRecord)
     {
+        var baseLine = $"""
+            "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
+            """;
+
         if (topic.MetaData.Length > 0)
         {
-            throw new NotImplementedException();
+            baseLine += ",\"" + string.Join("\n", topic.MetaData.Select(x => x.Name + ": " + ReportUtility.GetStringValue(x.Value))) + "\"";
         }
-        return $"""
-        "{topic.TopicDefinition.Id}","{topic.TopicDefinition.Severity}","{topic.TopicDefinition.Title}","{sourceMod?.ToString()}","{majorRecord?.FormKey.ToString()}","{majorRecord?.EditorID}","{topic.FormattedTopic.FormattedMessage}"
-        """;
+
+        return baseLine;
     }
 
     private void Append(string line)
