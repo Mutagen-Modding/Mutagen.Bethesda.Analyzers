@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
+using Mutagen.Bethesda.Analyzers.Skyrim.Record;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
@@ -85,10 +86,7 @@ public static class RunAnalyzers
             builder.RegisterType<NullCreationClubListingsPathProvider>().As<ICreationClubListingsPathProvider>();
         }
 
-        // Add Skyrim Analyzers
-        builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzerUtil).Assembly)
-            .AssignableTo<IAnalyzer>()
-            .AsImplementedInterfaces();
+        builder.RegisterModule<SkyrimAnalyzerModule>();
 
         return builder.Build();
     }

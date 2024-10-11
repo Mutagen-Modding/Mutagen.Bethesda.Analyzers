@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Analyzers.Skyrim.Util;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.HeadPart;

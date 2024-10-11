@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Util;
 
 public static class CircularLeveledListAnalyzerUtil
 {

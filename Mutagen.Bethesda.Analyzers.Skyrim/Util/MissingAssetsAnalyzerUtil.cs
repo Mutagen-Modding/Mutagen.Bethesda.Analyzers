@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Util;
 
 public class MissingAssetsAnalyzerUtil
 {
