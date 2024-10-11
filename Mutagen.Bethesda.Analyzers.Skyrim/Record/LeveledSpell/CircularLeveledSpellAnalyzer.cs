@@ -3,18 +3,20 @@ using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.LeveledSpell;
 
-public partial class CircularLeveledListAnalyzer : IContextualRecordAnalyzer<ILeveledSpellGetter>
+public class CircularLeveledSpellListAnalyzer : IContextualRecordAnalyzer<ILeveledSpellGetter>
 {
     public static readonly TopicDefinition<List<ILeveledSpellGetter>> CircularLeveledSpell = MutagenTopicBuilder.DevelopmentTopic(
             "Circular Leveled Spell",
             Severity.Suggestion)
         .WithFormatting<List<ILeveledSpellGetter>>("Leveled Spell contains itself in path {0}");
 
+    public IEnumerable<TopicDefinition> Topics { get; } = [CircularLeveledSpell];
+
     public void AnalyzeRecord(ContextualRecordAnalyzerParams<ILeveledSpellGetter> param)
     {
-        FindCircularList(param, l =>
+        CircularLeveledListAnalyzerUtil.FindCircularList(param, l =>
         {
             if (l.Entries is not null)
             {

@@ -6,21 +6,16 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
-public partial class MissingAssetsAnalyzer
+public class MissingAssetsAnalyzerUtil
 {
-    public string Author => "erri120";
-    public string Description => "Finds missing assets.";
-
-    private const string MissingModelFileMessageFormat = "Missing Model file {0}";
-
     private readonly IFileSystem _fileSystem;
 
-    public MissingAssetsAnalyzer(IFileSystem fileSystem)
+    public MissingAssetsAnalyzerUtil(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
     }
 
-    private void CheckForMissingModelAsset<TMajorRecordGetter>(
+    public void CheckForMissingModelAsset<TMajorRecordGetter>(
         IsolatedRecordAnalyzerParams<TMajorRecordGetter> param,
         TopicDefinition<string> topicDefinition)
         where TMajorRecordGetter : IMajorRecordGetter, IModeledGetter
@@ -32,6 +27,6 @@ public partial class MissingAssetsAnalyzer
         param.AddTopic(topicDefinition.Format(path));
     }
 
-    private bool FileExists(string path) => _fileSystem.File.Exists(path);
-    private bool FileExistsIfNotNull(string? path) => path == null || _fileSystem.File.Exists(path);
+    public bool FileExists(string path) => _fileSystem.File.Exists(path);
+    public bool FileExistsIfNotNull(string? path) => path == null || _fileSystem.File.Exists(path);
 }

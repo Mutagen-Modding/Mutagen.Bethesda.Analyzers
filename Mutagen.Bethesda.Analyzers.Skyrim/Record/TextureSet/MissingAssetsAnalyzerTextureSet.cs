@@ -2,10 +2,12 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.TextureSet;
 
-public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSetGetter>
+public class MissingAssetsAnalyzerTextureSet : IIsolatedRecordAnalyzer<ITextureSetGetter>
 {
+    private readonly MissingAssetsAnalyzerUtil _util;
+
     public static readonly TopicDefinition<string, string?> MissingTextureInTextureSet = MutagenTopicBuilder.FromDiscussion(
             91,
             "Missing Texture in TextureSet",
@@ -21,51 +23,58 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<ITextureSet
     private const string TextureSetMultilayerName = nameof(ITextureSet.Multilayer);
     private const string TextureSetBacklightMaskOrSpecularName = "Backlight Mask/Specular";
 
+    public IEnumerable<TopicDefinition> Topics { get; } = [MissingTextureInTextureSet];
+
+    public MissingAssetsAnalyzerTextureSet(MissingAssetsAnalyzerUtil util)
+    {
+        _util = util;
+    }
+
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<ITextureSetGetter> param)
     {
-        if (!FileExistsIfNotNull(param.Record.Diffuse))
+        if (!_util.FileExistsIfNotNull(param.Record.Diffuse))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetDiffuseName, param.Record.Diffuse));
         }
 
-        if (!FileExistsIfNotNull(param.Record.NormalOrGloss))
+        if (!_util.FileExistsIfNotNull(param.Record.NormalOrGloss))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetNormalOrGlossName, param.Record.NormalOrGloss));
         }
 
-        if (!FileExistsIfNotNull(param.Record.EnvironmentMaskOrSubsurfaceTint))
+        if (!_util.FileExistsIfNotNull(param.Record.EnvironmentMaskOrSubsurfaceTint))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetEnvironmentMaskOrSubsurfaceTintName, param.Record.EnvironmentMaskOrSubsurfaceTint));
         }
 
-        if (!FileExistsIfNotNull(param.Record.GlowOrDetailMap))
+        if (!_util.FileExistsIfNotNull(param.Record.GlowOrDetailMap))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetGlowOrDetailMapName, param.Record.GlowOrDetailMap));
         }
 
-        if (!FileExistsIfNotNull(param.Record.Height))
+        if (!_util.FileExistsIfNotNull(param.Record.Height))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetHeightName, param.Record.Height));
         }
 
-        if (!FileExistsIfNotNull(param.Record.Environment))
+        if (!_util.FileExistsIfNotNull(param.Record.Environment))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetEnvironmentName, param.Record.Environment));
         }
 
-        if (!FileExistsIfNotNull(param.Record.Multilayer))
+        if (!_util.FileExistsIfNotNull(param.Record.Multilayer))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetMultilayerName, param.Record.Multilayer));
         }
 
-        if (!FileExistsIfNotNull(param.Record.BacklightMaskOrSpecular))
+        if (!_util.FileExistsIfNotNull(param.Record.BacklightMaskOrSpecular))
         {
             param.AddTopic(
                 MissingTextureInTextureSet.Format(TextureSetBacklightMaskOrSpecularName, param.Record.BacklightMaskOrSpecular));

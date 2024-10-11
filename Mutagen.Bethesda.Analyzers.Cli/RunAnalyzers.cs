@@ -86,7 +86,7 @@ public static class RunAnalyzers
         }
 
         // Add Skyrim Analyzers
-        builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzer).Assembly)
+        builder.RegisterAssemblyTypes(typeof(MissingAssetsAnalyzerUtil).Assembly)
             .AssignableTo<IAnalyzer>()
             .AsImplementedInterfaces();
 

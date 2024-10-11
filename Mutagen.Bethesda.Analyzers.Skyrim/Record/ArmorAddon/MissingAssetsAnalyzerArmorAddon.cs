@@ -2,10 +2,12 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Skyrim;
 
-namespace Mutagen.Bethesda.Analyzers.Skyrim;
+namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.ArmorAddon;
 
-public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddonGetter>
+public class MissingAssetsAnalyzerArmorAddon : IIsolatedRecordAnalyzer<IArmorAddonGetter>
 {
+    private readonly MissingAssetsAnalyzerUtil _util;
+
     public static readonly TopicDefinition<string, string?> MissingArmorAddonWorldModel = MutagenTopicBuilder.FromDiscussion(
             84,
             "Missing Armor Addon Model file",
@@ -18,31 +20,38 @@ public partial class MissingAssetsAnalyzer : IIsolatedRecordAnalyzer<IArmorAddon
             Severity.Error)
         .WithFormatting<string, string?>("Missing {0} 1st Person Armor Addon Model file at {1}");
 
+    public MissingAssetsAnalyzerArmorAddon(MissingAssetsAnalyzerUtil util)
+    {
+        _util = util;
+    }
+
+    public IEnumerable<TopicDefinition> Topics { get; } = [MissingArmorAddonWorldModel, MissingArmorAddonFirstPersonModel];
+
     public void AnalyzeRecord(IsolatedRecordAnalyzerParams<IArmorAddonGetter> param)
     {
         var femaleWorldModel = param.Record.WorldModel?.Female?.File;
-        if (!FileExistsIfNotNull(femaleWorldModel))
+        if (!_util.FileExistsIfNotNull(femaleWorldModel))
         {
             param.AddTopic(
                 MissingArmorAddonWorldModel.Format("female", femaleWorldModel));
         }
 
         var maleWorldModel = param.Record.WorldModel?.Male?.File;
-        if (!FileExistsIfNotNull(maleWorldModel))
+        if (!_util.FileExistsIfNotNull(maleWorldModel))
         {
             param.AddTopic(
                 MissingArmorAddonWorldModel.Format("male", maleWorldModel));
         }
 
         var femaleFirstPersonModel = param.Record.FirstPersonModel?.Female?.File;
-        if (!FileExistsIfNotNull(femaleFirstPersonModel))
+        if (!_util.FileExistsIfNotNull(femaleFirstPersonModel))
         {
             param.AddTopic(
                 MissingArmorAddonFirstPersonModel.Format("female", femaleFirstPersonModel));
         }
 
         var maleFirstPersonModel = param.Record.FirstPersonModel?.Male?.File;
-        if (!FileExistsIfNotNull(maleFirstPersonModel))
+        if (!_util.FileExistsIfNotNull(maleFirstPersonModel))
         {
             param.AddTopic(
                 MissingArmorAddonFirstPersonModel.Format("male", maleFirstPersonModel));

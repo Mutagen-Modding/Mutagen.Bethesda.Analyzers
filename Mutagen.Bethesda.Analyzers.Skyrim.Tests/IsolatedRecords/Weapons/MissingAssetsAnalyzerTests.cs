@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Analyzers.Skyrim.Record.Weapon;
 using Mutagen.Bethesda.Analyzers.Testing.Frameworks;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim;
@@ -13,7 +14,7 @@ public class MissingAssetsAnalyzerTests
     public void Typical(
         AssetLink<SkyrimModelAssetType> modelPath,
         AssetLink<SkyrimModelAssetType> existingModelPath,
-        IsolatedRecordTestFixture<MissingAssetsAnalyzer, Weapon, IWeaponGetter> fixture)
+        IsolatedRecordTestFixture<MissingAssetsAnalyzerWeapon, Weapon, IWeaponGetter> fixture)
     {
         fixture.Run(
             prepForError: rec => rec.Model = new Model()
@@ -24,6 +25,6 @@ public class MissingAssetsAnalyzerTests
             {
                 File = existingModelPath
             },
-            MissingAssetsAnalyzer.MissingWeaponModel);
+            MissingAssetsAnalyzerWeapon.MissingWeaponModel);
     }
 }

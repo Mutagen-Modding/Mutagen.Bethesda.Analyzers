@@ -5,11 +5,9 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim;
 
-public partial class CircularLeveledListAnalyzer
+public static class CircularLeveledListAnalyzerUtil
 {
-    public IEnumerable<TopicDefinition> Topics => [CircularLeveledItem, CircularLeveledNpc, CircularLeveledSpell];
-
-    private static void FindCircularList<T>(
+    public static void FindCircularList<T>(
         ContextualRecordAnalyzerParams<T> param,
         Func<T, IEnumerable<FormKey>> nestedEntriesSelector,
         TopicDefinition<List<T>> topic)

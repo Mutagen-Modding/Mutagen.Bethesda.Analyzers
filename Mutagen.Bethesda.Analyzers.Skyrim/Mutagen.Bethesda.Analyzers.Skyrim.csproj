@@ -15,46 +15,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Update="MissingAssetsAnalyzerArmor.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerTextureSet.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerWeapon.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerStatics.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerHeadPart.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerArmorAddon.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MissingAssetsAnalyzerTopicListing.cs">
-        <DependentUpon>MissingAssetsAnalyzer.cs</DependentUpon>
-      </Compile>
       <Compile Remove="CellUnderscoreAnalyzer.cs" />
-      <Compile Update="InvalidCharactersAnalyzerBook.cs">
-        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="InvalidCharactersAnalyzerDialogResponses.cs">
-        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="InvalidCharactersNamed.cs">
-        <DependentUpon>InvalidCharactersAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="CircularLeveledItemAnalyzer.cs">
-        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="CircularLeveledNpcAnalyzer.cs">
-        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
-      </Compile>
-      <Compile Update="CircularLeveledSpellAnalyzer.cs">
-        <DependentUpon>CircularLeveledIListAnalyzer.cs</DependentUpon>
-      </Compile>
     </ItemGroup>
 
 </Project>
