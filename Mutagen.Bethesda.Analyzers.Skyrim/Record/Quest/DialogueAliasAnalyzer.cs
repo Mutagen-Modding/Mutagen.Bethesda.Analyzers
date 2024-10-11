@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Quest;
 
 public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
 {
-    public static readonly TopicDefinition<string?, List<IDialogResponsesGetter>> InvalidDialogueAlias = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?> InvalidDialogueAlias = MutagenTopicBuilder.DevelopmentTopic(
             "Invalid Dialogue Alias",
             Severity.Warning)
-        .WithFormatting<string?, List<IDialogResponsesGetter>>("Alias {0} that is forced to none, has no additional dialogue formlist/npc and has dialogue conditioned to it {1} doesn't get any lines for VA exported");
+        .WithFormatting<string?>("Alias {0} that is forced to none, has no additional dialogue formlist/npc and has dialogue conditioned to it doesn't get any lines for VA exported");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidDialogueAlias];
 
@@ -60,7 +60,8 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
             if (dialogue.Count == 0) continue;
 
             param.AddTopic(
-                InvalidDialogueAlias.Format(alias.Name, dialogue));
+                InvalidDialogueAlias.Format(alias.Name),
+                ("Dialogue", dialogue));
         }
     }
 

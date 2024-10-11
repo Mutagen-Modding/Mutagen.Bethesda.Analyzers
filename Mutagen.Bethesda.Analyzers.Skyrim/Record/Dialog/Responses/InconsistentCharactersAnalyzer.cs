@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Dialog.Responses;
 
 public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogResponsesGetter>
 {
-    public static readonly TopicDefinition<string, char[]> PromptInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string> PromptInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
             "Prompt Has Inconsistent Characters",
             Severity.Suggestion)
-        .WithFormatting<string, char[]>("Response {0} contains characters {1} which are not usually used in dialog");
+        .WithFormatting<string>("Response {0} contains characters which are not usually used in dialog");
 
-    public static readonly TopicDefinition<string, char[]> ResponseInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string> ResponseInconsistentCharacters = MutagenTopicBuilder.DevelopmentTopic(
             "Response Has Inconsistent Characters",
             Severity.Suggestion)
-        .WithFormatting<string, char[]>("Response {0} contains characters {1} which are not usually used in dialog");
+        .WithFormatting<string>("Response {0} contains characters which are not usually used in dialog");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [PromptInconsistentCharacters, ResponseInconsistentCharacters];
 
@@ -42,13 +42,14 @@ public class InconsistentCharactersAnalyzer : IIsolatedRecordAnalyzer<IDialogRes
 
         return;
 
-        void CheckInconsistentCharacters(string text, TopicDefinition<string, char[]> topic)
+        void CheckInconsistentCharacters(string text, TopicDefinition<string> topic)
         {
             var foundCharacters = InvalidCharacters.Where(text.Contains).ToArray();
             if (foundCharacters.Length == 0) return;
 
             param.AddTopic(
-                topic.Format(text, foundCharacters));
+                topic.Format(text),
+                ("Inconsistent Characters", foundCharacters));
         }
     }
 

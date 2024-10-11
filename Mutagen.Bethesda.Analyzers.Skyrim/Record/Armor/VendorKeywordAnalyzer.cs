@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<FormLink<IKeywordGetter>> ArmorMissingVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition ArmorMissingVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
             "Armor is missing Vendor Keyword",
             Severity.Suggestion)
-        .WithFormatting<FormLink<IKeywordGetter>>("Missing vendor keyword {0}");
+        .WithoutFormatting("Missing vendor keywords");
 
-    public static readonly TopicDefinition<FormLink<IKeywordGetter>, List<IFormLinkGetter<IKeywordGetter>>> UnsuitableVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition UnsuitableVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has unsuitable Vendor Keyword",
             Severity.Suggestion)
-        .WithFormatting<FormLink<IKeywordGetter>, List<IFormLinkGetter<IKeywordGetter>>>("Expected vendor keyword {0}, found {1}");
+        .WithoutFormatting("Expected vendor keywords");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMissingVendorKeyword];
 
@@ -82,12 +82,15 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         if (vendorKeywords.Count == 0)
         {
             param.AddTopic(
-                ArmorMissingVendorKeyword.Format(expectedVendorKeyword));
+                ArmorMissingVendorKeyword.Format(),
+                ("Expected Vendor Keywords", expectedVendorKeyword));
             return;
         }
 
         param.AddTopic(
-            UnsuitableVendorKeyword.Format(expectedVendorKeyword, vendorKeywords));
+            UnsuitableVendorKeyword.Format(),
+            ("Vendor Keywords", vendorKeywords),
+            ("Expected Vendor Keywords", expectedVendorKeyword));
     }
 
     public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()

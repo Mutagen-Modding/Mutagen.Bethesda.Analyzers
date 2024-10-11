@@ -8,10 +8,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Named;
 
 public class InvalidCharactersAnalyzerNamed : IIsolatedRecordAnalyzer<ISkyrimMajorRecordGetter>
 {
-    public static readonly TopicDefinition<IEnumerable<string>> InvalidCharactersName = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition InvalidCharactersName = MutagenTopicBuilder.DevelopmentTopic(
             "Invalid Characters in Name",
             Severity.Warning)
-        .WithFormatting<IEnumerable<string>>("The name contains invalid characters: {0}");
+        .WithoutFormatting("The name contains invalid characters");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidCharactersName];
 
@@ -23,7 +23,8 @@ public class InvalidCharactersAnalyzerNamed : IIsolatedRecordAnalyzer<ISkyrimMaj
         if (invalidStrings.Count == 0) return;
 
         param.AddTopic(
-            InvalidCharactersName.Format(invalidStrings.Select(x => x.Key)));
+            InvalidCharactersName.Format(),
+            ("Invalid Strings", invalidStrings.Select(x => x.Key)));
     }
 
     public IEnumerable<Func<ISkyrimMajorRecordGetter, object?>> FieldsOfInterest()

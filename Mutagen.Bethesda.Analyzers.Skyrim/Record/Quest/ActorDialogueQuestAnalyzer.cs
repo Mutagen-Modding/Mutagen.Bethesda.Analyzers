@@ -26,10 +26,10 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
             Severity.Error)
         .WithFormatting<string?, int, int>("Alias {0} has {1} conditions, which doesn't match the {2} npcs in the scene");
 
-    public static readonly TopicDefinition<string?, IEnumerable<Condition.Function>> AliasWithoutGetIsIDCondition = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<string?> AliasWithoutGetIsIDCondition = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without GetIsID condition",
             Severity.Error)
-        .WithFormatting<string?, IEnumerable<Condition.Function>>("Alias {0} uses conditions with function {1} which are not GetIsID");
+        .WithFormatting<string?>("Alias {0} uses conditions which are not GetIsID");
 
     public static readonly TopicDefinition<string?, int, int> AliasWithoutSameNumberOfGetIsIDConditionsAsNpcs = MutagenTopicBuilder.DevelopmentTopic(
             "Alias without same number of GetIsID conditions as npcs",
@@ -110,7 +110,8 @@ public class ActorDialogueQuestAnalyzer : IIsolatedRecordAnalyzer<IQuestGetter>
                 if (conditions.Count > 0)
                 {
                     param.AddTopic(
-                        AliasWithoutGetIsIDCondition.Format(eventAlias.Name, conditions.Select(x => x.Data.Function).Distinct()));
+                        AliasWithoutGetIsIDCondition.Format(eventAlias.Name),
+                        ("Functions", conditions.Select(x => x.Data.Function).Distinct()));
                 }
             }
             else

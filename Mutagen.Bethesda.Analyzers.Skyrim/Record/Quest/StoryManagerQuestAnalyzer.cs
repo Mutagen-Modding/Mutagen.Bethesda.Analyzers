@@ -30,6 +30,8 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
                     if (questFormKey == quest.FormKey)
                     {
                         param.AddTopic(
+                            mod.ModKey,
+                            quest,
                             StoryManagerQuestNotAssigned.Format());
                         return;
                     }

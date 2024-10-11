@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition<ArmorType, List<FormLink<IKeywordGetter>>> ArmorMatchingKeywordArmorType = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<ArmorType> ArmorMatchingKeywordArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Armor keywords don't match their equipped armor type",
             Severity.Suggestion)
-        .WithFormatting<ArmorType, List<FormLink<IKeywordGetter>>>("Has armor type {0} but doesn't have keyword {1}");
+        .WithFormatting<ArmorType>("Has armor type {0} but doesn't have matching keywords");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingKeywordArmorType];
 
@@ -44,7 +44,8 @@ public class KeywordArmorTypeAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         }
 
         param.AddTopic(
-            ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType, matchingKeywords));
+            ArmorMatchingKeywordArmorType.Format(armor.BodyTemplate.ArmorType),
+            ("Matching Keywords", matchingKeywords));
     }
 
     public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()

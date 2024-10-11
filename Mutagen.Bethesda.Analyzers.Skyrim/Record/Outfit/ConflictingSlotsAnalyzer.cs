@@ -8,10 +8,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Outfit;
 
 public class ConflictingSlotsAnalyzer : IContextualRecordAnalyzer<IOutfitGetter>
 {
-    public static readonly TopicDefinition<Dictionary<string, List<IArmorGetter>>, BipedObjectFlag> ConflictingSlotsTopic = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition ConflictingSlotsTopic = MutagenTopicBuilder.DevelopmentTopic(
             "Conflicting Slots",
             Severity.Warning)
-        .WithFormatting<Dictionary<string, List<IArmorGetter>>, BipedObjectFlag>("Outfit entries {0} are conflicting in slot {1}");
+        .WithoutFormatting("Outfit entries are conflicting in Biped Object Flag slots");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [ConflictingSlotsTopic];
 
@@ -37,9 +37,9 @@ public class ConflictingSlotsAnalyzer : IContextualRecordAnalyzer<IOutfitGetter>
             if (separateEntriesOccupyingSlots.Count <= 1) continue;
 
             param.AddTopic(
-                ConflictingSlotsTopic.Format(
-                    separateEntriesOccupyingSlots.ToDictionary(x => x.First().Entry.EditorID ?? x.First().Entry.FormKey.ToString(), x => x.Select(x => x.Armor).ToList()),
-                    slot));
+                ConflictingSlotsTopic.Format(),
+                ("Outfit Entries", separateEntriesOccupyingSlots.ToDictionary(x => x.First().Entry.EditorID ?? x.First().Entry.FormKey.ToString(), x => x.Select(x => x.Armor).ToList())),
+                ("Slot", slot));
         }
     }
 
