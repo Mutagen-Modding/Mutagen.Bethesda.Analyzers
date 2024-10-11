@@ -19,7 +19,7 @@ public sealed class EditorIdEnricher : IReportDropbox
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey mod,
-        IMajorRecordIdentifier record,
+        IMajorRecordIdentifierGetter record,
         Topic topic)
     {
         _reportDropbox.Dropoff(parameters, mod, record, Enrich(parameters, topic));

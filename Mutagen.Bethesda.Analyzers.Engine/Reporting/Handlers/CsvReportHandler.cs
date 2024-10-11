@@ -20,7 +20,7 @@ public class CsvReportHandler : IReportHandler
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey mod,
-        IMajorRecordIdentifier record,
+        IMajorRecordIdentifierGetter record,
         Topic topic)
     {
         Append(BuildLine(topic, mod, record));
@@ -33,7 +33,7 @@ public class CsvReportHandler : IReportHandler
         Append(BuildLine(topic, null, null));
     }
 
-    private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifier? majorRecord)
+    private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifierGetter? majorRecord)
     {
         if (topic.MetaData.Length > 0)
         {

@@ -19,7 +19,7 @@ public class PassToHandlerReportDropbox : IReportDropbox
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey mod,
-        IMajorRecordIdentifier record,
+        IMajorRecordIdentifierGetter record,
         Topic topic)
     {
         foreach (var handler in _handlers)

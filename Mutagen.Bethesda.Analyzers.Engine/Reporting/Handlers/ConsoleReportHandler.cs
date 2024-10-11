@@ -10,7 +10,7 @@ public class ConsoleReportHandler : IReportHandler
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey sourceMod,
-        IMajorRecordIdentifier majorRecord,
+        IMajorRecordIdentifierGetter majorRecord,
         Topic topic)
     {
         Console.WriteLine($"{topic.TopicDefinition}");

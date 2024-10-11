@@ -22,7 +22,7 @@ public class MinimumSeverityFilter : IReportDropbox
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey mod,
-        IMajorRecordIdentifier record,
+        IMajorRecordIdentifierGetter record,
         Topic topic)
     {
         if (topic.Severity < _minimum.MinimumSeverity) return;
