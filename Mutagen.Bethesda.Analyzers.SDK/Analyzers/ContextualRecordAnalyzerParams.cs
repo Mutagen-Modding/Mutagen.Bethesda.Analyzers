@@ -47,6 +47,8 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
+            mod,
+            record,
             Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }
