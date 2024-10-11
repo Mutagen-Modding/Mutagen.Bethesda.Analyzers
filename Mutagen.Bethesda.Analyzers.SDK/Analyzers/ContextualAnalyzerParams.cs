@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 /// </summary>
 public readonly struct ContextualAnalyzerParams
 {
+    public Type? AnalyzerType { get; init; }
     private readonly IReportDropbox _reportDropbox;
     private readonly ReportContextParameters _parameters;
 
@@ -45,6 +46,6 @@ public readonly struct ContextualAnalyzerParams
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }

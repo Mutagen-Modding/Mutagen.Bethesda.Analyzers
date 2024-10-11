@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 public readonly struct IsolatedRecordFrameAnalyzerParams<TMajor>
     where TMajor : IMajorRecordGetter
 {
+    public Type? AnalyzerType { get; init; }
     private readonly IReportDropbox _reportDropbox;
     private readonly ReportContextParameters _parameters;
 
@@ -35,7 +36,7 @@ public readonly struct IsolatedRecordFrameAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }
 
@@ -46,14 +47,17 @@ public readonly struct IsolatedRecordFrameAnalyzerParams
 {
     private readonly IReportDropbox _reportDropbox;
     private readonly ReportContextParameters _parameters;
+    public readonly Type AnalyzerType;
 
     public readonly MajorRecordFrame Frame;
 
     internal IsolatedRecordFrameAnalyzerParams(
         IReportDropbox reportDropbox,
         ReportContextParameters parameters,
-        MajorRecordFrame frame)
+        MajorRecordFrame frame,
+        Type analyzerType)
     {
+        AnalyzerType = analyzerType;
         _reportDropbox = reportDropbox;
         _parameters = parameters;
         Frame = frame;
@@ -68,6 +72,6 @@ public readonly struct IsolatedRecordFrameAnalyzerParams
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }

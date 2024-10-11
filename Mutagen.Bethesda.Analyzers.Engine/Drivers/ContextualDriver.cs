@@ -24,7 +24,10 @@ public class ContextualDriver : IContextualDriver
             reportContext);
         foreach (var contextualAnalyzer in _contextualAnalyzers)
         {
-            contextualAnalyzer.Analyze(analyzerParams);
+            contextualAnalyzer.Analyze(analyzerParams with
+            {
+                AnalyzerType = contextualAnalyzer.GetType()
+            });
         }
     }
 }

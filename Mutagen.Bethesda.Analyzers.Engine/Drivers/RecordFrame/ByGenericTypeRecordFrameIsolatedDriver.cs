@@ -34,7 +34,10 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
 
         foreach (var analyzer in _isolatedRecordFrameAnalyzers)
         {
-            analyzer.AnalyzeRecord(param);
+            analyzer.AnalyzeRecord(param with
+            {
+                AnalyzerType = analyzer.GetType()
+            });
         }
     }
 }

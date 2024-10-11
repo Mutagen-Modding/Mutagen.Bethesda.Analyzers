@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 public readonly struct ContextualRecordAnalyzerParams<TMajor>
     where TMajor : IMajorRecordGetter
 {
+    public Type? AnalyzerType { get; init; }
     public readonly ILinkCache LinkCache;
     public readonly ILoadOrderGetter<IModListingGetter<IModGetter>> LoadOrder;
     public readonly TMajor Record;
@@ -35,7 +36,7 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 
     public void AddTopic(
@@ -46,6 +47,6 @@ public readonly struct ContextualRecordAnalyzerParams<TMajor>
     {
         _reportDropbox.Dropoff(
             _parameters,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }

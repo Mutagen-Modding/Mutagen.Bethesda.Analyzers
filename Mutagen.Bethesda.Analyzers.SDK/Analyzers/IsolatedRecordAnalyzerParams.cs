@@ -9,9 +9,10 @@ namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 /// Object containing all the parameters available for a <see cref="IIsolatedRecordAnalyzer{TMajor}"/>
 /// </summary>
 /// <typeparam name="TMajor">The type of record being analyzed</typeparam>
-public readonly struct IsolatedRecordAnalyzerParams<TMajor>
+public readonly record struct IsolatedRecordAnalyzerParams<TMajor>
     where TMajor : IMajorRecordGetter
 {
+    public Type? AnalyzerType { get; init; }
     private readonly ModKey _mod;
     private readonly ReportContextParameters _parameters;
     private readonly IReportDropbox _reportDropbox;
@@ -44,6 +45,6 @@ public readonly struct IsolatedRecordAnalyzerParams<TMajor>
             _parameters,
             _mod,
             Record,
-            Topic.Create(formattedTopicDefinition, metaData));
+            Topic.Create(formattedTopicDefinition, AnalyzerType, metaData));
     }
 }

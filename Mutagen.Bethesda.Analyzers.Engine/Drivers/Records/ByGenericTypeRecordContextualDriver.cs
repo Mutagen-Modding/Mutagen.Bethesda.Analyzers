@@ -26,13 +26,17 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
 
             foreach (var rec in listing.Mod.EnumerateMajorRecords<TMajor>())
             {
+                var param = new ContextualRecordAnalyzerParams<TMajor>(
+                    driverParams.LinkCache,
+                    driverParams.LoadOrder,
+                    rec,
+                    driverParams.ReportDropbox);
                 foreach (var analyzer in _contextualRecordAnalyzers)
                 {
-                    analyzer.AnalyzeRecord(new ContextualRecordAnalyzerParams<TMajor>(
-                        driverParams.LinkCache,
-                        driverParams.LoadOrder,
-                        rec,
-                        driverParams.ReportDropbox));
+                    analyzer.AnalyzeRecord(param with
+                    {
+                        AnalyzerType = analyzer.GetType()
+                    });
                 }
             }
         }

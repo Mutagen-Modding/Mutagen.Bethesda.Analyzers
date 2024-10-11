@@ -38,12 +38,13 @@ public class DisallowedParametersChecker : IReportDropbox
     {
         return topic with
         {
-            FormattedTopic = topic.FormattedTopic.Transform(parameters, Checker)
+            FormattedTopic = topic.FormattedTopic.Transform(parameters, (param, item) => Checker(param, topic, item))
         };
     }
 
     private object? Checker(
         ReportContextParameters parameters,
+        Topic topic,
         object? item)
     {
         switch (item)
@@ -52,9 +53,9 @@ public class DisallowedParametersChecker : IReportDropbox
             case string:
                 return item;
             case IEnumerable:
-                throw new ArgumentException("Enumerables are not allowed in formatted topic parameters");
+                throw new ArgumentException($"Enumerables are not allowed in formatted topic parameters: {topic.TopicDefinition} ({topic.AnalyzerType})");
             case FormKey:
-                throw new ArgumentException("FormKeys are not allowed in formatted topic parameters.  Pass in typed FormLinks instead");
+                throw new ArgumentException($"FormKeys are not allowed in formatted topic parameters.  Pass in typed FormLinks instead: {topic.TopicDefinition} ({topic.AnalyzerType})");
             default:
                 return item;
         }

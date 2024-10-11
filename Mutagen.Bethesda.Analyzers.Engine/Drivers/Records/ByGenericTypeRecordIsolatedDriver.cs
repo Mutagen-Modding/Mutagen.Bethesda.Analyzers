@@ -32,7 +32,10 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
                 driverParams.ReportDropbox);
             foreach (var analyzer in _isolatedRecordAnalyzers)
             {
-                analyzer.AnalyzeRecord(isolatedParam);
+                analyzer.AnalyzeRecord(isolatedParam with
+                {
+                    AnalyzerType = analyzer.GetType()
+                });
             }
         }
     }
