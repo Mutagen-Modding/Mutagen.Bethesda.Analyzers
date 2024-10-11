@@ -10,7 +10,7 @@ public class DialogueAliasAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
     public static readonly TopicDefinition<string?> InvalidDialogueAlias = MutagenTopicBuilder.DevelopmentTopic(
             "Invalid Dialogue Alias",
             Severity.Warning)
-        .WithFormatting<string?>("Alias {0} that is forced to none, has no additional dialogue formlist/npc and has dialogue conditioned to it doesn't get any lines for VA exported");
+        .WithFormatting<string?>("Alias {0} that is forced to none, has no additional dialogue formlist/npc and has dialogue conditioned to it - no lines available for VA export");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [InvalidDialogueAlias];
 

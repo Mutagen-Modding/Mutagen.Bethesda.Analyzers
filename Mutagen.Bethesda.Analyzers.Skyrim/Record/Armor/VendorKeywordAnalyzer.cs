@@ -7,15 +7,15 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
 public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
 {
-    public static readonly TopicDefinition ArmorMissingVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<FormLink<IKeywordGetter>> ArmorMissingVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
             "Armor is missing Vendor Keyword",
             Severity.Suggestion)
-        .WithoutFormatting("Missing vendor keywords");
+        .WithFormatting<FormLink<IKeywordGetter>>("Missing vendor keyword {0}");
 
     public static readonly TopicDefinition UnsuitableVendorKeyword = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has unsuitable Vendor Keyword",
             Severity.Suggestion)
-        .WithoutFormatting("Expected vendor keywords");
+        .WithoutFormatting("Armor has unsuitable vendor keywords");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMissingVendorKeyword];
 
@@ -82,15 +82,13 @@ public class VendorKeywordAnalyzer : IIsolatedRecordAnalyzer<IArmorGetter>
         if (vendorKeywords.Count == 0)
         {
             param.AddTopic(
-                ArmorMissingVendorKeyword.Format(),
-                ("Expected Vendor Keywords", expectedVendorKeyword));
+                ArmorMissingVendorKeyword.Format(expectedVendorKeyword));
             return;
         }
 
         param.AddTopic(
             UnsuitableVendorKeyword.Format(),
-            ("Vendor Keywords", vendorKeywords),
-            ("Expected Vendor Keywords", expectedVendorKeyword));
+            ("Unsuitable Vendor Keywords", vendorKeywords));
     }
 
     public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
