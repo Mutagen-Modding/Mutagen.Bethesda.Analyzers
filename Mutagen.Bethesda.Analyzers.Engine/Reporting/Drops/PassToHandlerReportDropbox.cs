@@ -13,7 +13,6 @@ public class PassToHandlerReportDropbox : IReportDropbox
     public PassToHandlerReportDropbox(IReportHandler[] handlers)
     {
         _handlers = handlers;
-
     }
 
     public void Dropoff(

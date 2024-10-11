@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Autofac;
+using Noggog.Autofac;
 using Noggog.Autofac.Modules;
 
 namespace Mutagen.Bethesda.Analyzers.Autofac;
@@ -14,6 +16,9 @@ public class MainModule : Module
         builder.RegisterModule<MutagenModule>();
         builder.RegisterModule<ReflectionDriverModule>();
         builder.RegisterAssemblyTypes(typeof(IsolatedEngine).Assembly)
+            .InNamespacesOf(
+                typeof(ContextualEngine),
+                typeof(AnalyzerConfig))
             .AsImplementedInterfaces()
             .AsSelf()
             .SingleInstance();
