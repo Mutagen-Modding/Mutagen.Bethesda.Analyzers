@@ -29,14 +29,14 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
         {
             if (listing.Mod is null) continue;
 
-            foreach (var rec in listing.Mod.EnumerateMajorRecords<TMajor>())
+            await Task.WhenAll(listing.Mod.EnumerateMajorRecords<TMajor>().SelectMany(rec =>
             {
                 var param = new ContextualRecordAnalyzerParams<TMajor>(
                     driverParams.LinkCache,
                     driverParams.LoadOrder,
                     rec,
                     driverParams.ReportDropbox);
-                await Task.WhenAll(_contextualRecordAnalyzers.Select(analyzer =>
+                return _contextualRecordAnalyzers.Select(analyzer =>
                 {
                     return _dropoff.EnqueueAndWait(() =>
                     {
@@ -45,8 +45,8 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
                             AnalyzerType = analyzer.GetType()
                         });
                     });
-                }));
-            }
+                });
+            }));
         }
     }
 }

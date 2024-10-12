@@ -43,6 +43,8 @@ public class ContextualEngine : IContextualEngine
         using var env = EnvGetter.Construct();
         CancellationToken cancel = CancellationToken.None;
 
+        List<Task> toDo = new();
+
         var isolatedDrivers = IsolatedModDrivers.Drivers;
         if (isolatedDrivers.Count > 0)
         {
@@ -58,13 +60,13 @@ public class ContextualEngine : IContextualEngine
                     listing.Mod,
                     modPath);
 
-                await Task.WhenAll(IsolatedModDrivers.Drivers.Select(driver =>
+                toDo.Add(Task.WhenAll(IsolatedModDrivers.Drivers.Select(driver =>
                 {
                     return _workDropoff.EnqueueAndWait(() =>
                     {
                         return driver.Drive(isolatedParam);
                     }, cancel);
-                }));
+                })));
             }
         }
 
@@ -73,12 +75,14 @@ public class ContextualEngine : IContextualEngine
             env.LoadOrder,
             ReportDropbox);
 
-        await Task.WhenAll(ContextualModDrivers.Drivers.Select(driver =>
+        toDo.Add(Task.WhenAll(ContextualModDrivers.Drivers.Select(driver =>
         {
             return _workDropoff.EnqueueAndWait(() =>
             {
                 return driver.Drive(contextualParam);
             }, cancel);
-        }));
+        })));
+
+        await Task.WhenAll(toDo);
     }
 }

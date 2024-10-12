@@ -61,66 +61,96 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     public async Task Drive(ContextualDriverParams driverParams)
     {
-        foreach (var listing in driverParams.LoadOrder.ListedOrder)
-        {
-            if (listing.Mod is null) continue;
-
-            var modPath = Path.Combine(_dataDataDirectoryProvider.Path, listing.ModKey.FileName);
-
-            var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, modPath);
-            using var stream = new MutagenBinaryReadStream(modPath, parsingMeta);
-            var locs = RecordLocator.GetLocations(stream);
-
-            foreach (var recordLocationMarker in locs.ListedRecords)
+        await Task.WhenAll(driverParams.LoadOrder.ListedOrder
+            .Select(x => x.Mod)
+            .NotNull()
+            .Select(async mod =>
             {
-                if (!_mapping.TryGetValue(recordLocationMarker.Value.Record, out var analyzerBundles)) continue;
-                if (analyzerBundles.Isolated.Length == 0 && analyzerBundles.Contextual.Length == 0) continue;
+                var modPath = Path.Combine(_dataDataDirectoryProvider.Path, mod.ModKey.FileName);
 
-                stream.Position = recordLocationMarker.Value.Location.Min;
+                var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, modPath);
+                await using var stream = new MutagenBinaryReadStream(modPath, parsingMeta);
+                var locs = await _dropoff.EnqueueAndWait(() => RecordLocator.GetLocations(stream));
 
-                var width = checked((int)recordLocationMarker.Value.Location.Width);
+                var amount = locs.ListedRecords.Count;
+                var tasks = ArrayPool<Task?>.Shared.Rent(locs.ListedRecords.Count);
+                var bufs = ArrayPool<byte[]?>.Shared.Rent(locs.ListedRecords.Count);
 
-                var buf = ArrayPool<byte>.Shared.Rent(width);
-
-                var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
-                if (amountRead != width)
+                try
                 {
-                    throw new DataMisalignedException();
-                }
-
-                var frame = new MajorRecordFrame(_constants, buf);
-
-                if (analyzerBundles.Isolated.Length > 0)
-                {
-                    var isolatedParams = new IsolatedDriverParams(
-                        listing.Mod.ToUntypedImmutableLinkCache(),
-                        driverParams.ReportDropbox,
-                        listing.Mod,
-                        modPath);
-
-                    await Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
+                    for (int i = 0; i < amount; i++)
                     {
-                        return _dropoff.EnqueueAndWait(() =>
+                        var recordLocationMarker = locs.ListedRecords[i];
+                        if (!_mapping.TryGetValue(recordLocationMarker.Record, out var analyzerBundles)) continue;
+                        if (analyzerBundles.Isolated.Length == 0 && analyzerBundles.Contextual.Length == 0) continue;
+
+                        stream.Position = recordLocationMarker.Location.Min;
+
+                        var width = checked((int)recordLocationMarker.Location.Width);
+
+                        var buf = ArrayPool<byte>.Shared.Rent(width);
+                        bufs[i] = buf;
+
+                        var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
+                        if (amountRead != width)
                         {
-                            analyzer.Drive(isolatedParams, frame);
-                        });
-                    }));
-                }
+                            throw new DataMisalignedException();
+                        }
 
-                await Task.WhenAll(analyzerBundles.Contextual.Select(analyzer =>
-                {
-                    return _dropoff.EnqueueAndWait(() =>
+                        var frame = new MajorRecordFrame(_constants, new ReadOnlyMemorySlice<byte>(buf).Slice(width));
+
+                        List<Task> toDo = new();
+
+                        if (analyzerBundles.Isolated.Length > 0)
+                        {
+                            var isolatedParams = new IsolatedDriverParams(
+                                mod.ToUntypedImmutableLinkCache(),
+                                driverParams.ReportDropbox,
+                                mod,
+                                modPath);
+
+                            toDo.Add(Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
+                            {
+                                return _dropoff.EnqueueAndWait(() =>
+                                {
+                                    analyzer.Drive(isolatedParams, frame);
+                                });
+                            })));
+                        }
+
+                        toDo.Add(Task.WhenAll(analyzerBundles.Contextual.Select(analyzer =>
+                        {
+                            return _dropoff.EnqueueAndWait(() =>
+                            {
+                                analyzer.Drive(driverParams, frame);
+                            });
+                        })));
+
+                        tasks[i] = Task.WhenAll(toDo);
+                    }
+
+                    for (int i = 0; i < amount; i++)
                     {
-                        analyzer.Drive(driverParams, frame);
-                    });
-                }));
-
-                await _dropoff.EnqueueAndWait(() =>
+                        var task = tasks[i];
+                        if (task != null)
+                        {
+                            await task;
+                        }
+                    }
+                }
+                finally
                 {
-                    ArrayPool<byte>.Shared.Return(buf);
-                });
-            }
-        }
+                    ArrayPool<Task?>.Shared.Return(tasks);
+
+                    for (int i = 0; i < amount; i++)
+                    {
+                        var buf = bufs[i];
+                        if (buf == null) continue;
+                        ArrayPool<byte>.Shared.Return(buf);
+                    }
+                    ArrayPool<byte[]?>.Shared.Return(bufs);
+                }
+            }));
     }
 
     public async Task Drive(IsolatedDriverParams driverParams)
@@ -129,37 +159,63 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
         using var stream = new MutagenBinaryReadStream(driverParams.TargetModPath, parsingMeta);
         var locs = RecordLocator.GetLocations(stream);
 
-        foreach (var recordLocationMarker in locs.ListedRecords)
+        var amount = locs.ListedRecords.Count;
+        var tasks = ArrayPool<Task>.Shared.Rent(locs.ListedRecords.Count);
+        var bufs = ArrayPool<byte[]?>.Shared.Rent(locs.ListedRecords.Count);
+        for (int i = 0; i < amount; i++)
         {
-            if (!_mapping.TryGetValue(recordLocationMarker.Value.Record, out var analyzerBundles)
-                || analyzerBundles.Isolated.Length == 0) continue;
+            bufs[i] = null;
+        }
 
-            stream.Position = recordLocationMarker.Value.Location.Min;
-
-            var width = checked((int)recordLocationMarker.Value.Location.Width);
-
-            var buf = ArrayPool<byte>.Shared.Rent(width);
-
-            var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
-            if (amountRead != width)
+        try
+        {
+            for (int i = 0; i < amount; i++)
             {
-                throw new DataMisalignedException();
+                var recordLocationMarker = locs.ListedRecords[i];
+                if (!_mapping.TryGetValue(recordLocationMarker.Record, out var analyzerBundles)
+                    || analyzerBundles.Isolated.Length == 0) continue;
+
+                stream.Position = recordLocationMarker.Location.Min;
+
+                var width = checked((int)recordLocationMarker.Location.Width);
+
+                var buf = ArrayPool<byte>.Shared.Rent(width);
+                bufs[i] = buf;
+
+                var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
+                if (amountRead != width)
+                {
+                    throw new DataMisalignedException();
+                }
+
+                var frame = new MajorRecordFrame(GameConstants.Get(_gameReleaseContext.Release), new ReadOnlyMemorySlice<byte>(buf).Slice(width));
+
+                tasks[i] = Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
+                {
+                    return _dropoff.EnqueueAndWait(() =>
+                    {
+                        analyzer.Drive(driverParams, frame);
+                    });
+                }));
             }
 
-            var frame = new MajorRecordFrame(GameConstants.Get(_gameReleaseContext.Release), buf);
-
-            await Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
+            for (int i = 0; i < amount; i++)
             {
-                return _dropoff.EnqueueAndWait(() =>
-                {
-                    analyzer.Drive(driverParams, frame);
-                });
-            }));
-
-            await _dropoff.EnqueueAndWait(() =>
-            {
-                ArrayPool<byte>.Shared.Return(buf);
-            });
+                await tasks[i];
+            }
         }
+        finally
+        {
+            ArrayPool<Task>.Shared.Return(tasks);
+
+            for (int i = 0; i < amount; i++)
+            {
+                var buf = bufs[i];
+                if (buf == null) continue;
+                ArrayPool<byte>.Shared.Return(buf);
+            }
+            ArrayPool<byte[]?>.Shared.Return(bufs);
+        }
+
     }
 }

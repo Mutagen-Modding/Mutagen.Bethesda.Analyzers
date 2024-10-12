@@ -28,14 +28,14 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
         if (_isolatedRecordAnalyzers.Length == 0) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
 
-        foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
+        await Task.WhenAll(driverParams.TargetMod.EnumerateMajorRecords<TMajor>().SelectMany(rec =>
         {
             var isolatedParam = new IsolatedRecordAnalyzerParams<TMajor>(
                 driverParams.TargetMod.ModKey,
                 rec,
                 reportContext,
                 driverParams.ReportDropbox);
-            await Task.WhenAll(_isolatedRecordAnalyzers.Select(analyzer =>
+            return _isolatedRecordAnalyzers.Select(analyzer =>
             {
                 return _dropoff.EnqueueAndWait(() =>
                 {
@@ -44,7 +44,7 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
                         AnalyzerType = analyzer.GetType()
                     });
                 });
-            }));
-        }
+            });
+        }));
     }
 }
