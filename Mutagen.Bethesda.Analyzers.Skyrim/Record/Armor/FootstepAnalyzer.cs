@@ -26,7 +26,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
     public static readonly TopicDefinition<IFormLinkGetter<IRaceGetter>> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has more than one armor addon that adds footstep sound",
             Severity.Suggestion)
-        .WithFormatting<IFormLinkGetter<IRaceGetter>>("Armor has multiple armor addons that have footstep sounds which are enabled for the same race {1}");
+        .WithFormatting<IFormLinkGetter<IRaceGetter>>("Armor has multiple armor addons that have footstep sounds which are enabled for the same race {0}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingFootstepArmorType, ArmorMissingFootstep, ArmorDuplicateFootstep];
 
