@@ -1,19 +1,13 @@
 ﻿using System.IO.Abstractions;
 using Autofac;
-using AutoFixture.Xunit2;
 using FluentAssertions;
-using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.Engines;
-using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Analyzers.Testing;
-using Mutagen.Bethesda.Analyzers.Testing.AutoFixture;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
-using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.Analyzers.Tests.Engine;
@@ -21,7 +15,7 @@ namespace Mutagen.Bethesda.Analyzers.Tests.Engine;
 public class EngineTests
 {
     [Theory, MutagenModAutoData]
-    public void IsolatedEngineCallsRecordAnalyzers(
+    public async Task IsolatedEngineCallsRecordAnalyzers(
         IFileSystem fileSystem,
         SkyrimMod mod,
         Npc npc,
@@ -43,7 +37,7 @@ public class EngineTests
             .WithFileSystem(fileSystem)
             .Write();
 
-        sut.RunOn(modPath, dropoff);
+        await sut.RunOn(modPath, dropoff);
 
         dropoff.Reports.Select(x => x.TopicDefinition.Id)
             .Should().Equal(TestIsolatedRecordAnalyzer.HasHeight.Id);

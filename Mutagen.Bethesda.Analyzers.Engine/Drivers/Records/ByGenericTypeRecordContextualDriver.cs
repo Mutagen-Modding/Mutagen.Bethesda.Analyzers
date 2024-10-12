@@ -1,11 +1,13 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;
 
 public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
     where TMajor : class, IMajorRecordGetter
 {
+    private readonly IWorkDropoff _dropoff;
     private readonly IContextualRecordAnalyzer<TMajor>[] _contextualRecordAnalyzers;
 
     public bool Applicable => _contextualRecordAnalyzers.Length > 0;
@@ -13,13 +15,16 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
     public IEnumerable<IAnalyzer> Analyzers => _contextualRecordAnalyzers;
 
     public ByGenericTypeRecordContextualDriver(
-        IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers)
+        IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers,
+        IWorkDropoff dropoff)
     {
         _contextualRecordAnalyzers = contextualRecordAnalyzers;
+        _dropoff = dropoff;
     }
 
-    public void Drive(ContextualDriverParams driverParams)
+    public async Task Drive(ContextualDriverParams driverParams)
     {
+        if (_contextualRecordAnalyzers.Length == 0) return;
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
             if (listing.Mod is null) continue;
@@ -31,13 +36,16 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
                     driverParams.LoadOrder,
                     rec,
                     driverParams.ReportDropbox);
-                foreach (var analyzer in _contextualRecordAnalyzers)
+                await Task.WhenAll(_contextualRecordAnalyzers.Select(analyzer =>
                 {
-                    analyzer.AnalyzeRecord(param with
+                    return _dropoff.EnqueueAndWait(() =>
                     {
-                        AnalyzerType = analyzer.GetType()
+                        analyzer.AnalyzeRecord(param with
+                        {
+                            AnalyzerType = analyzer.GetType()
+                        });
                     });
-                }
+                }));
             }
         }
     }

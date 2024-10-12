@@ -4,5 +4,5 @@ namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 
 public interface IIsolatedRecordFrameAnalyzerDriver : IRecordFrameAnalyzerBundle
 {
-    void Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame);
+    Task Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame);
 }

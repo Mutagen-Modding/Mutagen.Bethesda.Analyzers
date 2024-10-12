@@ -8,13 +8,13 @@ using Mutagen.Bethesda.Analyzers.Cli.Modules;
 using Mutagen.Bethesda.Analyzers.Cli.Overrides;
 using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.Reporting.Handlers;
-using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Skyrim;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using Noggog.StructuredStrings;
+using Noggog.WorkEngine;
 using IContainer = Autofac.IContainer;
 
 namespace Mutagen.Bethesda.Analyzers.Cli;
@@ -26,10 +26,14 @@ public static class RunAnalyzers
         var container = GetContainer(command);
 
         var engine = container.Resolve<ContextualEngine>();
+        var consumer = container.Resolve<IWorkConsumer>();
 
         PrintTopics(command, engine);
 
+        consumer.Start();
         await engine.Run();
+
+        await consumer.AwaitUntilEmpty();
 
         return 0;
     }
@@ -71,6 +75,7 @@ public static class RunAnalyzers
             .AsImplementedInterfaces();
         builder.RegisterType<ConsoleReportHandler>().AsImplementedInterfaces();
         builder.RegisterInstance(command).AsImplementedInterfaces();
+        builder.RegisterInstance(new NumWorkThreadsConstant(command.NumThreads)).AsImplementedInterfaces();
 
         if (command.CustomDataFolder is not null)
         {

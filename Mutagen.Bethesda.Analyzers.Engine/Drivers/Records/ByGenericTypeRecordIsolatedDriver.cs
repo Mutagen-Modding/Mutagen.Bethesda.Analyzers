@@ -1,12 +1,14 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;
 
 public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
     where TMajor : class, IMajorRecordGetter
 {
+    private readonly IWorkDropoff _dropoff;
     private readonly IIsolatedRecordAnalyzer<TMajor>[] _isolatedRecordAnalyzers;
 
     public bool Applicable => _isolatedRecordAnalyzers.Length > 0;
@@ -14,13 +16,16 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
     public IEnumerable<IAnalyzer> Analyzers => _isolatedRecordAnalyzers;
 
     public ByGenericTypeRecordIsolatedDriver(
-        IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers)
+        IIsolatedRecordAnalyzer<TMajor>[] isolatedRecordAnalyzers,
+        IWorkDropoff dropoff)
     {
         _isolatedRecordAnalyzers = isolatedRecordAnalyzers;
+        _dropoff = dropoff;
     }
 
-    public void Drive(IsolatedDriverParams driverParams)
+    public async Task Drive(IsolatedDriverParams driverParams)
     {
+        if (_isolatedRecordAnalyzers.Length == 0) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
 
         foreach (var rec in driverParams.TargetMod.EnumerateMajorRecords<TMajor>())
@@ -30,13 +35,16 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
                 rec,
                 reportContext,
                 driverParams.ReportDropbox);
-            foreach (var analyzer in _isolatedRecordAnalyzers)
+            await Task.WhenAll(_isolatedRecordAnalyzers.Select(analyzer =>
             {
-                analyzer.AnalyzeRecord(isolatedParam with
+                return _dropoff.EnqueueAndWait(() =>
                 {
-                    AnalyzerType = analyzer.GetType()
+                    analyzer.AnalyzeRecord(isolatedParam with
+                    {
+                        AnalyzerType = analyzer.GetType()
+                    });
                 });
-            }
+            }));
         }
     }
 }

@@ -8,11 +8,14 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 
 public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 {
+    private readonly IWorkDropoff _dropoff;
+    private readonly GameConstants _constants;
     private readonly IGameReleaseContext _gameReleaseContext;
     private readonly IDataDirectoryProvider _dataDataDirectoryProvider;
 
@@ -35,10 +38,13 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
         IGameReleaseContext gameReleaseContext,
         IDataDirectoryProvider dataDataDirectoryProvider,
         IIsolatedRecordFrameAnalyzerDriver[] isolatedDrivers,
-        IContextualRecordFrameAnalyzerDriver[] contextualDrivers)
+        IContextualRecordFrameAnalyzerDriver[] contextualDrivers,
+        IWorkDropoff dropoff)
     {
         _gameReleaseContext = gameReleaseContext;
         _dataDataDirectoryProvider = dataDataDirectoryProvider;
+        _dropoff = dropoff;
+        _constants = GameConstants.Get(_gameReleaseContext.Release);
         foreach (var drivers in isolatedDrivers
                      .Where(x => x.Applicable)
                      .GroupBy(x => x.TargetType))
@@ -53,7 +59,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
         }
     }
 
-    public void Drive(ContextualDriverParams driverParams)
+    public async Task Drive(ContextualDriverParams driverParams)
     {
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
@@ -68,6 +74,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
             foreach (var recordLocationMarker in locs.ListedRecords)
             {
                 if (!_mapping.TryGetValue(recordLocationMarker.Value.Record, out var analyzerBundles)) continue;
+                if (analyzerBundles.Isolated.Length == 0 && analyzerBundles.Contextual.Length == 0) continue;
 
                 stream.Position = recordLocationMarker.Value.Location.Min;
 
@@ -75,40 +82,48 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
                 var buf = ArrayPool<byte>.Shared.Rent(width);
 
-                try
+                var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
+                if (amountRead != width)
                 {
-                    stream.Read(buf.AsSpan().Slice(0, width));
+                    throw new DataMisalignedException();
+                }
 
-                    var frame = new MajorRecordFrame(GameConstants.Get(_gameReleaseContext.Release), buf);
+                var frame = new MajorRecordFrame(_constants, buf);
 
-                    if (analyzerBundles.Isolated.Length > 0)
+                if (analyzerBundles.Isolated.Length > 0)
+                {
+                    var isolatedParams = new IsolatedDriverParams(
+                        listing.Mod.ToUntypedImmutableLinkCache(),
+                        driverParams.ReportDropbox,
+                        listing.Mod,
+                        modPath);
+
+                    await Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
                     {
-                        var isolatedParams = new IsolatedDriverParams(
-                            listing.Mod.ToUntypedImmutableLinkCache(),
-                            driverParams.ReportDropbox,
-                            listing.Mod,
-                            modPath);
-
-                        foreach (var analyzer in analyzerBundles.Isolated)
+                        return _dropoff.EnqueueAndWait(() =>
                         {
                             analyzer.Drive(isolatedParams, frame);
-                        }
-                    }
+                        });
+                    }));
+                }
 
-                    foreach (var analyzer in analyzerBundles.Contextual)
+                await Task.WhenAll(analyzerBundles.Contextual.Select(analyzer =>
+                {
+                    return _dropoff.EnqueueAndWait(() =>
                     {
                         analyzer.Drive(driverParams, frame);
-                    }
-                }
-                finally
+                    });
+                }));
+
+                await _dropoff.EnqueueAndWait(() =>
                 {
                     ArrayPool<byte>.Shared.Return(buf);
-                }
+                });
             }
         }
     }
 
-    public void Drive(IsolatedDriverParams driverParams)
+    public async Task Drive(IsolatedDriverParams driverParams)
     {
         var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, driverParams.TargetModPath);
         using var stream = new MutagenBinaryReadStream(driverParams.TargetModPath, parsingMeta);
@@ -116,7 +131,8 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
         foreach (var recordLocationMarker in locs.ListedRecords)
         {
-            if (!_mapping.TryGetValue(recordLocationMarker.Value.Record, out var analyzerBundles)) continue;
+            if (!_mapping.TryGetValue(recordLocationMarker.Value.Record, out var analyzerBundles)
+                || analyzerBundles.Isolated.Length == 0) continue;
 
             stream.Position = recordLocationMarker.Value.Location.Min;
 
@@ -124,24 +140,26 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
             var buf = ArrayPool<byte>.Shared.Rent(width);
 
-            try
+            var amountRead = stream.Read(buf.AsSpan().Slice(0, width));
+            if (amountRead != width)
             {
-                stream.Read(buf.AsSpan().Slice(0, width));
-
-                var frame = new MajorRecordFrame(GameConstants.Get(_gameReleaseContext.Release), buf);
-
-                if (analyzerBundles.Isolated.Length > 0)
-                {
-                    foreach (var analyzer in analyzerBundles.Isolated)
-                    {
-                        analyzer.Drive(driverParams, frame);
-                    }
-                }
+                throw new DataMisalignedException();
             }
-            finally
+
+            var frame = new MajorRecordFrame(GameConstants.Get(_gameReleaseContext.Release), buf);
+
+            await Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
+            {
+                return _dropoff.EnqueueAndWait(() =>
+                {
+                    analyzer.Drive(driverParams, frame);
+                });
+            }));
+
+            await _dropoff.EnqueueAndWait(() =>
             {
                 ArrayPool<byte>.Shared.Return(buf);
-            }
+            });
         }
     }
 }

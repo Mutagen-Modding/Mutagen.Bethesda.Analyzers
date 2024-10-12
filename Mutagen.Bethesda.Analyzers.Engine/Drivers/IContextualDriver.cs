@@ -2,5 +2,5 @@
 
 public interface IContextualDriver : IDriver
 {
-    void Drive(ContextualDriverParams driverParams);
+    Task Drive(ContextualDriverParams driverParams);
 }

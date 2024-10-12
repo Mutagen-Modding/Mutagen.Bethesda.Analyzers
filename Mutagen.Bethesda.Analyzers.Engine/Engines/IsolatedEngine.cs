@@ -2,16 +2,18 @@
 using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Engines;
 
 public interface IIsolatedEngine : IEngine
 {
-    void RunOn(ModPath modPath, IReportDropbox reportDropbox);
+    Task RunOn(ModPath modPath, IReportDropbox reportDropbox);
 }
 
 public class IsolatedEngine : IIsolatedEngine
 {
+    private readonly IWorkDropoff _workDropoff;
     public IModImporter ModImporter { get; }
     public IDriverProvider<IIsolatedDriver> IsolatedDrivers { get; }
 
@@ -19,13 +21,15 @@ public class IsolatedEngine : IIsolatedEngine
 
     public IsolatedEngine(
         IModImporter modImporter,
-        IDriverProvider<IIsolatedDriver> isolatedDrivers)
+        IDriverProvider<IIsolatedDriver> isolatedDrivers,
+        IWorkDropoff workDropoff)
     {
         ModImporter = modImporter;
         IsolatedDrivers = isolatedDrivers;
+        _workDropoff = workDropoff;
     }
 
-    public void RunOn(ModPath modPath, IReportDropbox reportDropbox)
+    public async Task RunOn(ModPath modPath, IReportDropbox reportDropbox)
     {
         var mod = ModImporter.Import(modPath);
 
@@ -35,9 +39,12 @@ public class IsolatedEngine : IIsolatedEngine
             mod,
             modPath);
 
-        foreach (var driver in IsolatedDrivers.Drivers)
+        await Task.WhenAll(IsolatedDrivers.Drivers.Select(driver =>
         {
-            driver.Drive(driverParams);
-        }
+            return _workDropoff.EnqueueAndWait(() =>
+            {
+                return driver.Drive(driverParams);
+            });
+        }));
     }
 }

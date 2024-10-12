@@ -4,12 +4,14 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 
 public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecordFrameAnalyzerDriver
     where TMajor : class, IMajorRecordGetter
 {
+    private readonly IWorkDropoff _dropoff;
     private readonly IContextualRecordFrameAnalyzer<TMajor>[] _contextualRecordFrameAnalyzers;
 
     public bool Applicable => _contextualRecordFrameAnalyzers.Length > 0;
@@ -19,12 +21,14 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
     public RecordType TargetType => MajorRecordTypeLookup<TMajor>.RecordType;
 
     public ByGenericTypeRecordFrameContextualDriver(
+        IWorkDropoff dropoff,
         IContextualRecordFrameAnalyzer<TMajor>[] contextualRecordFrameAnalyzers)
     {
+        _dropoff = dropoff;
         _contextualRecordFrameAnalyzers = contextualRecordFrameAnalyzers;
     }
 
-    public void Drive(ContextualDriverParams driverParams, MajorRecordFrame frame)
+    public async Task Drive(ContextualDriverParams driverParams, MajorRecordFrame frame)
     {
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
         var param = new ContextualRecordFrameAnalyzerParams<TMajor>(
@@ -32,9 +36,12 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
             driverParams.LoadOrder,
             frame);
 
-        foreach (var analyzer in _contextualRecordFrameAnalyzers)
+        await Task.WhenAll(_contextualRecordFrameAnalyzers.Select(analyzer =>
         {
-            analyzer.AnalyzeRecord(param);
-        }
+            return _dropoff.EnqueueAndWait(() =>
+            {
+                analyzer.AnalyzeRecord(param);
+            });
+        }));
     }
 }

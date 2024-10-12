@@ -1,6 +1,7 @@
-using Mutagen.Bethesda.Analyzers.Drivers;
+﻿using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Environments.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Engines;
 
@@ -11,6 +12,7 @@ public interface IContextualEngine : IEngine
 
 public class ContextualEngine : IContextualEngine
 {
+    private readonly IWorkDropoff _workDropoff;
     public IReportDropbox ReportDropbox { get; }
     public IGameEnvironmentProvider EnvGetter { get; }
     public IDataDirectoryProvider DataDirectoryProvider { get; }
@@ -25,8 +27,10 @@ public class ContextualEngine : IContextualEngine
         IDataDirectoryProvider dataDataDirectoryProvider,
         IDriverProvider<IContextualDriver> contextualDrivers,
         IDriverProvider<IIsolatedDriver> isolatedDrivers,
-        IReportDropbox reportDropbox)
+        IReportDropbox reportDropbox,
+        IWorkDropoff workDropoff)
     {
+        _workDropoff = workDropoff;
         ReportDropbox = reportDropbox;
         EnvGetter = envGetter;
         DataDirectoryProvider = dataDataDirectoryProvider;
@@ -37,11 +41,7 @@ public class ContextualEngine : IContextualEngine
     public async Task Run()
     {
         using var env = EnvGetter.Construct();
-
-        var contextualParam = new ContextualDriverParams(
-            env.LinkCache,
-            env.LoadOrder,
-            ReportDropbox);
+        CancellationToken cancel = CancellationToken.None;
 
         var isolatedDrivers = IsolatedModDrivers.Drivers;
         if (isolatedDrivers.Count > 0)
@@ -58,16 +58,27 @@ public class ContextualEngine : IContextualEngine
                     listing.Mod,
                     modPath);
 
-                foreach (var driver in IsolatedModDrivers.Drivers)
+                await Task.WhenAll(IsolatedModDrivers.Drivers.Select(driver =>
                 {
-                    driver.Drive(isolatedParam);
-                }
+                    return _workDropoff.EnqueueAndWait(() =>
+                    {
+                        return driver.Drive(isolatedParam);
+                    }, cancel);
+                }));
             }
         }
 
-        foreach (var driver in ContextualModDrivers.Drivers)
+        var contextualParam = new ContextualDriverParams(
+            env.LinkCache,
+            env.LoadOrder,
+            ReportDropbox);
+
+        await Task.WhenAll(ContextualModDrivers.Drivers.Select(driver =>
         {
-            driver.Drive(contextualParam);
-        }
+            return _workDropoff.EnqueueAndWait(() =>
+            {
+                return driver.Drive(contextualParam);
+            }, cancel);
+        }));
     }
 }

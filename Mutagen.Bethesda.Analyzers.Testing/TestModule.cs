@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Autofac;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
+using Noggog.WorkEngine;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Analyzers.Testing;
@@ -40,5 +41,6 @@ public class TestModule : Module
         var minSev = Substitute.For<IMinimumSeverityConfiguration>();
         minSev.MinimumSeverity.Returns(Severity.Suggestion);
         builder.RegisterInstance(minSev).As<IMinimumSeverityConfiguration>();
+        builder.RegisterType<InlineWorkDropoff>().As<IWorkDropoff>();
     }
 }
