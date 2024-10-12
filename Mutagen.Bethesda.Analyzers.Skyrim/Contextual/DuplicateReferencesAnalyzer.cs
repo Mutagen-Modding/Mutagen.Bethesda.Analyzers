@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 
@@ -7,10 +8,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateReferencesAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<List<IPlacedObjectGetter>, List<IPlacedObjectGetter>> DuplicateReferences = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<ICellGetter, IFormLinkNullableGetter<IPlaceableObjectGetter>> DuplicateReferences = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate References",
             Severity.Suggestion)
-        .WithFormatting<List<IPlacedObjectGetter>, List<IPlacedObjectGetter>>("The following references are duplicate records of {0} and can be deleted: {1}");
+        .WithFormatting<ICellGetter, IFormLinkNullableGetter<IPlaceableObjectGetter>>("Cell {0} has multiple identical references of {1}");
 
     private static readonly FuncEqualityComparer<IPlacedObjectGetter> DuplicatePlacedComparer = new(
         (a, b) =>
@@ -62,7 +63,10 @@ public class DuplicateReferencesAnalyzer : IContextualAnalyzer
                     removedDuplicates = dispensableDuplicates;
                 }
 
-                param.AddTopic(DuplicateReferences.Format(keptDuplicates, removedDuplicates));
+                param.AddTopic(
+                    DuplicateReferences.Format(cell, duplicateGroup.Key.Base),
+                    ("Keep", keptDuplicates),
+                    ("Remove", removedDuplicates));
             }
         }
     }
