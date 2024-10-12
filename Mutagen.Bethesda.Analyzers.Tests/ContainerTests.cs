@@ -13,7 +13,6 @@ public class ContainerTests
         var builder = new ContainerBuilder();
         builder.RegisterModule<TestModule>();
         var container = builder.Build();
-
         container.Resolve<IsolatedEngine>();
     }
 

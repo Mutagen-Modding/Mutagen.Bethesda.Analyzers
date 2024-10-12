@@ -6,16 +6,28 @@ using Mutagen.Bethesda.Analyzers.Cli.Modules;
 using Mutagen.Bethesda.Analyzers.Config;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Environments.DI;
+using Noggog;
 using NSubstitute;
 
 namespace Mutagen.Bethesda.Analyzers.Testing;
 
 public class TestModule : Module
 {
+    private readonly IFileSystem? _fileSystem;
+
+    public TestModule(IFileSystem? fileSystem)
+    {
+        _fileSystem = fileSystem;
+    }
+
+    public TestModule()
+    {
+    }
+
     protected override void Load(ContainerBuilder builder)
     {
         builder.RegisterModule<RunAnalyzerModule>();
-        builder.RegisterInstance(new FileSystem())
+        builder.RegisterInstance(_fileSystem.GetOrDefault())
             .As<IFileSystem>();
         builder.RegisterGeneric(typeof(NullLogger<>))
             .As(typeof(ILogger<>))
