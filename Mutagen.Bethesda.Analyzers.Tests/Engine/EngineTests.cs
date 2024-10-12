@@ -37,7 +37,7 @@ public class EngineTests
     }
 
     [Theory, NSubData]
-    public void ContextualEngineCallsIsolatedRecordAnalyzers(
+    public async Task ContextualEngineCallsIsolatedRecordAnalyzers(
         IModGetter modA,
         IModGetter modB,
         [Frozen] IReportDropbox reportDropbox,
@@ -53,7 +53,7 @@ public class EngineTests
         sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
         sut.IsolatedModDrivers.Drivers.Returns(drivers);
 
-        sut.Run();
+        await sut.Run();
 
         var modAPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modA.ModKey.FileName));
         var modBPath = new ModPath(Path.Combine(sut.DataDirectoryProvider.Path, modB.ModKey.FileName));
@@ -72,7 +72,7 @@ public class EngineTests
     }
 
     [Theory, NSubData]
-    public void ContextualEngineCallsContextualRecordAnalyzers(
+    public async Task ContextualEngineCallsContextualRecordAnalyzers(
         IModGetter modA,
         IModGetter modB,
         [Frozen] IReportDropbox reportDropbox,
@@ -88,7 +88,7 @@ public class EngineTests
         sut.EnvGetter.Construct().ReturnsForAnyArgs(gameEnv);
         sut.ContextualModDrivers.Drivers.Returns(drivers);
 
-        sut.Run();
+        await sut.Run();
 
         foreach (var driver in drivers)
         {

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Analyzers.Drivers;
+using Mutagen.Bethesda.Analyzers.Drivers;
 using Mutagen.Bethesda.Analyzers.SDK.Drops;
 using Mutagen.Bethesda.Environments.DI;
 
@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines;
 
 public interface IContextualEngine : IEngine
 {
-    void Run();
+    Task Run();
 }
 
 public class ContextualEngine : IContextualEngine
@@ -34,7 +34,7 @@ public class ContextualEngine : IContextualEngine
         IsolatedModDrivers = isolatedDrivers;
     }
 
-    public void Run()
+    public async Task Run()
     {
         using var env = EnvGetter.Construct();
 

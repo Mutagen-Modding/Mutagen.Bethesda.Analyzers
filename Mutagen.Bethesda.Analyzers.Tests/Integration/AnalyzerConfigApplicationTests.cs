@@ -29,22 +29,22 @@ public class AnalyzerConfigApplicationTests
         WarningAnalyzer = new TestAnalyzer(Warning);
     }
 
-    public static TestDropoff RunTest(Action<ContainerBuilder> containerAdjustment)
+    public static async Task<TestDropoff> RunTest(Action<ContainerBuilder> containerAdjustment)
     {
         var builder = new ContainerBuilder();
         builder.RegisterModule<TestModule>();
         containerAdjustment(builder);
         var container = builder.Build();
         var engine = container.Resolve<ContextualEngine>();
-        engine.Run();
+        await engine.Run();
         return container.Resolve<TestDropoff>();
     }
 
     [Theory]
     [AnalyzerAutoData]
-    public void NoReturnActsNormally(IContextualAnalyzer testAnalyzer)
+    public async Task NoReturnActsNormally(IContextualAnalyzer testAnalyzer)
     {
-        var dropoff = RunTest(builder =>
+        var dropoff = await RunTest(builder =>
         {
             testAnalyzer.Analyze(default);
             builder.RegisterInstance(testAnalyzer).AsSelf();
@@ -53,9 +53,9 @@ public class AnalyzerConfigApplicationTests
     }
 
     [Fact]
-    public void PassesDesiredSeverity()
+    public async Task PassesDesiredSeverity()
     {
-        var dropoff = RunTest(builder =>
+        var dropoff = await RunTest(builder =>
         {
             builder.RegisterInstance(WarningAnalyzer).AsImplementedInterfaces();
         });
@@ -63,9 +63,9 @@ public class AnalyzerConfigApplicationTests
     }
 
     [Fact]
-    public void FiltersUndesiredSeverity()
+    public async Task FiltersUndesiredSeverity()
     {
-        var dropoff = RunTest(builder =>
+        var dropoff = await RunTest(builder =>
         {
             builder.RegisterInstance(SuggestionAnalyzer).AsImplementedInterfaces();
             var minSev = Substitute.For<IMinimumSeverityConfiguration>();
@@ -76,9 +76,9 @@ public class AnalyzerConfigApplicationTests
     }
 
     [Fact]
-    public void AdjustsTopicSeverity()
+    public async Task AdjustsTopicSeverity()
     {
-        var dropoff = RunTest(builder =>
+        var dropoff = await RunTest(builder =>
         {
             builder.RegisterInstance(WarningAnalyzer).AsImplementedInterfaces();
             var minSev = Substitute.For<IMinimumSeverityConfiguration>();
