@@ -23,10 +23,10 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             Severity.Warning)
         .WithoutFormatting("Armor has no armor addon that adds footstep sounds");
 
-    public static readonly TopicDefinition<List<IArmorAddonGetter>, IFormLinkGetter<IRaceGetter>> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<IFormLinkGetter<IRaceGetter>> ArmorDuplicateFootstep = MutagenTopicBuilder.DevelopmentTopic(
             "Armor has more than one armor addon that adds footstep sound",
             Severity.Suggestion)
-        .WithFormatting<List<IArmorAddonGetter>, IFormLinkGetter<IRaceGetter>>("Armor has multiple armor addons {0} that have footstep sounds which are enabled for the same race {1}");
+        .WithFormatting<IFormLinkGetter<IRaceGetter>>("Armor has multiple armor addons that have footstep sounds which are enabled for the same race {1}");
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingFootstepArmorType, ArmorMissingFootstep, ArmorDuplicateFootstep];
 
@@ -57,7 +57,8 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             if (addons.Count == 0) continue;
 
             param.AddTopic(
-                ArmorDuplicateFootstep.Format(addons, race));
+                ArmorDuplicateFootstep.Format(race),
+                ("Addons", addons));
         }
 
         // Check if the footstep sound is correct
