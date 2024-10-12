@@ -21,7 +21,7 @@ public class ConsoleReportHandler : IReportHandler
         IMajorRecordIdentifierGetter majorRecord,
         Topic topic)
     {
-        _workDropoff.EnqueueAndWait(() =>
+        _workDropoff.Enqueue(() =>
         {
             Console.WriteLine($"{topic.TopicDefinition}");
             Console.WriteLine($"   {sourceMod.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
@@ -35,7 +35,7 @@ public class ConsoleReportHandler : IReportHandler
         ReportContextParameters parameters,
         Topic topic)
     {
-        _workDropoff.EnqueueAndWait(() =>
+        _workDropoff.Enqueue(() =>
         {
             Console.WriteLine($"{topic.TopicDefinition}");
             Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
