@@ -19,11 +19,13 @@ public class RunAnalyzerModule(RunAnalyzersCommand? command) : Module
             builder.RegisterInstance(new CsvInputs(command.OutputFilePath)).AsSelf().AsImplementedInterfaces();
         }
 
-        builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
-        builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
-        builder.RegisterDecorator<EditorIdEnricher, IReportDropbox>();
-        builder.RegisterDecorator<DisallowedParametersChecker, IReportDropbox>();
+        // Last registered runs first
         builder.RegisterType<PassToHandlerReportDropbox>().AsImplementedInterfaces();
+        builder.RegisterDecorator<EditorIdEnricher, IReportDropbox>();
+        builder.RegisterDecorator<MinimumSeverityFilter, IReportDropbox>();
+        builder.RegisterDecorator<SeverityAdjuster, IReportDropbox>();
+        builder.RegisterDecorator<DisallowedParametersChecker, IReportDropbox>();
+
         builder.RegisterModule<MainModule>();
     }
 }

@@ -22,6 +22,9 @@ public class MainModule : Module
             .AsImplementedInterfaces()
             .AsSelf()
             .SingleInstance();
+        builder.RegisterType<ContextualDriver>()
+            .AsImplementedInterfaces()
+            .SingleInstance();
         builder.RegisterGeneric(typeof(InjectionDriverProvider<>))
             .As(typeof(IDriverProvider<>))
             .SingleInstance();
