@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Analyzers.Engines;
 using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Analyzers.Testing;
+using Mutagen.Bethesda.Environments;
 using NSubstitute;
 using Xunit;
 
@@ -29,22 +30,34 @@ public class AnalyzerConfigApplicationTests
         WarningAnalyzer = new TestAnalyzer(Warning);
     }
 
-    public static async Task<TestDropoff> RunTest(Action<ContainerBuilder> containerAdjustment)
+    public class Payload
     {
-        var builder = new ContainerBuilder();
-        builder.RegisterModule<TestModule>();
-        containerAdjustment(builder);
-        var container = builder.Build();
-        var engine = container.Resolve<ContextualEngine>();
-        await engine.Run(CancellationToken.None);
-        return container.Resolve<TestDropoff>();
+        private readonly IGameEnvironment _env;
+
+        public Payload(IGameEnvironment env)
+        {
+            _env = env;
+        }
+
+        public async Task<TestDropoff> RunTest(Action<ContainerBuilder> containerAdjustment)
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<TestModule>();
+            builder.RegisterInstance(new TestGameEnvironmentProvider(_env)).AsImplementedInterfaces();
+            containerAdjustment(builder);
+            var container = builder.Build();
+            var engine = container.Resolve<ContextualEngine>();
+            await engine.Run(CancellationToken.None);
+            return container.Resolve<TestDropoff>();
+        }
     }
 
-    [Theory]
-    [AnalyzerAutoData]
-    public async Task NoReturnActsNormally(IContextualAnalyzer testAnalyzer)
+    [Theory, AnalyzerAutoData]
+    public async Task NoReturnActsNormally(
+        Payload payload,
+        IContextualAnalyzer testAnalyzer)
     {
-        var dropoff = await RunTest(builder =>
+        var dropoff = await payload.RunTest(builder =>
         {
             testAnalyzer.Analyze(default);
             builder.RegisterInstance(testAnalyzer).AsSelf();
@@ -52,20 +65,20 @@ public class AnalyzerConfigApplicationTests
         dropoff.Reports.Should().HaveCount(0);
     }
 
-    [Fact]
-    public async Task PassesDesiredSeverity()
+    [Theory, AnalyzerAutoData]
+    public async Task PassesDesiredSeverity(Payload payload)
     {
-        var dropoff = await RunTest(builder =>
+        var dropoff = await payload.RunTest(builder =>
         {
             builder.RegisterInstance(WarningAnalyzer).AsImplementedInterfaces();
         });
         dropoff.Reports.Should().HaveCount(1);
     }
 
-    [Fact]
-    public async Task FiltersUndesiredSeverity()
+    [Theory, AnalyzerAutoData]
+    public async Task FiltersUndesiredSeverity(Payload payload)
     {
-        var dropoff = await RunTest(builder =>
+        var dropoff = await payload.RunTest(builder =>
         {
             builder.RegisterInstance(SuggestionAnalyzer).AsImplementedInterfaces();
             var minSev = Substitute.For<IMinimumSeverityConfiguration>();
@@ -75,10 +88,10 @@ public class AnalyzerConfigApplicationTests
         dropoff.Reports.Should().HaveCount(0);
     }
 
-    [Fact]
-    public async Task AdjustsTopicSeverity()
+    [Theory, AnalyzerAutoData]
+    public async Task AdjustsTopicSeverity(Payload payload)
     {
-        var dropoff = await RunTest(builder =>
+        var dropoff = await payload.RunTest(builder =>
         {
             builder.RegisterInstance(WarningAnalyzer).AsImplementedInterfaces();
             var minSev = Substitute.For<IMinimumSeverityConfiguration>();
