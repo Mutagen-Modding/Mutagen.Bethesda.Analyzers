@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines;
 
 public interface IIsolatedEngine : IEngine
 {
-    Task RunOn(ModPath modPath, IReportDropbox reportDropbox);
+    Task RunOn(ModPath modPath, IReportDropbox reportDropbox, CancellationToken cancel);
 }
 
 public class IsolatedEngine : IIsolatedEngine
@@ -29,22 +29,28 @@ public class IsolatedEngine : IIsolatedEngine
         _workDropoff = workDropoff;
     }
 
-    public async Task RunOn(ModPath modPath, IReportDropbox reportDropbox)
+    public async Task RunOn(
+        ModPath modPath,
+        IReportDropbox reportDropbox,
+        CancellationToken cancel)
     {
+        if (cancel.IsCancellationRequested) return;
         var mod = ModImporter.Import(modPath);
 
         var driverParams = new IsolatedDriverParams(
             mod.ToUntypedImmutableLinkCache(),
             reportDropbox,
             mod,
-            modPath);
+            modPath,
+            cancel);
 
+        if (cancel.IsCancellationRequested) return;
         await Task.WhenAll(IsolatedDrivers.Drivers.Select(driver =>
         {
             return _workDropoff.EnqueueAndWait(() =>
             {
                 return driver.Drive(driverParams);
-            });
+            }, cancel);
         }));
     }
 }

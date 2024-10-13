@@ -30,6 +30,7 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
 
     public async Task Drive(ContextualDriverParams driverParams, MajorRecordFrame frame)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
         var param = new ContextualRecordFrameAnalyzerParams<TMajor>(
             driverParams.LinkCache,
@@ -41,7 +42,7 @@ public class ByGenericTypeRecordFrameContextualDriver<TMajor> : IContextualRecor
             return _dropoff.EnqueueAndWait(() =>
             {
                 analyzer.AnalyzeRecord(param);
-            });
+            }, driverParams.CancellationToken);
         }));
     }
 }

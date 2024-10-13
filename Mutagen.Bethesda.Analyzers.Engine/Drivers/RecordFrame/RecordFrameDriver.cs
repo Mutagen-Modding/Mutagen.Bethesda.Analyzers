@@ -61,11 +61,13 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     public async Task Drive(ContextualDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         await Task.WhenAll(driverParams.LoadOrder.ListedOrder
             .Select(x => x.Mod)
             .NotNull()
             .Select(async mod =>
             {
+                if (driverParams.CancellationToken.IsCancellationRequested) return;
                 var modPath = Path.Combine(_dataDataDirectoryProvider.Path, mod.ModKey.FileName);
 
                 var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, modPath);
@@ -80,6 +82,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
                 {
                     for (int i = 0; i < amount; i++)
                     {
+                        if (driverParams.CancellationToken.IsCancellationRequested) return;
                         var recordLocationMarker = locs.ListedRecords[i];
                         if (!_mapping.TryGetValue(recordLocationMarker.Record, out var analyzerBundles)) continue;
                         if (analyzerBundles.Isolated.Length == 0 && analyzerBundles.Contextual.Length == 0) continue;
@@ -107,14 +110,15 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
                                 mod.ToUntypedImmutableLinkCache(),
                                 driverParams.ReportDropbox,
                                 mod,
-                                modPath);
+                                modPath,
+                                driverParams.CancellationToken);
 
                             toDo.Add(Task.WhenAll(analyzerBundles.Isolated.Select(analyzer =>
                             {
                                 return _dropoff.EnqueueAndWait(() =>
                                 {
                                     analyzer.Drive(isolatedParams, frame);
-                                });
+                                }, driverParams.CancellationToken);
                             })));
                         }
 
@@ -123,7 +127,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
                             return _dropoff.EnqueueAndWait(() =>
                             {
                                 analyzer.Drive(driverParams, frame);
-                            });
+                            }, driverParams.CancellationToken);
                         })));
 
                         tasks[i] = Task.WhenAll(toDo);
@@ -131,6 +135,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
                     for (int i = 0; i < amount; i++)
                     {
+                        if (driverParams.CancellationToken.IsCancellationRequested) return;
                         var task = tasks[i];
                         if (task != null)
                         {
@@ -155,6 +160,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
 
     public async Task Drive(IsolatedDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         var parsingMeta = ParsingMeta.Factory(new BinaryReadParameters(), _gameReleaseContext.Release, driverParams.TargetModPath);
         using var stream = new MutagenBinaryReadStream(driverParams.TargetModPath, parsingMeta);
         var locs = RecordLocator.GetLocations(stream);
@@ -171,6 +177,7 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
         {
             for (int i = 0; i < amount; i++)
             {
+                if (driverParams.CancellationToken.IsCancellationRequested) return;
                 var recordLocationMarker = locs.ListedRecords[i];
                 if (!_mapping.TryGetValue(recordLocationMarker.Record, out var analyzerBundles)
                     || analyzerBundles.Isolated.Length == 0) continue;
@@ -195,12 +202,13 @@ public class RecordFrameDriver : IIsolatedDriver, IContextualDriver
                     return _dropoff.EnqueueAndWait(() =>
                     {
                         analyzer.Drive(driverParams, frame);
-                    });
+                    }, driverParams.CancellationToken);
                 }));
             }
 
             for (int i = 0; i < amount; i++)
             {
+                if (driverParams.CancellationToken.IsCancellationRequested) return;
                 await tasks[i];
             }
         }

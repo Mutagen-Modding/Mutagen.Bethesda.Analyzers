@@ -31,7 +31,7 @@ public static class RunAnalyzers
         PrintTopics(command, engine);
 
         consumer.Start();
-        await engine.Run();
+        await engine.Run(CancellationToken.None);
 
         await consumer.AwaitUntilEmpty();
 

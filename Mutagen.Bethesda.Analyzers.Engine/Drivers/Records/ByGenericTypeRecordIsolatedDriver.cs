@@ -25,6 +25,7 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
 
     public async Task Drive(IsolatedDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         if (_isolatedRecordAnalyzers.Length == 0) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
 
@@ -43,7 +44,7 @@ public class ByGenericTypeRecordIsolatedDriver<TMajor> : IIsolatedDriver
                     {
                         AnalyzerType = analyzer.GetType()
                     });
-                });
+                }, driverParams.CancellationToken);
             });
         }));
     }

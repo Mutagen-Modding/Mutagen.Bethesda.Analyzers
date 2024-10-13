@@ -36,7 +36,7 @@ public class AnalyzerConfigApplicationTests
         containerAdjustment(builder);
         var container = builder.Build();
         var engine = container.Resolve<ContextualEngine>();
-        await engine.Run();
+        await engine.Run(CancellationToken.None);
         return container.Resolve<TestDropoff>();
     }
 

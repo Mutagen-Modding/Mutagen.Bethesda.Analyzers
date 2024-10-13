@@ -30,6 +30,7 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
 
     public async Task Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
         var param = new IsolatedRecordFrameAnalyzerParams<TMajor>(
             driverParams.ReportDropbox,
@@ -44,7 +45,7 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
                 {
                     AnalyzerType = analyzer.GetType()
                 });
-            });
+            }, driverParams.CancellationToken);
         }));
     }
 }

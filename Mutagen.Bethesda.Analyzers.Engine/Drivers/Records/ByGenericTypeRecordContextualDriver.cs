@@ -24,9 +24,11 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
 
     public async Task Drive(ContextualDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         if (_contextualRecordAnalyzers.Length == 0) return;
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
+            if (driverParams.CancellationToken.IsCancellationRequested) return;
             if (listing.Mod is null) continue;
 
             await Task.WhenAll(listing.Mod.EnumerateMajorRecords<TMajor>().SelectMany(rec =>
@@ -44,7 +46,7 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
                         {
                             AnalyzerType = analyzer.GetType()
                         });
-                    });
+                    }, driverParams.CancellationToken);
                 });
             }));
         }

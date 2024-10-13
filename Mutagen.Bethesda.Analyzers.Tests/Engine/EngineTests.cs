@@ -37,7 +37,7 @@ public class EngineTests
             .WithFileSystem(fileSystem)
             .Write();
 
-        await sut.RunOn(modPath, dropoff);
+        await sut.RunOn(modPath, dropoff, CancellationToken.None);
 
         dropoff.Reports.Select(x => x.TopicDefinition.Id)
             .Should().Equal(TestIsolatedRecordAnalyzer.HasHeight.Id);
@@ -79,7 +79,7 @@ public class EngineTests
             .WithFileSystem(fileSystem)
             .Write();
 
-        await sut.Run();
+        await sut.Run(CancellationToken.None);
 
         dropoff.Reports.Select(x => x.TopicDefinition.Id)
             .Should().Equal(TestIsolatedRecordAnalyzer.HasHeight.Id);
@@ -121,7 +121,7 @@ public class EngineTests
             .WithFileSystem(fileSystem)
             .Write();
 
-        await sut.Run();
+        await sut.Run(CancellationToken.None);
 
         dropoff.Reports.Select(x => x.TopicDefinition.Id)
             .Should().Equal(TestContextualRecordAnalyzer.HasHeight.Id);

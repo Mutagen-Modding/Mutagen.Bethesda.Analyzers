@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Analyzers.Engines;
 
 public interface IContextualEngine : IEngine
 {
-    Task Run();
+    Task Run(CancellationToken cancel);
 }
 
 public class ContextualEngine : IContextualEngine
@@ -38,10 +38,10 @@ public class ContextualEngine : IContextualEngine
         IsolatedModDrivers = isolatedDrivers;
     }
 
-    public async Task Run()
+    public async Task Run(CancellationToken cancel)
     {
+        if (cancel.IsCancellationRequested) return;
         using var env = EnvGetter.Construct();
-        CancellationToken cancel = CancellationToken.None;
 
         List<Task> toDo = new();
 
@@ -51,6 +51,7 @@ public class ContextualEngine : IContextualEngine
             foreach (var listing in env.LoadOrder.ListedOrder)
             {
                 if (listing.Mod is null) continue;
+                if (cancel.IsCancellationRequested) return;
 
                 var modPath = Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName);
 
@@ -58,7 +59,8 @@ public class ContextualEngine : IContextualEngine
                     listing.Mod.ToUntypedImmutableLinkCache(),
                     ReportDropbox,
                     listing.Mod,
-                    modPath);
+                    modPath,
+                    cancel);
 
                 toDo.Add(Task.WhenAll(IsolatedModDrivers.Drivers.Select(driver =>
                 {
@@ -73,7 +75,8 @@ public class ContextualEngine : IContextualEngine
         var contextualParam = new ContextualDriverParams(
             env.LinkCache,
             env.LoadOrder,
-            ReportDropbox);
+            ReportDropbox,
+            cancel);
 
         toDo.Add(Task.WhenAll(ContextualModDrivers.Drivers.Select(driver =>
         {
@@ -83,6 +86,7 @@ public class ContextualEngine : IContextualEngine
             }, cancel);
         })));
 
+        if (cancel.IsCancellationRequested) return;
         await Task.WhenAll(toDo);
     }
 }

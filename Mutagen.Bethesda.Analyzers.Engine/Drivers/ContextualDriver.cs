@@ -21,6 +21,7 @@ public class ContextualDriver : IContextualDriver
 
     public async Task Drive(ContextualDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         if (_contextualAnalyzers.Length == 0) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
         var analyzerParams = new ContextualAnalyzerParams(
@@ -28,6 +29,7 @@ public class ContextualDriver : IContextualDriver
             driverParams.LoadOrder,
             driverParams.ReportDropbox,
             reportContext);
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         await Task.WhenAll(_contextualAnalyzers.Select(contextualAnalyzer =>
         {
             return _dropoff.EnqueueAndWait(() =>
@@ -36,7 +38,7 @@ public class ContextualDriver : IContextualDriver
                 {
                     AnalyzerType = contextualAnalyzer.GetType()
                 });
-            });
+            }, driverParams.CancellationToken);
         }));
     }
 }
