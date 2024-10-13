@@ -33,8 +33,6 @@ public static class RunAnalyzers
         consumer.Start();
         await engine.Run(CancellationToken.None);
 
-        await consumer.AwaitUntilEmpty();
-
         return 0;
     }
 
