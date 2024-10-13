@@ -44,6 +44,7 @@ public class AnalyzerConfigApplicationTests
             var builder = new ContainerBuilder();
             builder.RegisterModule<TestModule>();
             builder.RegisterInstance(new TestGameEnvironmentProvider(_env)).AsImplementedInterfaces();
+            builder.RegisterInstance(_env).AsImplementedInterfaces();
             containerAdjustment(builder);
             var container = builder.Build();
             var engine = container.Resolve<ContextualEngine>();
