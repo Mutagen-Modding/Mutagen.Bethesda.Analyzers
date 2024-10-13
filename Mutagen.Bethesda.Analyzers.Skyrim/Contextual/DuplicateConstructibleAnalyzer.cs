@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 
@@ -7,10 +8,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class DuplicateConstructibleAnalyzer : IContextualAnalyzer
 {
-    private static readonly TopicDefinition<List<IConstructibleObjectGetter>> DuplicateConstructibleReference = MutagenTopicBuilder.DevelopmentTopic(
+    private static readonly TopicDefinition<int, IFormLinkNullableGetter<IConstructibleGetter>> DuplicateConstructibleReference = MutagenTopicBuilder.DevelopmentTopic(
             "Duplicate Constructible Object",
             Severity.Warning)
-        .WithFormatting<List<IConstructibleObjectGetter>>("Constructibles {0} are creating the same item, all but one should be removed.");
+        .WithFormatting<int, IFormLinkNullableGetter<IConstructibleGetter>>("{0} Constructibles are creating the same item {1}, all but one should be removed.");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [DuplicateConstructibleReference];
 
@@ -32,7 +33,8 @@ public class DuplicateConstructibleAnalyzer : IContextualAnalyzer
             if (duplicateGroup.Count() == 1) continue;
 
             param.AddTopic(
-                DuplicateConstructibleReference.Format(duplicateGroup.ToList())
+                DuplicateConstructibleReference.Format(duplicateGroup.Count(), duplicateGroup.Key.CreatedObject),
+                ("Constructibles", duplicateGroup.ToArray())
             );
         }
     }

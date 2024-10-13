@@ -1,11 +1,13 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.Records;
 
 public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
     where TMajor : class, IMajorRecordGetter
 {
+    private readonly IWorkDropoff _dropoff;
     private readonly IContextualRecordAnalyzer<TMajor>[] _contextualRecordAnalyzers;
 
     public bool Applicable => _contextualRecordAnalyzers.Length > 0;
@@ -13,32 +15,40 @@ public class ByGenericTypeRecordContextualDriver<TMajor> : IContextualDriver
     public IEnumerable<IAnalyzer> Analyzers => _contextualRecordAnalyzers;
 
     public ByGenericTypeRecordContextualDriver(
-        IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers)
+        IContextualRecordAnalyzer<TMajor>[] contextualRecordAnalyzers,
+        IWorkDropoff dropoff)
     {
         _contextualRecordAnalyzers = contextualRecordAnalyzers;
+        _dropoff = dropoff;
     }
 
-    public void Drive(ContextualDriverParams driverParams)
+    public async Task Drive(ContextualDriverParams driverParams)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
+        if (_contextualRecordAnalyzers.Length == 0) return;
         foreach (var listing in driverParams.LoadOrder.ListedOrder)
         {
+            if (driverParams.CancellationToken.IsCancellationRequested) return;
             if (listing.Mod is null) continue;
 
-            foreach (var rec in listing.Mod.EnumerateMajorRecords<TMajor>())
+            await Task.WhenAll(listing.Mod.EnumerateMajorRecords<TMajor>().SelectMany(rec =>
             {
                 var param = new ContextualRecordAnalyzerParams<TMajor>(
                     driverParams.LinkCache,
                     driverParams.LoadOrder,
                     rec,
                     driverParams.ReportDropbox);
-                foreach (var analyzer in _contextualRecordAnalyzers)
+                return _contextualRecordAnalyzers.Select(analyzer =>
                 {
-                    analyzer.AnalyzeRecord(param with
+                    return _dropoff.EnqueueAndWait(() =>
                     {
-                        AnalyzerType = analyzer.GetType()
-                    });
-                }
-            }
+                        analyzer.AnalyzeRecord(param with
+                        {
+                            AnalyzerType = analyzer.GetType()
+                        });
+                    }, driverParams.CancellationToken);
+                });
+            }));
         }
     }
 }

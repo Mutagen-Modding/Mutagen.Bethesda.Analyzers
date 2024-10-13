@@ -2,5 +2,5 @@
 
 public interface IIsolatedDriver : IDriver
 {
-    void Drive(IsolatedDriverParams driverParams);
+    Task Drive(IsolatedDriverParams driverParams);
 }

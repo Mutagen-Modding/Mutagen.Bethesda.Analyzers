@@ -4,12 +4,14 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Drivers.RecordFrame;
 
 public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFrameAnalyzerDriver
     where TMajor : class, IMajorRecordGetter
 {
+    private readonly IWorkDropoff _dropoff;
     private readonly IIsolatedRecordFrameAnalyzer<TMajor>[] _isolatedRecordFrameAnalyzers;
 
     public bool Applicable => _isolatedRecordFrameAnalyzers.Length > 0;
@@ -19,25 +21,31 @@ public class ByGenericTypeRecordFrameIsolatedDriver<TMajor> : IIsolatedRecordFra
     public RecordType TargetType => MajorRecordTypeLookup<TMajor>.RecordType;
 
     public ByGenericTypeRecordFrameIsolatedDriver(
-        IIsolatedRecordFrameAnalyzer<TMajor>[] isolatedRecordFrameAnalyzers)
+        IIsolatedRecordFrameAnalyzer<TMajor>[] isolatedRecordFrameAnalyzers,
+        IWorkDropoff dropoff)
     {
         _isolatedRecordFrameAnalyzers = isolatedRecordFrameAnalyzers;
+        _dropoff = dropoff;
     }
 
-    public void Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame)
+    public async Task Drive(IsolatedDriverParams driverParams, MajorRecordFrame frame)
     {
+        if (driverParams.CancellationToken.IsCancellationRequested) return;
         var reportContext = new ReportContextParameters(driverParams.LinkCache);
         var param = new IsolatedRecordFrameAnalyzerParams<TMajor>(
             driverParams.ReportDropbox,
             reportContext,
             frame);
 
-        foreach (var analyzer in _isolatedRecordFrameAnalyzers)
+        await Task.WhenAll(_isolatedRecordFrameAnalyzers.Select(analyzer =>
         {
-            analyzer.AnalyzeRecord(param with
+            return _dropoff.EnqueueAndWait(() =>
             {
-                AnalyzerType = analyzer.GetType()
-            });
-        }
+                analyzer.AnalyzeRecord(param with
+                {
+                    AnalyzerType = analyzer.GetType()
+                });
+            }, driverParams.CancellationToken);
+        }));
     }
 }

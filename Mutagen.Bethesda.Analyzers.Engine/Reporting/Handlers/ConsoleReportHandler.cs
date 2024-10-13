@@ -2,30 +2,44 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 
 public class ConsoleReportHandler : IReportHandler
 {
+    private readonly IWorkDropoff _workDropoff;
+
+    public ConsoleReportHandler(IWorkDropoff workDropoff)
+    {
+        _workDropoff = workDropoff;
+    }
+
     public void Dropoff(
         ReportContextParameters parameters,
         ModKey sourceMod,
         IMajorRecordIdentifierGetter majorRecord,
         Topic topic)
     {
-        Console.WriteLine($"{topic.TopicDefinition}");
-        Console.WriteLine($"   {sourceMod.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
-        Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
+        _workDropoff.Enqueue(() =>
+        {
+            Console.WriteLine($"{topic.TopicDefinition}");
+            Console.WriteLine($"   {sourceMod.ToString()} -> {majorRecord.FormKey.ToString()} {majorRecord.EditorID}");
+            Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
 
-        PrintMetadata(topic);
+            PrintMetadata(topic);
+        });
     }
 
     public void Dropoff(
         ReportContextParameters parameters,
         Topic topic)
     {
-        Console.WriteLine($"{topic.TopicDefinition}");
-        Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
+        _workDropoff.Enqueue(() =>
+        {
+            Console.WriteLine($"{topic.TopicDefinition}");
+            Console.WriteLine($"   {topic.FormattedTopic.FormattedMessage}");
+        });
     }
 
     private static void PrintMetadata(Topic topic)

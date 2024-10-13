@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Analyzers.Reporting.Handlers;
 
@@ -9,12 +10,15 @@ public record CsvInputs(string OutputFilePath);
 
 public class CsvReportHandler : IReportHandler
 {
+    private readonly IWorkDropoff _workDropoff;
     private readonly CsvInputs _inputs;
 
     public CsvReportHandler(
-        CsvInputs inputs)
+        CsvInputs inputs,
+        IWorkDropoff workDropoff)
     {
         _inputs = inputs;
+        _workDropoff = workDropoff;
     }
 
     public void Dropoff(
@@ -23,14 +27,20 @@ public class CsvReportHandler : IReportHandler
         IMajorRecordIdentifierGetter majorRecord,
         Topic topic)
     {
-        Append(BuildLine(topic, sourceMod, majorRecord));
+        _workDropoff.Enqueue(() =>
+        {
+            Append(BuildLine(topic, sourceMod, majorRecord));
+        });
     }
 
     public void Dropoff(
         ReportContextParameters parameters,
         Topic topic)
     {
-        Append(BuildLine(topic, null, null));
+        _workDropoff.Enqueue(() =>
+        {
+            Append(BuildLine(topic, null, null));
+        });
     }
 
     private static string BuildLine(Topic topic, ModKey? sourceMod, IMajorRecordIdentifierGetter? majorRecord)

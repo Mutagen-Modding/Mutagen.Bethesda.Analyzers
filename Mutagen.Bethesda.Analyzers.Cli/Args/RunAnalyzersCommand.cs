@@ -24,4 +24,7 @@ public class RunAnalyzersCommand : IMinimumSeverityConfiguration
 
     [Option("UseDataFolderForLoadOrder", HelpText = "Whether to use all plugins in the data folder for load order resolution instead of plugins.txt")]
     public bool UseDataFolderForLoadOrder { get; set; } = false;
+
+    [Option('t', "NumThreads", HelpText = "Number of threads to use")]
+    public int? NumThreads { get; set; }
 }

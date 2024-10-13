@@ -7,10 +7,10 @@ namespace Mutagen.Bethesda.Analyzers.Skyrim.Contextual;
 
 public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
 {
-    public static readonly TopicDefinition<ICellGetter, int, List<IFormLinkGetter<INpcGetter>>, IFormLinkGetter<IVoiceTypeGetter>> NpcsWithSameVoiceType = MutagenTopicBuilder.DevelopmentTopic(
+    public static readonly TopicDefinition<ICellGetter, int, IFormLinkGetter<IVoiceTypeGetter>> NpcsWithSameVoiceType = MutagenTopicBuilder.DevelopmentTopic(
             "NPCs with the same voice type in same cell",
             Severity.Suggestion)
-        .WithFormatting<ICellGetter, int, List<IFormLinkGetter<INpcGetter>>, IFormLinkGetter<IVoiceTypeGetter>>("Cell {0} includes {1} npcs {2} with the same voice type {3}");
+        .WithFormatting<ICellGetter, int, IFormLinkGetter<IVoiceTypeGetter>>("Cell {0} includes {1} npcs with the same voice type {2}");
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NpcsWithSameVoiceType];
 
@@ -37,7 +37,8 @@ public class ConflictingVoiceTypesAnalyzer : IContextualAnalyzer
                 if (count <= 1) continue;
 
                 param.AddTopic(
-                    NpcsWithSameVoiceType.Format(cell, count, npcs, grouping.Key));
+                    NpcsWithSameVoiceType.Format(cell, count, grouping.Key),
+                    ("NPCs", npcs));
             }
         }
     }

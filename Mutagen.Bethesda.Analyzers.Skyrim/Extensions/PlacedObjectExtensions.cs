@@ -34,7 +34,6 @@ public static class PlacedObjectExtensions
     {
         return linkCache.PriorityOrder.WinningOverrides<IFactionGetter>()
             .Any(faction => faction.Flags.HasFlag(Faction.FactionFlag.Vendor) && faction.MerchantContainer.FormKey == placedObject.FormKey);
-
     }
 
     public static bool IsBed(this IPlacedObjectGetter placedObject, ILinkCache linkCache)
