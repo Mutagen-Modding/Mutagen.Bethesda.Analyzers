@@ -66,6 +66,7 @@ public class EngineTests
             })
         };
         builder.RegisterInstance(new TestGameEnvironmentProvider(env)).AsImplementedInterfaces();
+        builder.RegisterInstance(env).AsImplementedInterfaces();
         var container = builder.Build();
         var sut = container.Resolve<ContextualEngine>();
         var dropoff = container.Resolve<TestDropoff>();
