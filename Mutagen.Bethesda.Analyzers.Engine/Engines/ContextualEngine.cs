@@ -15,7 +15,6 @@ public class ContextualEngine : IContextualEngine
     private readonly IWorkDropoff _workDropoff;
     public IReportDropbox ReportDropbox { get; }
     public IGameEnvironmentProvider EnvGetter { get; }
-    public IDataDirectoryProvider DataDirectoryProvider { get; }
     public IDriverProvider<IContextualDriver> ContextualModDrivers { get; }
     public IDriverProvider<IIsolatedDriver> IsolatedModDrivers { get; }
 
@@ -24,7 +23,6 @@ public class ContextualEngine : IContextualEngine
 
     public ContextualEngine(
         IGameEnvironmentProvider envGetter,
-        IDataDirectoryProvider dataDataDirectoryProvider,
         IDriverProvider<IContextualDriver> contextualDrivers,
         IDriverProvider<IIsolatedDriver> isolatedDrivers,
         IReportDropbox reportDropbox,
@@ -33,7 +31,6 @@ public class ContextualEngine : IContextualEngine
         _workDropoff = workDropoff;
         ReportDropbox = reportDropbox;
         EnvGetter = envGetter;
-        DataDirectoryProvider = dataDataDirectoryProvider;
         ContextualModDrivers = contextualDrivers;
         IsolatedModDrivers = isolatedDrivers;
     }
@@ -53,7 +50,7 @@ public class ContextualEngine : IContextualEngine
                 if (listing.Mod is null) continue;
                 if (cancel.IsCancellationRequested) return;
 
-                var modPath = Path.Combine(DataDirectoryProvider.Path, listing.ModKey.FileName);
+                var modPath = Path.Combine(env.DataFolderPath.Path, listing.ModKey.FileName);
 
                 var isolatedParam = new IsolatedDriverParams(
                     listing.Mod.ToUntypedImmutableLinkCache(),
