@@ -6,7 +6,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Armor;
 
-public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
+public class FootstepAnalyzerGeneric : IIsolatedRecordsAnalyzer<IArmorGetter, IArmorAddonGetter>
 {
     public static readonly TopicDefinition<ArmorType> UnknownArmorType = MutagenTopicBuilder.DevelopmentTopic(
             "Unknown Armor Type",
@@ -30,7 +30,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
     public IEnumerable<TopicDefinition> Topics => [ArmorMatchingFootstepArmorType, ArmorMissingFootstep, ArmorDuplicateFootstep];
 
-    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IArmorGetter> param)
+    public void AnalyzeRecord(IsolatedRecordsAnalyzerParams<IArmorGetter, IArmorAddonGetter> param)
     {
         var armor = param.Record;
 
@@ -41,7 +41,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
         if (armor.BodyTemplate is null || !armor.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.Feet)) return;
 
         var armorAddons = armor.Armature
-            .Select(armorAddonLink => armorAddonLink.TryResolve(param.LinkCache))
+            .Select(armorAddonLink => armorAddonLink.TryResolve(param.Lookup1))
             .NotNull()
             .ToList();
 
@@ -58,7 +58,7 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
 
             param.AddTopic(
                 ArmorDuplicateFootstep.Format(race),
-                ("Addons", addons));
+                armorAddons);
         }
 
         // Check if the footstep sound is correct
@@ -76,7 +76,8 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
                 break;
             default:
                 param.AddTopic(
-                    UnknownArmorType.Format(armor.BodyTemplate.ArmorType));
+                    UnknownArmorType.Format(armor.BodyTemplate.ArmorType),
+                    armorAddons);
 
                 return;
         }
@@ -86,21 +87,30 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
             if (armorAddon.FootstepSound.FormKey == correctFootstepSound.FormKey) continue;
 
             param.AddTopic(
-                ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound));
+                ArmorMatchingFootstepArmorType.Format(armor.BodyTemplate.ArmorType, correctFootstepSound),
+                armorAddons);
         }
 
         // Check if there are any footstep sounds
         if (armorAddons.Count == 0 || armorAddons.TrueForAll(x => x.FootstepSound.IsNull))
         {
             param.AddTopic(
-                ArmorMissingFootstep.Format());
+                ArmorMissingFootstep.Format(),
+                armorAddons);
         }
     }
 
-    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterest()
+    public IEnumerable<Func<IArmorGetter, object?>> DriverFieldsOfInterest()
     {
         yield return x => x.TemplateArmor;
         yield return x => x.BodyTemplate;
         yield return x => x.Armature;
+    }
+
+    public IEnumerable<Func<IArmorAddonGetter, object?>> LookupFieldsOfInterest()
+    {
+        yield return x => x.FootstepSound;
+        yield return x => x.AdditionalRaces;
+        yield return x => x.Race;
     }
 }

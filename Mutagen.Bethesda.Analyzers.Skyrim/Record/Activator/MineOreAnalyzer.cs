@@ -1,10 +1,11 @@
 ﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Activator;
 
-public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
+public class MineOreAnalyzer : IIsolatedRecordsAnalyzer<IActivatorGetter, IMiscItemGetter>
 {
     public static readonly TopicDefinition NoMineOreScript = MutagenTopicBuilder.DevelopmentTopic(
             "No MineOreScript",
@@ -23,7 +24,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [NoMineOreScript, IncorrectVeinOre];
 
-    public void AnalyzeRecord(ContextualRecordAnalyzerParams<IActivatorGetter> param)
+    public void AnalyzeRecord(IsolatedRecordsAnalyzerParams<IActivatorGetter, IMiscItemGetter> param)
     {
         var activator = param.Record;
         if (activator.EditorID is null) return;
@@ -33,7 +34,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         var script = activator.VirtualMachineAdapter?.Scripts.FirstOrDefault(s => string.Equals(s.Name, "MineOreScript", StringComparison.OrdinalIgnoreCase));
         if (script is null)
         {
-            param.AddTopic(
+            param.AddTopicWithNoLookups(
                 NoMineOreScript.Format());
             return;
         }
@@ -42,7 +43,7 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         var oreProperty = script.GetProperty<IScriptObjectPropertyGetter>("Ore");
         if (oreProperty is null)
         {
-            param.AddTopic(
+            param.AddTopicWithNoLookups(
                 NoOreProperty.Format());
             return;
         }
@@ -50,16 +51,21 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         var oreLinks = oreProperty.EnumerateFormLinks().ToList();
         if (oreLinks.Count == 0)
         {
-            param.AddTopic(
+            param.AddTopicWithNoLookups(
                 NoOreProperty.Format());
             return;
         }
 
-        var ore = oreLinks[0].TryResolve<IMiscItemGetter>(param.LinkCache);
+        // ToDo
+        // Horrible.  Need to add .ToLinkGetter<IMiscItemGetter>() for this.
+        var oreLink = new FormLink<IMiscItemGetter>(oreLinks[0].FormKey);
+
+        var ore = oreLink.TryResolve<IMiscItemGetter>(param.Lookup1);
         if (ore is null)
         {
             param.AddTopic(
-                NoOreProperty.Format());
+                NoOreProperty.Format(),
+                oreLink);
             return;
         }
 
@@ -67,7 +73,8 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         if (oreSubStrings is null)
         {
             param.AddTopic(
-                NoOreProperty.Format());
+                NoOreProperty.Format(),
+                ore);
             return;
         }
 
@@ -80,11 +87,18 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         }
 
         param.AddTopic(
-            IncorrectVeinOre.Format(ore));
+            IncorrectVeinOre.Format(ore),
+            ore);
     }
-    public IEnumerable<Func<IActivatorGetter, object?>> FieldsOfInterest()
+
+    public IEnumerable<Func<IActivatorGetter, object?>> DriverFieldsOfInterest()
     {
         yield return x => x.EditorID;
-        yield return x => x.VirtualMachineAdapter!.Scripts;
+        yield return x => x.VirtualMachineAdapter!.Scripts.Select(x => x.Properties);
+    }
+
+    public IEnumerable<Func<IMiscItemGetter, object?>> LookupFieldsOfInterest()
+    {
+        yield return x => x.Name;
     }
 }

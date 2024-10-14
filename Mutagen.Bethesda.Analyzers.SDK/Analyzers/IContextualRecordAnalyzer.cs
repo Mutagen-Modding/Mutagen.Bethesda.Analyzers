@@ -3,7 +3,9 @@
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 
 /// <summary>
-/// An analyzer targeting a specific record's content only
+/// An analyzer initiating from a specific record. <br />
+/// Has the ability to analyze anything on the load order, from there. <br />
+/// Must hand feed all relevant interesting fields for the records it intends to interact with
 /// </summary>
 /// <typeparam name="TMajor">The type of record being analyzed</typeparam>
 public interface IContextualRecordAnalyzer<TMajor> : IAnalyzer

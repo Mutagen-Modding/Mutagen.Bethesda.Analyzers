@@ -4,7 +4,7 @@ using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Npc;
 
-public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
+public class ChildLowConfidenceAnalyzer : IIsolatedRecordsAnalyzer<INpcGetter, IRaceGetter>
 {
     public static readonly TopicDefinition ChildLowConfidence = MutagenTopicBuilder.DevelopmentTopic(
             "Child low confidence",
@@ -13,22 +13,28 @@ public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
 
     public IEnumerable<TopicDefinition> Topics { get; } = [ChildLowConfidence];
 
-    public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
+    public void AnalyzeRecord(IsolatedRecordsAnalyzerParams<INpcGetter, IRaceGetter> param)
     {
         var npc = param.Record;
-        if (!npc.Race.TryResolve(param.LinkCache, out var race)) return;
+        if (!npc.Race.TryResolve(param.Lookup1, out var race)) return;
         if (!race.IsChildRace()) return;
 
         if (npc.AIData.Confidence is Confidence.Brave or Confidence.Foolhardy)
         {
             param.AddTopic(
-                ChildLowConfidence.Format());
+                ChildLowConfidence.Format(),
+                race);
         }
     }
 
-    public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
+    public IEnumerable<Func<INpcGetter, object?>> DriverFieldsOfInterest()
     {
         yield return x => x.MajorFlags;
         yield return x => x.Race;
+    }
+
+    public IEnumerable<Func<IRaceGetter, object?>> LookupFieldsOfInterest()
+    {
+        yield return x => x.Flags;
     }
 }
