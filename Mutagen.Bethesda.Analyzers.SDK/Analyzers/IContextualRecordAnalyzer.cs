@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Records;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 
@@ -21,4 +22,15 @@ public interface IContextualRecordAnalyzer<TMajor> : IAnalyzer
     /// </summary>
     /// <returns>List of fields of interest to the analyzer</returns>
     IEnumerable<Func<TMajor, object?>> FieldsOfInterest();
+}
+
+public static class FieldsOfInterestExt
+{
+    public static TRet Watch<TMajorGetter, TRet>(this IFormLinkGetter<TMajorGetter> link, Func<TMajorGetter, TRet> selector)
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        // Logic itself doesn't matter
+        // Just looking at signatures via reflection to dissect interest
+        return default!;
+    }
 }

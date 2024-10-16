@@ -29,6 +29,9 @@ public class ChildLowConfidenceAnalyzer : IContextualRecordAnalyzer<INpcGetter>
     public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
     {
         yield return x => x.MajorFlags;
-        yield return x => x.Race;
+        yield return x => FieldsOfInterestExt.Watch(x.Race, x =>
+        {
+            return x.Flags;
+        });
     }
 }

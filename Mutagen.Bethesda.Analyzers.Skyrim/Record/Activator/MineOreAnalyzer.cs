@@ -1,5 +1,7 @@
-﻿using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
+﻿using K4os.Hash.xxHash;
+using Mutagen.Bethesda.Analyzers.SDK.Analyzers;
 using Mutagen.Bethesda.Analyzers.SDK.Topics;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 
 namespace Mutagen.Bethesda.Analyzers.Skyrim.Record.Activator;
@@ -85,6 +87,15 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
     public IEnumerable<Func<IActivatorGetter, object?>> FieldsOfInterest()
     {
         yield return x => x.EditorID;
-        yield return x => x.VirtualMachineAdapter!.Scripts;
+        yield return x => x.VirtualMachineAdapter!.Scripts.Select(x =>
+        {
+            return x.Properties.Select(x =>
+            {
+                return x.EnumerateFormLinks()
+                    .Cast<IFormLinkGetter<IMiscItemGetter>>()
+                    .Select(x =>
+                        x.Watch(x => x.Name));
+            });
+        });
     }
 }

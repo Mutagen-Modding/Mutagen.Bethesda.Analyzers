@@ -101,6 +101,35 @@ public class FootstepAnalyzer : IContextualRecordAnalyzer<IArmorGetter>
     {
         yield return x => x.TemplateArmor;
         yield return x => x.BodyTemplate;
-        yield return x => x.Armature;
+        yield return x => x.Armature.Select(x =>
+        {
+            return x.Watch(x =>
+            {
+                return new object[]
+                {
+                    x.FootstepSound,
+                    x.AdditionalRaces,
+                    x.Race,
+                };
+            });
+        });
+    }
+
+    public IEnumerable<Func<IArmorGetter, object?>> FieldsOfInterestAlt()
+    {
+        yield return x => x.TemplateArmor;
+        yield return x => x.BodyTemplate;
+        yield return x => x.Armature.Select(x =>
+        {
+            return FieldsOfInterestExt.Watch(x, x =>
+            {
+                return new object[]
+                {
+                    x.FootstepSound,
+                    x.AdditionalRaces,
+                    x.Race,
+                };
+            });
+        });
     }
 }
