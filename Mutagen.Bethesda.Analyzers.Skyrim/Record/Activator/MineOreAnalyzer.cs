@@ -82,6 +82,16 @@ public class MineOreAnalyzer : IContextualRecordAnalyzer<IActivatorGetter>
         param.AddTopic(
             IncorrectVeinOre.Format(ore));
     }
+    public void FieldsOfInterest(ContextualRecordAnalyzerInterestBuilder<IActivatorGetter> interest)
+    {
+        interest.Add(x => x.EditorID);
+        interest
+            .AddList(x => x.VirtualMachineAdapter!.Scripts)
+            .AddList(x => x.Properties)
+            .AllFormLinksOfType<IMiscItemGetter>()
+            .Add(x => x.Name);
+    }
+
     public IEnumerable<Func<IActivatorGetter, object?>> FieldsOfInterest()
     {
         yield return x => x.EditorID;

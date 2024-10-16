@@ -20,5 +20,5 @@ public interface IContextualRecordAnalyzer<TMajor> : IAnalyzer
     /// This is used to inform the engine of when the analyzer should be rerun.
     /// </summary>
     /// <returns>List of fields of interest to the analyzer</returns>
-    IEnumerable<Func<TMajor, object?>> FieldsOfInterest();
+    void FieldsOfInterest(ContextualRecordAnalyzerInterestBuilder<TMajor> interest);
 }
