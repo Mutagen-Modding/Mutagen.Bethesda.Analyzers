@@ -21,22 +21,12 @@ public class StoryManagerQuestAnalyzer : IContextualRecordAnalyzer<IQuestGetter>
 
         // TODO: potentially replace with reference cache
 
-        foreach (var mod in param.LoadOrder.Select(l => l.Value.Mod).NotNull())
+        if (param.LinkCache.PriorityOrder.WinningOverrides<IStoryManagerQuestNodeGetter>()
+            .SelectMany(questNode => questNode.Quests.Select(n => n.Quest.FormKey))
+            .All(questFormKey => questFormKey != quest.FormKey))
         {
-            foreach (var questNode in mod.EnumerateMajorRecords<IStoryManagerQuestNodeGetter>())
-            {
-                foreach (var questFormKey in questNode.Quests.Select(n => n.Quest.FormKey))
-                {
-                    if (questFormKey == quest.FormKey)
-                    {
-                        param.AddTopic(
-                            mod.ModKey,
-                            quest,
-                            StoryManagerQuestNotAssigned.Format());
-                        return;
-                    }
-                }
-            }
+            param.AddTopic(
+                StoryManagerQuestNotAssigned.Format());
         }
     }
 
