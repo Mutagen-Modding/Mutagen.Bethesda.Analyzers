@@ -22,7 +22,12 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
             Severity.Warning)
         .WithFormatting< IFormLinkGetter<ISkyrimMajorRecordGetter>>("Npc uses carry package, but StopCarryingEvent property in carry script is not set to OffsetStop but {0}");
 
-    public IEnumerable<TopicDefinition> Topics { get; } = [CarryPackageWithoutScript, NoStopCarryingEventProperty];
+    public static readonly TopicDefinition< IFormLinkGetter<ISkyrimMajorRecordGetter>> NoCarryItemProperty = MutagenTopicBuilder.DevelopmentTopic(
+            "Carry package without CarryItem property",
+            Severity.Warning)
+        .WithFormatting< IFormLinkGetter<ISkyrimMajorRecordGetter>>("Npc uses carry package, but has no CarryItem property filled");
+
+    public IEnumerable<TopicDefinition> Topics { get; } = [CarryPackageWithoutScript, NoStopCarryingEventProperty, NoCarryItemProperty];
 
     public void AnalyzeRecord(ContextualRecordAnalyzerParams<INpcGetter> param)
     {
@@ -62,7 +67,7 @@ public class CarryPackageAnalyzer : IContextualRecordAnalyzer<INpcGetter>
         if (carryItemIngredientProperty is not null) return;
 
         param.AddTopic(
-            CarryPackageWithoutScript.Format());
+            NoCarryItemProperty.Format());
     }
 
     public IEnumerable<Func<INpcGetter, object?>> FieldsOfInterest()
