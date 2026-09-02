@@ -17,7 +17,7 @@ public class PersistenceAnalyzer : IContextualRecordAnalyzer<IPlacedGetter>
         .WithoutFormatting("Placed record is persistent but does not need to be");
 
     public static readonly TopicDefinition<PersistReason> NotPersistent = MutagenTopicBuilder.FromDiscussion(
-            286,
+            655,
             "Not Persistent",
             Severity.Error)
         .WithFormatting<PersistReason>("Placed record is not persistent but needs to be due to {0}");
